@@ -3,6 +3,12 @@
 namespace Config;
 
 use App\Libraries\AuditLog;
+use App\Libraries\ContentOptions;
+use App\Libraries\ContentPolicy;
+use App\Libraries\ContentService;
+use App\Libraries\Markdown;
+use App\Libraries\MediaService;
+use App\Libraries\MissionDirectory;
 use App\Libraries\DepartmentAccess;
 use CodeIgniter\Config\BaseService;
 use CodeIgniter\HTTP\IncomingRequest;
@@ -51,5 +57,59 @@ class Services extends BaseService
         }
 
         return new DepartmentAccess(Database::connect());
+    }
+
+    public static function contentPolicy(bool $getShared = true): ContentPolicy
+    {
+        if ($getShared) {
+            return static::getSharedInstance('contentPolicy');
+        }
+
+        return new ContentPolicy(config(ContentTypes::class), static::departmentAccess());
+    }
+
+    public static function content(bool $getShared = true): ContentService
+    {
+        if ($getShared) {
+            return static::getSharedInstance('content');
+        }
+
+        return new ContentService(Database::connect(), config(ContentTypes::class), static::auditLog(), config(App::class)->defaultLocale);
+    }
+
+    public static function contentOptions(bool $getShared = true): ContentOptions
+    {
+        if ($getShared) {
+            return static::getSharedInstance('contentOptions');
+        }
+
+        return new ContentOptions(Database::connect(), config(ContentTypes::class), static::contentPolicy());
+    }
+
+    public static function media(bool $getShared = true): MediaService
+    {
+        if ($getShared) {
+            return static::getSharedInstance('media');
+        }
+
+        return new MediaService(Database::connect(), config(Media::class), static::auditLog());
+    }
+
+    public static function missionDirectory(bool $getShared = true): MissionDirectory
+    {
+        if ($getShared) {
+            return static::getSharedInstance('missionDirectory');
+        }
+
+        return new MissionDirectory(Database::connect());
+    }
+
+    public static function markdown(bool $getShared = true): Markdown
+    {
+        if ($getShared) {
+            return static::getSharedInstance('markdown');
+        }
+
+        return new Markdown();
     }
 }

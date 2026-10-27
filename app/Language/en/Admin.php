@@ -16,4 +16,6 @@ return [
     'actor'          => 'Staff account',
     'subject'        => 'Subject',
     'ipAddress'      => 'IP address',
+    'publishing'     => 'Publishing',
+    'content'        => 'Content',
 ];

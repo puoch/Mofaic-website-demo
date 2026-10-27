@@ -32,6 +32,27 @@ New accounts start as Read-Only Staff.
 | `inquiries.view` / `inquiries.manage`: Public Inquiries Inbox | | ✓ | | |
 | `diaspora.submissions-view` / `-manage`: Diaspora inbox | per person | per person | per person | |
 
+## Content scopes (Gate 3)
+
+Each content type has a scope, set in `Config\ContentTypes` and enforced by
+`App\Libraries\ContentPolicy` on every create, save, publish, unpublish,
+delete, restore and media change. The check runs against both the stored record
+and the submitted values, so content cannot be moved out of scope.
+
+| Scope | Types | Who can change it |
+| --- | --- | --- |
+| `department` | News and statements, pages, galleries, archive items | Ministry Administrators: any department. Department Editors: only records in their departments, and only their departments can be chosen |
+| `department`, mission activity | Articles in the *Mission activity* category | Ministry Administrators only (`missions.publish-activities`), whatever the department |
+| `missions` | Missions, countries | Ministry Administrators (`missions.manage`) |
+| `site` | Tags, quick links, social accounts, organogram units, emergency contacts, contact information | Ministry Administrators (`content.publish-any`) |
+
+Content with no department can be changed only by Ministry Administrators.
+Restoring an earlier version also needs `content.restore`. Everyone with
+`content.view` can read drafts and version history in the administration area.
+
+The *Minister's engagements* listing is news tagged with the system tag
+`minister-engagements`; any editor who can publish the article can add the tag.
+
 ## Rules behind the matrix
 
 - **Direct publishing.** Editors publish within their scope without a second

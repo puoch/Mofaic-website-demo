@@ -34,7 +34,15 @@ server {
     ssl_certificate     /etc/ssl/<approved-domain>/fullchain.pem;
     ssl_certificate_key /etc/ssl/<approved-domain>/privkey.pem;
 
-    client_max_body_size 25m;
+    # Must allow the largest upload in Config\Media (PD-12, 200 MB video).
+    # Set upload_max_filesize and post_max_size in php.ini to match.
+    client_max_body_size 210m;
+
+    # Uploaded files are never run as code.
+    location ^~ /uploads/ {
+        location ~ \.php$ { deny all; }
+        add_header X-Content-Type-Options nosniff always;
+    }
 
     location / {
         try_files $uri $uri/ /index.php$is_args$args;
@@ -67,11 +75,13 @@ cd releases/<date>
 composer install --no-dev --optimize-autoloader --no-interaction
 ln -s /srv/mofaic-web/shared/.env .env
 rm -rf writable && ln -s /srv/mofaic-web/shared/writable writable
+rm -rf public/uploads && ln -s /srv/mofaic-web/shared/uploads public/uploads
 
 # Back up the database before migrating
 mysqldump --single-transaction mofaic_web > /srv/mofaic-web/backups/pre-<date>.sql
 
 php spark migrate --all
+php spark db:seed StructureSeeder   # adds any missing structure pages; never overwrites
 php spark optimize
 ln -sfn /srv/mofaic-web/releases/<date> /srv/mofaic-web/current
 sudo systemctl reload php8.3-fpm
@@ -90,7 +100,7 @@ Never run `db:seed DemoSeeder` on staging or the live site. It refuses to run in
 
 ## Backups (to be agreed)
 
-Back up the database and `writable/uploads` from Gate 3 onwards. How often,
+Back up the database and `shared/uploads` (served as `public/uploads`) from Gate 3 onwards. How often,
 where backups are kept off-site, and recovery time targets are open (brief
 section 6, item 9). Gate 5 includes a restore drill with recorded evidence.
 

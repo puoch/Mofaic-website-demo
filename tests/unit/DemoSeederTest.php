@@ -44,6 +44,32 @@ final class DemoSeederTest extends StaffTestCase
         }
     }
 
+    public function testDemoCountriesMissionsAndArticlesAreLabelled(): void
+    {
+        $this->seed(DemoSeeder::class);
+
+        $countries = $this->db->table('countries')->get()->getResultArray();
+        $this->assertCount(3, $countries);
+        foreach ($countries as $country) {
+            $this->assertSame('1', (string) $country['is_demo']);
+            $this->assertMatchesRegularExpression('/^X[A-Z]$/', $country['iso_code'], 'Demo countries use ISO user-assigned codes only.');
+            $this->assertStringContainsString('(DEMO)', $country['name']);
+        }
+
+        $missions = $this->db->table('missions')->get()->getResultArray();
+        $this->assertNotEmpty($missions);
+        foreach ($missions as $mission) {
+            $this->assertSame('1', (string) $mission['is_demo']);
+            $this->assertStringContainsString(DemoSeeder::LABEL, $mission['name']);
+            $this->assertStringEndsWith('@example.invalid', (string) $mission['email']);
+            $this->assertStringStartsWith('+000', (string) $mission['phone']);
+        }
+
+        foreach ($this->db->table('articles')->get()->getResultArray() as $article) {
+            $this->assertStringContainsString(DemoSeeder::LABEL, $article['title']);
+        }
+    }
+
     public function testRunningTwiceCreatesNoDuplicates(): void
     {
         $this->seed(DemoSeeder::class);
@@ -51,5 +77,7 @@ final class DemoSeederTest extends StaffTestCase
 
         $this->assertSame(3, $this->db->table('departments')->countAllResults());
         $this->assertSame(4, $this->db->table('users')->countAllResults());
+        $this->assertSame(3, $this->db->table('countries')->countAllResults());
+        $this->assertSame(3, $this->db->table('missions')->countAllResults());
     }
 }

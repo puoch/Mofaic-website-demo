@@ -30,8 +30,14 @@ holds nothing else.
 | `tests/feature/StaffAccessTest.php` | GOV-01, SEC-01, SEC-04 | No registration or magic link, admin needs sign-in, each role reaches the dashboard, audit log restricted, CSRF rejection, failed sign-in audited without the password, emailed code required |
 | `tests/unit/PermissionsTest.php` | GOV-01 to GOV-04, HOME-03 | Four roles, no role grants diaspora submissions, per-person grant, department scope, mission activities limited to Ministry Administrators |
 | `tests/unit/AuditLogTest.php` | SEC-04 | Records events, strips secrets, newest first |
-| `tests/unit/DemoSeederTest.php` | DEMO-01 | Refuses production, labels every record, no duplicates |
+| `tests/unit/DemoSeederTest.php` | DEMO-01 | Refuses production, labels every record (including demo countries, missions and articles), no duplicates |
 | `tests/feature/HealthTest.php` | SEC-06 | Health check response |
+| `tests/unit/ContentServiceTest.php` | GOV-05, GOV-06, NEWS-06, ABT-04 | Slugs, page paths and loops, tags, publish dates, revisions and restore, protected system records, audit events |
+| `tests/unit/ContentPolicyTest.php` | GOV-02, GOV-03, HOME-03, DIA-11 | Department scope, mission activities, site-wide and missions scopes, restore permission |
+| `tests/unit/MediaServiceTest.php` | NEWS-02, NEWS-03, ARC-01 | Uploads checked by detected type, random file names, external links https only, removal deletes the file |
+| `tests/feature/PublicContentTest.php` | HOME-01 to HOME-05, ABT-01 to ABT-04, ASS-01, SRV-01 to SRV-06, NEWS-01 to NEWS-06, ARC-01, ARC-03, CON-01 | Only published content appears, drafts and unpublished parents return 404, search and date filters, tags, galleries, Markdown escaping, empty-state messages, emergency and contact text hidden until entered |
+| `tests/feature/MissionsTest.php` | MIS-01 to MIS-06, HOME-06 | Directory by category, profiles, coverage, related missions, country finder, neutral no-match message |
+| `tests/feature/AdminContentTest.php` | GOV-02, GOV-03, GOV-05, GOV-06, HOME-03 | Editors publish in their departments without approval, cannot reach others, mission activities, restore, coverage, 403 screens |
 
 ## Not covered yet
 
@@ -39,6 +45,8 @@ holds nothing else.
   which feature tests skip. The tests check that it is switched on, and it was
   checked by hand with `curl` against `php spark serve`.
 - Browser checks: keyboard navigation, screen reader, sticky header on scroll,
-  mobile menu, and WCAG 2.2 AA scans. These are planned with Gate 3, when real
-  pages exist.
+  mobile menu, and WCAG 2.2 AA scans. Not run at Gate 3; planned for Gate 5.
+- An upload through the real editing form. The media tests replace PHP's upload
+  check with a test double, because `is_uploaded_file()` only accepts real HTTP
+  uploads.
 - Completing an emailed sign-in code end to end, which needs a mail server.

@@ -18,6 +18,7 @@ not be treated as Ministry policy.
 | 2026-10-26 | Super Administrators get no diaspora submission access by role; access is granted per person (PD-02) | Sponsor, Gate 0 Q3 |
 | 2026-10-26 | Accessibility target is WCAG 2.2 level AA (PD-14) | Sponsor, Gate 0 Q5 |
 | 2026-10-26 | Coding approved ("APPROVE GATE 2: START CODING"). Gate 1 was not reviewed separately | Sponsor |
+| 2026-10-27 | Gate 3 approved ("APPROVE GATE 3: START CODING") | Sponsor |
 
 ## Proposed, in use as configurable defaults
 
@@ -27,6 +28,13 @@ not be treated as Ministry policy.
 | PD-04 | ARCHIVES linked from the footer until the Ministry decides | `Config\Navigation::$archivesPlacement` |
 | PD-16 | Demo data labelled `DEMO, NOT OFFICIAL`, using `example.invalid`, blocked in production | `DemoSeeder` |
 | PD-17 | Front-end assets served locally, no CDN | `public/assets/vendor/` |
+| PD-12 | Media limits: images JPG/PNG/WebP up to 10 MB, PDF up to 20 MB, MP3 up to 50 MB, MP4 up to 200 MB; audio and video may instead link to an `https://` address | `Config\Media` |
+| PD-13 | Every saved version of content is kept; nothing is pruned until retention is decided | `content_revisions` |
+| G3-01 | Search on News & Press uses a plain text match on title, summary and body, not MySQL full-text (PD-15 stays unused) | `Site\News::list` |
+| G3-02 | The country finder says neutrally that no mission is recorded for a country, with no referral, because the no-match rule is undecided (deferred item 5) | `site/missions/country.php` |
+| G3-03 | External audio and video, and social media accounts, are shown as links, not embedded players or feeds. Embedding would load content from other hosts and needs a Content Security Policy change and Ministry approval | `site/partials/media.php`, `Site\News::social` |
+| G3-04 | Department Editors and Read-Only Staff can open the publishing screens; site-wide lists (tags, quick links, social accounts, organogram, emergency contacts, contact information) are edited by Ministry Administrators only | `Libraries\ContentPolicy` |
+| G3-05 | System pages from the brief's structure can be filled in and published but not deleted, moved or renamed | `StructureSeeder`, `lockedForSystem` |
 | — | Permission matrix in `docs/permissions.md` | `Config\AuthGroups` |
 | — | Server baseline: Ubuntu 24.04 LTS, Nginx, PHP-FPM 8.3, MySQL 8.4 | `docs/deployment.md` |
 
@@ -35,8 +43,7 @@ not be treated as Ministry policy.
 PD-03 (missing-translation notice), PD-05 (inbox statuses), PD-06 (no personal data
 in notification emails), PD-07 (no-match referral), PD-08 (diaspora name required),
 PD-09 (newsletter double opt-in), PD-10 (queued email via MOFAIC relay), PD-11
-(spam protection without third parties), PD-12 (media limits), PD-13 (keep all
-revisions), PD-15 (MySQL full-text search).
+(spam protection without third parties), PD-15 (MySQL full-text search).
 
 ## Deferred (brief section 6)
 
