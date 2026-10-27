@@ -47,7 +47,7 @@ holds nothing else.
 | `tests/feature/DiasporaFormsTest.php` | DIA-01 to DIA-12, EXC-02 | Voluntary statement, no identity/financial/file fields, required fields, all serving missions listed and none chosen, only listed missions accepted, nothing sent to missions, no-match, separate newsletter opt-in, anonymous contributions, Stay Informed, Diaspora by Country |
 | `tests/feature/InboxTest.php` | CON-04, CON-05, DIA-13, GOV-04, SEC-04 | No role opens the Diaspora inbox, per-person grants, audited views, view-only cannot change, status, assignment, notes, inbox separation, access screen |
 | `tests/feature/DiasporaPublishingTest.php` | DIA-09, DIA-11, DIA-12 | Diaspora editors publish directly, diaspora department required, no mission activities, one page per country, newsletter sending, notification rules |
-| `tests/unit/LocalAssetsTest.php` | PRI-09, PD-17 | Every stylesheet and script the layouts load is in the repository, Bootstrap matches its checksums, no view loads scripts or styles from another host |
+| `tests/unit/LocalAssetsTest.php` | PRI-09, PD-17 | Every stylesheet and script the layouts load is in the repository, Bootstrap matches its checksums, no view hard-codes another host, local mode loads only local files, CDN mode carries integrity hashes that match the vendored files and the fallback script, and the Content Security Policy allows the CDN only in CDN mode |
 | `tests/unit/GoLiveCheckTest.php` | G5-01 | Reads every proposal and deferred item from the decision log, unsettled ones block, a decision passes only with its recorded source, shipped approvals match the log, demo data, missing Ministry text, backup age, Super Administrator count |
 | `tests/unit/ContentSafetyTest.php` | DEMO-01 | No placeholder text copied from other governments' sites (terms listed in the test), no Cyrillic letters (or the Latin letters they are often transliterated with) anywhere in the repository |
 | `tests/unit/StaffCommandTest.php` | GOV-01, SEC-04 | Access review list, ban and unban, department membership, all audited; unknown accounts change nothing |
@@ -59,6 +59,12 @@ real browser: WCAG 2.2 AA rules, outside requests, fixed header, skip link,
 mobile menu and reflow. It needs a running copy of the site, so CI does not
 run it. See [accessibility.md](accessibility.md) for how to run it and the
 Gate 5 results.
+
+`tests/browser/cdn-fallback.mjs` checks the CDN mode (PD-17) against a copy
+started with `assets.bootstrapSource = cdn`: the CDN works, the CDN returns a
+changed file, and the CDN cannot be reached. In the last two the local copy
+must load. Run `check.mjs` in `local` mode, because it treats every request to
+another host as a failure. Results: [evidence/gate-5/cdn-fallback.md](evidence/gate-5/cdn-fallback.md).
 
 ## Backup scripts
 

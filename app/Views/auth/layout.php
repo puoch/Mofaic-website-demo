@@ -1,7 +1,8 @@
 <?php
 /**
  * Replaces Shield's default sign-in layout, which loads Bootstrap from a
- * public CDN. Everything here is served locally.
+ * public CDN without integrity checks. This one uses the site's own asset
+ * tags, which follow assets.bootstrapSource (PD-17).
  *
  * @var CodeIgniter\View\View $this
  */

@@ -61,6 +61,7 @@ class GoLiveCheck
         $this->add('Server', 'Every request is forced to https', $app->forceGlobalSecureRequests, 'set app.forceGlobalSecureRequests = true');
         $this->add('Server', 'Cookies are sent over https only', config('Cookie')->secure, 'set cookie.secure = true');
         $this->add('Server', 'Content Security Policy is on', $app->CSPEnabled);
+        $this->add('Server', 'Bootstrap is served from this server', config('Assets')->usesCdn() ? 'warn' : 'pass', 'assets.bootstrapSource = cdn, so visitors\' browsers contact ' . config('Assets')->cdnOrigin() . '. Use local on the on-premises server (PD-17)');
         $this->add('Server', 'encryption.key is set (32 bytes)', strlen((string) config('Encryption')->key) === 32, 'generate with php spark key:generate');
 
         $db = db_connect();

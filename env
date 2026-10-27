@@ -55,6 +55,15 @@ email.SMTPUser = ''
 email.SMTPPass = ''
 
 #--------------------------------------------------------------------
+# FRONT-END FILES (PD-17)
+# local: Bootstrap from this server (on-premises live site).
+# cdn:   Bootstrap from cdn.jsdelivr.net with integrity checks, falling
+#        back to the local copy (VPS phase). Visitors' browsers then
+#        contact jsDelivr.
+#--------------------------------------------------------------------
+# assets.bootstrapSource = local
+
+#--------------------------------------------------------------------
 # DEMO DATA (development and testing only)
 #--------------------------------------------------------------------
 # DEMO_PASSWORD = choose-a-local-password

@@ -41,5 +41,7 @@ composer test
 ```
 
 To update Bootstrap, download the new release's `dist` files into a new
-`bootstrap-<version>` folder, regenerate `SHA256SUMS`, and update the path in
-`app/Views/partials/head_assets.php` and `app/Views/layouts/public.php`.
+`bootstrap-<version>` folder, regenerate `SHA256SUMS`, then update
+`Config\Assets`: `$bootstrapVersion`, `$cdnBase` and every `$integrity` value
+(`openssl dgst -sha384 -binary <file> | openssl base64 -A`). The unit test
+`LocalAssetsTest` fails until the integrity values match the new files.

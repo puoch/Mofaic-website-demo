@@ -141,3 +141,54 @@ if (! function_exists('mission_url')) {
         return locale_url('missions/profile/' . $mission['slug']);
     }
 }
+
+if (! function_exists('bootstrap_css')) {
+    /**
+     * The Bootstrap stylesheet tag, from this server or the CDN (PD-17,
+     * Config\Assets).
+     *
+     * @param string $dir 'ltr' or 'rtl'
+     */
+    function bootstrap_css(string $dir): string
+    {
+        $file = $dir === 'rtl' ? 'css/bootstrap.rtl.min.css' : 'css/bootstrap.min.css';
+
+        return bootstrap_tag('<link rel="stylesheet" href="%s"%s>', $file);
+    }
+}
+
+if (! function_exists('bootstrap_js')) {
+    /**
+     * The Bootstrap script tag, plus the local fallback when the CDN is used.
+     */
+    function bootstrap_js(): string
+    {
+        $tag = bootstrap_tag('<script src="%s"%s defer></script>', 'js/bootstrap.bundle.min.js');
+
+        if (config('Assets')->usesCdn()) {
+            $tag .= "\n    " . '<script src="' . esc(base_url('assets/js/cdn-fallback.js')) . '" defer></script>';
+        }
+
+        return $tag;
+    }
+}
+
+if (! function_exists('bootstrap_tag')) {
+    /**
+     * @param string $format sprintf pattern with the address and the extra attributes
+     * @param string $file   path under Bootstrap's dist/ folder
+     */
+    function bootstrap_tag(string $format, string $file): string
+    {
+        $assets = config('Assets');
+        $local  = base_url('assets/vendor/bootstrap-' . $assets->bootstrapVersion . '/' . $file);
+
+        if (! $assets->usesCdn()) {
+            return sprintf($format, esc($local), '');
+        }
+
+        $extra = ' integrity="' . esc($assets->integrity[$file]) . '" crossorigin="anonymous" data-local="' . esc($local) . '"';
+
+        return sprintf($format, esc($assets->cdnBase . $file), $extra);
+    }
+}

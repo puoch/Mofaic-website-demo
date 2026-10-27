@@ -14,6 +14,7 @@ All server-specific settings live in `.env`, copied from the `env` template.
 | `encryption.key` | generated | generated separately on each server with `php spark key:generate` |
 | `database.default.*` | local database | the server's MySQL 8.4 database, `utf8mb4` |
 | `email.*` | optional | SMTP relay. Required, because staff sign-in codes are emailed |
+| `assets.bootstrapSource` | `local` | `cdn` on the VPS while the initial phase needs it; `local` on the on-premises server (PD-17) |
 | `DEMO_PASSWORD` | optional | never set |
 
 Staging uses `production` so it behaves exactly like the live site, including
@@ -32,6 +33,7 @@ error pages that hide technical details.
 | `Session.php`, `Cookie.php`, `Security.php` | Session and cookie names, CSRF token name |
 | `ContentTypes.php` | Every editable content type: table, fields, validation, scope, whether it keeps versions or takes media; article and mission categories; the *Minister's engagements* tag |
 | `Submissions.php` | Submission types and their inboxes, inbox statuses (PD-05), contribution categories, which inquiry and registration fields are required (PD-08), which text blocks open each form, spam limits (PD-11) |
+| `Assets.php` | Where Bootstrap is loaded from (`local` or `cdn`, PD-17), the CDN address and the integrity hash of each file |
 | `Media.php` | Allowed file types and sizes for uploads (PD-12), and which kinds may link to an external address |
 
 ## Adding a language later

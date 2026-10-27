@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use CodeIgniter\Config\Factories;
 use CodeIgniter\Test\CIUnitTestCase;
+use Config\Assets;
+use Config\ContentSecurityPolicy;
 
 /**
  * Every stylesheet and script the layouts load must be in the repository and
- * served from this server (PD-17, on-premises requirement). Until Gate 5 the
+ * can be served from this server (PD-17, on-premises requirement). The CDN
+ * mode must keep integrity checks and the local fallback. Until Gate 5 the
  * Bootstrap files were missing from git because a Composer ignore rule also
  * matched public/assets/vendor.
  */
@@ -25,17 +29,67 @@ final class LocalAssetsTest extends CIUnitTestCase
 
         $this->assertNotSame([], $assets);
 
+        // Bootstrap is loaded through bootstrap_css() and bootstrap_js().
+        $config = config(Assets::class);
+        foreach (array_keys($config->integrity) as $file) {
+            $assets[] = 'assets/vendor/bootstrap-' . $config->bootstrapVersion . '/' . $file;
+        }
+        $assets[] = 'assets/js/cdn-fallback.js';
+
         foreach (array_unique($assets) as $asset) {
-            if (str_ends_with($asset, '/')) {
-                foreach (['bootstrap.min.css', 'bootstrap.rtl.min.css'] as $css) {
-                    $this->assertFileExists(FCPATH . $asset . $css);
-                }
-
-                continue;
-            }
-
             $this->assertFileExists(FCPATH . $asset);
         }
+    }
+
+    public function testLocalModeServesBootstrapFromThisServer(): void
+    {
+        $tags = bootstrap_css('ltr') . bootstrap_css('rtl') . bootstrap_js();
+
+        $this->assertStringContainsString(base_url('assets/vendor/bootstrap-5.3.8/css/bootstrap.min.css'), $tags);
+        $this->assertStringContainsString(base_url('assets/vendor/bootstrap-5.3.8/css/bootstrap.rtl.min.css'), $tags);
+        $this->assertStringContainsString(base_url('assets/vendor/bootstrap-5.3.8/js/bootstrap.bundle.min.js'), $tags);
+        $this->assertStringNotContainsString('jsdelivr', $tags);
+        $this->assertStringNotContainsString('cdn-fallback', $tags);
+    }
+
+    public function testCdnModeChecksIntegrityAndFallsBackToTheLocalCopy(): void
+    {
+        $config                  = new Assets();
+        $config->bootstrapSource = 'cdn';
+        Factories::injectMock('config', 'Assets', $config);
+
+        $css = bootstrap_css('ltr');
+        $js  = bootstrap_js();
+
+        $this->assertStringContainsString('href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"', $css);
+        $this->assertStringContainsString('data-local="' . base_url('assets/vendor/bootstrap-5.3.8/css/bootstrap.min.css') . '"', $css);
+        $this->assertStringContainsString('crossorigin="anonymous"', $js);
+        $this->assertStringContainsString(base_url('assets/js/cdn-fallback.js'), $js);
+
+        // Each integrity value must match the vendored file, or the browser
+        // would refuse the CDN copy on every page and always fall back.
+        foreach ($config->integrity as $file => $integrity) {
+            $hash = 'sha384-' . base64_encode(hash_file('sha384', FCPATH . 'assets/vendor/bootstrap-5.3.8/' . $file, true));
+            $this->assertSame($hash, $integrity, $file);
+        }
+    }
+
+    public function testContentSecurityPolicyAllowsTheCdnOnlyInCdnMode(): void
+    {
+        $this->assertSame('self', (new ContentSecurityPolicy())->scriptSrc);
+
+        $_SERVER['assets.bootstrapSource'] = 'cdn';
+
+        try {
+            $csp = new ContentSecurityPolicy();
+        } finally {
+            unset($_SERVER['assets.bootstrapSource']);
+        }
+
+        foreach (['scriptSrc', 'scriptSrcElem', 'styleSrc', 'styleSrcElem'] as $directive) {
+            $this->assertSame(['self', 'https://cdn.jsdelivr.net'], $csp->{$directive}, $directive);
+        }
+        $this->assertSame('self', $csp->imageSrc);
     }
 
     public function testVendoredBootstrapMatchesItsChecksums(): void

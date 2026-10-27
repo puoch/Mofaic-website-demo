@@ -61,6 +61,6 @@
         <?php endif ?>
         <?= $this->renderSection('content') ?>
     </main>
-    <script src="<?= base_url('assets/vendor/bootstrap-5.3.8/js/bootstrap.bundle.min.js') ?>" defer></script>
+    <?= bootstrap_js() ?>
 </body>
 </html>

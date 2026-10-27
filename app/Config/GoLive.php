@@ -56,7 +56,7 @@ class GoLive extends BaseConfig
         'G5-03' => 'Sponsor, proposal sheet 2026-10-27, interim until deferred item 9',
         'G5-04' => 'Sponsor, proposal sheet 2026-10-27',
         'G5-05' => 'Sponsor, proposal sheet 2026-10-27',
-        // PD-17: change requested, details pending.
+        'PD-17' => 'Sponsor, 2026-10-27: changed to allow both CDN and local serving',
     ];
 
     /**

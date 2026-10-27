@@ -104,9 +104,18 @@ final class GoLiveCheckTest extends StaffTestCase
             $this->assertNotSame('', trim($source), "{$id} has no recorded source.");
         }
 
-        // PD-17 has a change requested, so it must still block.
-        $this->assertArrayNotHasKey('PD-17', $approved);
-        $this->assertSame('fail', $this->results()['PD-17 approved by MOFAIC']['status']);
+        $this->assertSame('pass', $this->results()['PD-05 approved by MOFAIC']['status']);
+    }
+
+    public function testWarnsWhenBootstrapComesFromTheCdn(): void
+    {
+        $this->assertSame('pass', $this->results()['Bootstrap is served from this server']['status']);
+
+        $assets                  = new \Config\Assets();
+        $assets->bootstrapSource = 'cdn';
+        \CodeIgniter\Config\Factories::injectMock('config', 'Assets', $assets);
+
+        $this->assertSame('warn', $this->results()['Bootstrap is served from this server']['status']);
     }
 
     public function testTheTestEnvironmentIsNotReady(): void
