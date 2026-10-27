@@ -1,7 +1,9 @@
 # Decision log
 
-The source of truth for what is confirmed, proposed and deferred. The baseline is
-the Requirements & Architecture Brief v2.3. Item IDs (PRI-, NAV-, MIS-, ...) match
+The source of truth for what is confirmed, proposed and deferred. The original
+baseline is the Requirements & Architecture Brief v2.3; the decisions below are
+written into [v2.4](requirements-brief-v2.4.md). Issue a new brief version after
+each round of decisions. Item IDs (PRI-, NAV-, MIS-, ...) match
 the Gate 0 traceability matrix.
 
 **Confirmed** = chosen by the project sponsor. **Proposed** = suggested, not yet
@@ -23,6 +25,8 @@ not be treated as Ministry policy.
 | 2026-10-27 | Gate 5 started on the sponsor's "proceed" after the Gate 4 pull request. This does not approve any G3 or G4 proposal | Sponsor |
 | 2026-10-27 | Approved 33 proposals on the sheet: PD-01, PD-03 to PD-13, PD-15, PD-16, G2-01, G2-02, G3-01 to G3-05, G4-01 to G4-07 and G5-01 to G5-05. PD-04, PD-13, G4-01, G4-06, G4-07 and G5-03 are approved as interim defaults; the deferred items they wait on (2, 6, 9, 10 and 13) stay open | Sponsor, proposal sheet |
 | 2026-10-27 | An early test copy runs on InfinityFree's free tier, deployed from GitHub. Test and demonstration only; the hosting decision above is unchanged | Sponsor, thread message |
+| 2026-10-27 | Keyword search uses MySQL full-text search (PD-15). G3-01 (plain text match) is withdrawn; a plain match remains only for words the full-text index skips and on databases other than MySQL | Sponsor, thread message |
+| 2026-10-27 | A staff accounts screen is added to the administration area, so hosts without a terminal can manage accounts | Sponsor, thread message |
 | 2026-10-27 | PD-17 changed: support both a CDN and serving from the Ministry's own server, because the initial phase on the VPS needs the CDN. Implemented as a per-server switch (`assets.bootstrapSource`), local by default | Sponsor, thread message |
 
 ## Proposed, in use as configurable defaults
@@ -38,7 +42,7 @@ recorded in "Confirmed after the brief" above and in `Config\GoLive`.
 | PD-17 | Bootstrap served from this server (`local`, the default and the on-premises setting) or from jsDelivr (`cdn`, for the VPS phase) with Subresource Integrity; if a CDN file is missing or fails its check, the local copy loads | `Config\Assets`, `public/assets/vendor/`, `assets/js/cdn-fallback.js` |
 | PD-12 | Media limits: images JPG/PNG/WebP up to 10 MB, PDF up to 20 MB, MP3 up to 50 MB, MP4 up to 200 MB; audio and video may instead link to an `https://` address | `Config\Media` |
 | PD-13 | Every saved version of content is kept; nothing is pruned until retention is decided | `content_revisions` |
-| G3-01 | Search on News & Press uses a plain text match on title, summary and body, not MySQL full-text (PD-15 stays unused) | `Site\News::list` |
+| PD-15 | News & Press keyword search uses a MySQL full-text index on title, summary and text; every word must appear and word beginnings match. Words of one or two letters and MySQL's stopwords fall back to a plain text match | `Site\News::list`, `Libraries\FullTextQuery` |
 | G3-02 | The country finder says neutrally that no mission is recorded for a country, with no referral, because the no-match rule is undecided (deferred item 5) | `site/missions/country.php` |
 | G3-03 | External audio and video, and social media accounts, are shown as links, not embedded players or feeds. Embedding would load content from other hosts and needs a Content Security Policy change and Ministry approval | `site/partials/media.php`, `Site\News::social` |
 | G3-04 | Department Editors and Read-Only Staff can open the publishing screens; site-wide lists (tags, quick links, social accounts, organogram, emergency contacts, contact information) are edited by Ministry Administrators only | `Libraries\ContentPolicy` |
@@ -61,14 +65,18 @@ recorded in "Confirmed after the brief" above and in `Config\GoLive`.
 | G5-01 | `php spark golive:check` blocks the live launch while any proposal in this table or any deferred item below is not recorded as settled in `Config\GoLive` | `Libraries\GoLiveCheck` |
 | G5-02 | Browser and accessibility checks (axe-core, Playwright) are a development tool run before each release, not installed on the live server | `tests/browser/` |
 | G5-03 | Backups: nightly at 01:30, kept 14 days on the server and copied off it; monthly restore drill straight after a backup, with the evidence kept. Real targets are deferred item 9 | `scripts/`, `docs/deployment.md` |
-| G5-04 | Quarterly access review and same-day offboarding (ban, never delete), at least two Super Administrators, using `php spark staff` until there is a staff-account screen | `docs/operations.md`, `Commands\Staff` |
+| G5-04 | Quarterly access review and same-day offboarding (ban, never delete), at least two Super Administrators. Done on Admin > Staff accounts or with `php spark staff`; nobody can change their own role or ban themselves, and the last active Super Administrator cannot be removed | `docs/operations.md`, `Controllers\Admin\Staff`, `Commands\Staff` |
 | G5-05 | Links use the site accent colour (7.2:1 on the footer band) instead of Bootstrap's blue (4.1:1, fails AA). Brand colours are deferred item 12 | `public/assets/css/site.css` |
 | G2-02 | Server baseline: Ubuntu 24.04 LTS, Nginx, PHP-FPM 8.3, MySQL 8.4 | `docs/deployment.md` |
 
 ## Proposed, not used yet
 
-PD-03 (missing-translation notice), PD-15 (MySQL full-text search). Both were
-approved by the sponsor on 2026-10-27; neither is built yet.
+PD-03 (missing-translation notice). Approved by the sponsor on 2026-10-27; not
+built yet, because the site is English only.
+
+## Withdrawn
+
+G3-01 (plain text search), replaced by PD-15 on 2026-10-27.
 
 ## Deferred (brief section 6)
 

@@ -35,6 +35,16 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'pe
     $routes->post('(inquiries|diaspora)/(inquiry|registration|contribution)/(:num)/assign', 'Inbox::assign/$1/$2/$3');
     $routes->post('(inquiries|diaspora)/(inquiry|registration|contribution)/(:num)/notes', 'Inbox::note/$1/$2/$3');
 
+    // Staff accounts: access review, new accounts, roles, banning, departments (G5-04).
+    $routes->group('staff', ['filter' => 'permission:users.manage'], static function (RouteCollection $routes): void {
+        $routes->get('/', 'Staff::index');
+        $routes->post('/', 'Staff::create');
+        $routes->post('(:num)/role', 'Staff::role/$1');
+        $routes->post('(:num)/ban', 'Staff::ban/$1');
+        $routes->post('(:num)/unban', 'Staff::unban/$1');
+        $routes->post('(:num)/department', 'Staff::department/$1');
+    });
+
     // Per-person access to the Diaspora inbox (PD-02).
     $routes->get('diaspora-access', 'DiasporaAccess::index', ['filter' => 'permission:users.manage']);
     $routes->post('diaspora-access', 'DiasporaAccess::grant', ['filter' => 'permission:users.manage']);

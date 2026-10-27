@@ -11,9 +11,8 @@ use CodeIgniter\Shield\Models\UserModel;
 
 /**
  * Staff access tasks for the quarterly access review and offboarding
- * (docs/operations.md). There is no staff-account screen in the
- * administration area yet; Shield's `shield:user` command creates accounts
- * and changes roles.
+ * (docs/operations.md). The same tasks, plus creating accounts and changing
+ * roles, are on the staff screen (/admin/staff, Controllers\Admin\Staff).
  *
  *   php spark staff list
  *   php spark staff ban <email> [--reason "Left the Ministry"]

@@ -14,6 +14,7 @@ use App\Libraries\DiasporaAccess;
 use App\Libraries\FormGuard;
 use App\Libraries\MailQueue;
 use App\Libraries\Newsletter;
+use App\Libraries\StaffAccounts;
 use App\Libraries\StaffDirectory;
 use App\Libraries\SubmissionService;
 use CodeIgniter\Config\BaseService;
@@ -162,6 +163,15 @@ class Services extends BaseService
         }
 
         return new StaffDirectory();
+    }
+
+    public static function staffAccounts(bool $getShared = true): StaffAccounts
+    {
+        if ($getShared) {
+            return static::getSharedInstance('staffAccounts');
+        }
+
+        return new StaffAccounts();
     }
 
     public static function diasporaAccess(bool $getShared = true): DiasporaAccess

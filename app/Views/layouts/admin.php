@@ -42,6 +42,7 @@
                     <li class="nav-item"><a class="nav-link" href="<?= esc(site_url('admin/newsletter'), 'attr') ?>">Newsletter</a></li>
                     <?php endif ?>
                     <?php if (auth()->user()?->can('users.manage')): ?>
+                    <li class="nav-item"><a class="nav-link" href="<?= esc(site_url('admin/staff'), 'attr') ?>">Staff accounts</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= esc(site_url('admin/diaspora-access'), 'attr') ?>">Diaspora access</a></li>
                     <?php endif ?>
                     <?php if (auth()->user()?->can('audit.view')): ?>

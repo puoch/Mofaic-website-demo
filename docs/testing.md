@@ -53,6 +53,8 @@ holds nothing else.
 | `tests/unit/ApacheRulesTest.php` | Shared hosting | The root `.htaccess` sends every request into `public/` and fails rather than serving files without `mod_rewrite`; `public/uploads/.htaccess` refuses PHP files |
 | `tests/unit/GoLiveCheckTest.php` | G5-01 | Reads every proposal and deferred item from the decision log, unsettled ones block, a decision passes only with its recorded source, shipped approvals match the log, served project files fail, demo data, missing Ministry text, backup age, Super Administrator count |
 | `tests/unit/ContentSafetyTest.php` | DEMO-01 | No placeholder text copied from other governments' sites (terms listed in the test), no Cyrillic letters (or the Latin letters they are often transliterated with) anywhere in the repository |
+| `tests/feature/StaffScreenTest.php` | GOV-01, SEC-04, G5-04 | Only Super Administrators open the staff screen; accounts created with a role and strong password, roles changed, bans with reason, department membership, all audited; nobody changes their own role or bans themselves; the last Super Administrator stays |
+| `tests/unit/FullTextQueryTest.php` | NEWS-04, PD-15 | Search words become a full-text query: every word required, prefix match, visitor operators removed, short words and stopwords left to the plain match |
 | `tests/unit/StaffCommandTest.php` | GOV-01, SEC-04 | Access review list, ban and unban, department membership, all audited; unknown accounts change nothing |
 
 ## Browser checks
