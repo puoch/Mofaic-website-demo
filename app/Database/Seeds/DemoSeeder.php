@@ -94,6 +94,7 @@ class DemoSeeder extends Seeder
         }
 
         $this->demoContent($users->findByCredentials(['email' => 'demo-ministryadmin@example.invalid']));
+        $this->demoForms((int) $ids['demo-diaspora']);
 
         if (is_cli() && ENVIRONMENT !== 'testing') {
             CLI::write('Demo accounts: demo-<role>@example.invalid (roles: ' . implode(', ', array_keys($accounts)) . ')', 'yellow');
@@ -164,6 +165,58 @@ class DemoSeeder extends Seeder
             $article['body']    = "Fictional text for testing.\n\n" . self::LABEL . '.';
             $id                 = $content->save('articles', null, $article, $adminId);
             $content->publish('articles', $id, $adminId);
+        }
+    }
+
+    /**
+     * Draft text so the public forms can be tried in development. Real
+     * wording (privacy notice, voluntary statement, headquarters contact) must
+     * come from MOFAIC; these blocks are filled only while they are empty.
+     */
+    private function demoForms(int $diasporaDepartmentId): void
+    {
+        $draft = static fn (string $what): string => '**' . self::LABEL . '. DRAFT TEXT, NOT APPROVED BY MOFAIC.** Placeholder for the ' . $what . '.';
+
+        foreach ([
+            'privacy_notice'                  => $draft('privacy notice'),
+            'diaspora_registration_statement' => $draft('statement that registration is voluntary'),
+            'headquarters_contact'            => $draft('Ministry headquarters contact'),
+        ] as $key => $body) {
+            $this->db->table('site_blocks')->where('block_key', $key)->where('body', null)->update(['body' => $body]);
+        }
+
+        if ($this->db->table('notification_rules')->countAllResults() === 0) {
+            foreach (array_keys(config('Submissions')->types) as $type) {
+                service('content')->save('notification_rules', null, [
+                    'submission_type' => $type,
+                    'recipients'      => 'demo-inbox@example.invalid',
+                    'subject'         => 'New submission {reference} (' . self::LABEL . ')',
+                    'intro'           => 'A new submission has arrived.',
+                    'is_active'       => '1',
+                ], null);
+            }
+        }
+
+        if ($this->db->table('articles')->where('category', 'diaspora_announcement')->countAllResults() === 0) {
+            $id = service('content')->save('articles', null, [
+                'category'      => 'diaspora_announcement',
+                'title'         => 'Demo diaspora announcement (' . self::LABEL . ')',
+                'summary'       => 'Fictional text for testing.',
+                'body'          => "Fictional text for testing.\n\n" . self::LABEL . '.',
+                'department_id' => (string) $diasporaDepartmentId,
+            ], null);
+            service('content')->publish('articles', $id, null);
+        }
+
+        $xa = $this->db->table('countries')->where('iso_code', 'XA')->get()->getRowArray();
+        if ($xa !== null && $this->db->table('diaspora_country_pages')->countAllResults() === 0) {
+            $id = service('content')->save('diaspora_countries', null, [
+                'country_id'    => (string) $xa['id'],
+                'title'         => 'Diaspora in Demoland (' . self::LABEL . ')',
+                'summary'       => 'Fictional text for testing.',
+                'department_id' => (string) $diasporaDepartmentId,
+            ], null);
+            service('content')->publish('diaspora_countries', $id, null);
         }
     }
 }

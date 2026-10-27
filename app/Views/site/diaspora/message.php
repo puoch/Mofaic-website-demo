@@ -4,8 +4,8 @@
 
 <?= $this->section('content') ?>
 <div class="container-xl page-body">
-    <?= view('site/partials/breadcrumb', ['crumbs' => [[$heading]]]) ?>
+    <?= view('site/partials/breadcrumb', ['crumbs' => [[lang('Site.nav.diaspora'), locale_url('diaspora')], [lang('Forms.stayInformed'), locale_url('diaspora/stay-informed')], [$heading]]]) ?>
     <h1 class="page-title"><?= esc($heading) ?></h1>
-    <p class="section-pending"><?= esc(lang('Site.sectionPending')) ?></p>
+    <p role="status" data-testid="message"><?= esc($message) ?></p>
 </div>
 <?= $this->endSection() ?>

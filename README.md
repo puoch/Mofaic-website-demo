@@ -3,9 +3,10 @@
 Public website and staff administration area for the Ministry of Foreign
 Affairs & International Cooperation (MFA&IC), Republic of South Sudan.
 
-> **Status: Gate 3 content modules, development only.** This is not an official
-> website. It holds no Ministry content, and no Ministry data has been entered.
-> The page structure exists as empty drafts that Ministry staff fill in.
+> **Status: Gate 4 diaspora and inquiries, development only.** This is not an
+> official website. It holds no Ministry content, and no Ministry data has been
+> entered. The page structure exists as empty drafts that Ministry staff fill in.
+> Public forms stay closed until MOFAIC's approved privacy notice is entered.
 > Demonstration records are fictional and labelled `DEMO, NOT OFFICIAL`.
 
 Built with PHP 8.3, CodeIgniter 4.7, CodeIgniter Shield 1.4, MySQL 8.4 and

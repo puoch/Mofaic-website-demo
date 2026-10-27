@@ -17,7 +17,7 @@ below marked *proposed* needs MOFAIC approval.
 | Database | MySQL 8.4 LTS on the same server at first, separate later if load needs it |
 | TLS | Certificate for the approved domain; HTTP redirects to HTTPS |
 | Mail | SMTP relay. Staff sign-in depends on it |
-| Scheduled tasks | cron, for queued email from Gate 4 |
+| Scheduled tasks | cron runs `php spark mail:send` every minute (queued email, PD-10) |
 
 Only `public/` is served by the web server. `app/`, `vendor/` and `writable/`
 must not be reachable from the web.
@@ -87,6 +87,17 @@ ln -sfn /srv/mofaic-web/releases/<date> /srv/mofaic-web/current
 sudo systemctl reload php8.3-fpm
 curl -fsS https://<approved-domain>/health
 ```
+
+Add the mail task once per server (as the user that runs PHP-FPM):
+
+```bash
+* * * * * cd /srv/mofaic-web/current && php spark mail:send --limit 50 >> /srv/mofaic-web/shared/writable/logs/mail.log 2>&1
+```
+
+Before opening the public forms on the live site, `encryption.key` must be set
+(form tokens and unsubscribe links are signed with it), and Ministry
+Administrators must enter the approved privacy notice and voluntary
+registration statement under **Content > Fixed text blocks**.
 
 Never run `db:seed DemoSeeder` on staging or the live site. It refuses to run in
 `production`.

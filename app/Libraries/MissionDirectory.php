@@ -64,6 +64,14 @@ class MissionDirectory
     }
 
     /**
+     * @return array<string, mixed>|null
+     */
+    public function profileById(int $id, string $locale): ?array
+    {
+        return $this->published($locale)->where('missions.id', $id)->get()->getRowArray();
+    }
+
+    /**
      * Countries a mission serves, with resident or non-resident coverage.
      *
      * @return list<array<string, mixed>>

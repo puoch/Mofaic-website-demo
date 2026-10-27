@@ -15,6 +15,9 @@ use CodeIgniter\Config\BaseConfig;
  *    missions.publish-activities (brief sections 2 and 3).
  *  - scope 'missions':   missions.manage (central Ministry administrators).
  *  - scope 'site':       content.publish-any (central Ministry administrators).
+ *  - Diaspora content (diaspora article categories and Diaspora by Country
+ *    pages) must belong to a department marked as a diaspora department, so
+ *    it is published by that department's editors (brief sections 2 and 3).
  *
  * Types with 'status' are published and unpublished; types with 'revisions'
  * keep every saved version and can be restored (content.restore).
@@ -41,7 +44,7 @@ class ContentTypes extends BaseConfig
             'slugFrom'  => 'title',
             'list'      => ['title', 'category', 'status', 'published_at'],
             'fields'    => [
-                'category'      => ['label' => 'Category', 'type' => 'select', 'options' => 'articleCategories', 'rules' => 'required|in_list[news,statement,mission_activity]'],
+                'category'      => ['label' => 'Category', 'type' => 'select', 'options' => 'articleCategories', 'rules' => 'required|in_list[news,statement,mission_activity,diaspora_announcement,diaspora_event,diaspora_newsletter]'],
                 'title'         => ['label' => 'Title', 'type' => 'text', 'rules' => 'required|max_length[255]'],
                 'slug'          => ['label' => 'Web address', 'type' => 'slug', 'rules' => 'permit_empty|max_length[190]|alpha_dash', 'help' => 'Leave empty to create it from the title.'],
                 'summary'       => ['label' => 'Summary', 'type' => 'textarea', 'rules' => 'permit_empty|max_length[1000]'],
@@ -214,17 +217,54 @@ class ContentTypes extends BaseConfig
                 'sort_order' => ['label' => 'Order', 'type' => 'number', 'rules' => 'permit_empty|integer'],
             ],
         ],
+        'diaspora_countries' => [
+            'table'     => 'diaspora_country_pages',
+            'label'     => 'Diaspora by Country',
+            'singular'  => 'Diaspora country page',
+            'titleField'=> 'title',
+            'scope'     => 'department',
+            'diaspora'  => true,
+            'status'    => true,
+            'revisions' => true,
+            'media'     => true,
+            'localized' => true,
+            'slugFrom'  => 'title',
+            'list'      => ['title', 'status', 'published_at'],
+            'fields'    => [
+                'country_id'    => ['label' => 'Country of residence', 'type' => 'select', 'options' => 'countries', 'rules' => 'required|is_natural_no_zero'],
+                'title'         => ['label' => 'Title', 'type' => 'text', 'rules' => 'required|max_length[255]'],
+                'slug'          => ['label' => 'Web address', 'type' => 'slug', 'rules' => 'permit_empty|max_length[190]|alpha_dash'],
+                'summary'       => ['label' => 'Summary', 'type' => 'textarea', 'rules' => 'permit_empty|max_length[1000]'],
+                'body'          => ['label' => 'Text', 'type' => 'markdown', 'rules' => 'permit_empty|max_length[60000]'],
+                'department_id' => ['label' => 'Department (a diaspora department)', 'type' => 'department', 'rules' => 'required|is_natural_no_zero'],
+            ],
+        ],
+        'notification_rules' => [
+            'table'     => 'notification_rules',
+            'label'     => 'Notification rules',
+            'singular'  => 'Notification rule',
+            'titleField'=> 'subject',
+            'scope'     => 'site',
+            'list'      => ['submission_type', 'subject', 'is_active'],
+            'fields'    => [
+                'submission_type' => ['label' => 'Submission type', 'type' => 'select', 'options' => 'submissionTypes', 'rules' => 'required|in_list[inquiry,registration,contribution]'],
+                'recipients'      => ['label' => 'Send to', 'type' => 'textarea', 'rules' => 'required|max_length[2000]', 'help' => 'Staff email addresses, one per line.'],
+                'subject'         => ['label' => 'Email subject', 'type' => 'text', 'rules' => 'required|max_length[190]', 'help' => 'You can use {reference}. The visitor\'s details are never included.'],
+                'intro'           => ['label' => 'Opening text', 'type' => 'textarea', 'rules' => 'permit_empty|max_length[2000]', 'help' => 'Shown above the submission type, reference and staff-area link.'],
+                'is_active'       => ['label' => 'Active', 'type' => 'checkbox'],
+            ],
+        ],
         'site_blocks' => [
             'table'     => 'site_blocks',
-            'label'     => 'Home page notices',
-            'singular'  => 'Notice',
+            'label'     => 'Fixed text blocks',
+            'singular'  => 'Text block',
             'titleField'=> 'block_key',
             'scope'     => 'site',
             'localized' => true,
             'fixedRows' => true,
             'list'      => ['block_key'],
             'fields'    => [
-                'body' => ['label' => 'Text', 'type' => 'markdown', 'rules' => 'permit_empty|max_length[5000]', 'help' => 'Only MOFAIC-approved emergency information. The area is hidden while this is empty.'],
+                'body' => ['label' => 'Text', 'type' => 'markdown', 'rules' => 'permit_empty|max_length[5000]', 'help' => 'Only MOFAIC-approved text. The area or form that uses it stays hidden while this is empty.'],
             ],
         ],
     ];
@@ -236,7 +276,17 @@ class ContentTypes extends BaseConfig
         'news'             => 'News',
         'statement'        => 'Statement',
         'mission_activity' => 'Mission activity',
+        'diaspora_announcement' => 'Diaspora announcement',
+        'diaspora_event'        => 'Diaspora event',
+        'diaspora_newsletter'   => 'Diaspora newsletter',
     ];
+
+    /**
+     * Article categories published under SSD DIASPORA, Stay Informed.
+     *
+     * @var list<string>
+     */
+    public array $diasporaArticleCategories = ['diaspora_announcement', 'diaspora_event', 'diaspora_newsletter'];
 
     /**
      * Mission categories in the confirmed MISSIONS hierarchy (brief section 2).
@@ -263,15 +313,18 @@ class ContentTypes extends BaseConfig
     ];
 
     /**
-     * Fixed text blocks: the home page emergency contacts and the official
-     * contact information on CONTACTS. Only these rows exist; they cannot be
-     * added or removed in the administration area.
+     * Fixed text blocks. Only these rows exist; they cannot be added or
+     * removed in the administration area. Public forms stay closed until the
+     * blocks they need hold approved text (Config\Submissions::$requiredBlocks).
      *
      * @var array<string, string>
      */
     public array $siteBlocks = [
         'emergency_contacts'  => 'Official emergency contacts',
         'contact_information' => 'Official contact information (CONTACTS page)',
+        'privacy_notice'      => 'Privacy notice shown on every public form',
+        'diaspora_registration_statement' => 'Diaspora registration: statement that registration is voluntary',
+        'headquarters_contact' => 'Ministry headquarters contact, shown when no mission serves a country',
     ];
 
     /**

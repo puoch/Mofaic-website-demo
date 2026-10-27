@@ -436,6 +436,30 @@ class Content extends BaseController
             $errors['mission_id'] = 'Choose the mission this activity belongs to.';
         }
 
+        if ($this->policy->isDiasporaContent($type, $input) && ! isset($errors['department_id'])) {
+            $departmentId = (int) ($input['department_id'] ?? 0);
+            if ($departmentId === 0 || ! service('departmentAccess')->isDiasporaDepartment($departmentId)) {
+                $errors['department_id'] = 'Diaspora content must belong to a diaspora department.';
+            }
+        }
+
+        if ($type === 'diaspora_countries' && ($input['country_id'] ?? '') !== '' && ! isset($errors['country_id'])) {
+            $taken = db_connect()->table('diaspora_country_pages')->where(['country_id' => (int) $input['country_id'], 'locale' => $record['locale'] ?? $this->locale()]);
+            if ($record !== null) {
+                $taken->where('id !=', $record['id']);
+            }
+            if ($taken->countAllResults() > 0) {
+                $errors['country_id'] = 'This country already has a Diaspora by Country page.';
+            }
+        }
+
+        if ($type === 'notification_rules' && isset($input['recipients']) && ! isset($errors['recipients'])) {
+            $lines = array_filter(array_map('trim', preg_split('/[\s,;]+/', $input['recipients']) ?: []));
+            if (count(\App\Libraries\SubmissionService::recipients($input['recipients'])) !== count(array_unique($lines))) {
+                $errors['recipients'] = 'Enter valid email addresses, one per line.';
+            }
+        }
+
         if ($type === 'pages' && isset($input['external_links']) && trim($input['external_links']) !== '') {
             $lines = array_filter(array_map('trim', preg_split('/\R/', $input['external_links'])));
             if (count(parse_external_links($input['external_links'])) !== count($lines)) {
@@ -530,9 +554,12 @@ class Content extends BaseController
         $locale = $record['locale'] ?? $this->locale();
 
         return match ($type) {
-            'articles'  => site_url($locale . '/news-press/' . match ($record['category']) {
-                'statement' => 'statements', 'mission_activity' => 'mission-activities', default => 'news',
-            } . '/' . $record['slug']),
+            'articles'  => in_array($record['category'], $this->types->diasporaArticleCategories, true)
+                ? site_url($locale . '/diaspora/stay-informed/' . $record['slug'])
+                : site_url($locale . '/news-press/' . match ($record['category']) {
+                    'statement' => 'statements', 'mission_activity' => 'mission-activities', default => 'news',
+                } . '/' . $record['slug']),
+            'diaspora_countries' => site_url($locale . '/diaspora/countries/' . $record['slug']),
             'pages'     => site_url($locale . '/' . $record['section'] . '/' . $record['path']),
             'galleries' => site_url($locale . '/news-press/gallery/' . $record['slug']),
             'archives'  => site_url($locale . '/archives/' . $record['slug']),

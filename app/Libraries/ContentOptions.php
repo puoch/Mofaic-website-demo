@@ -39,6 +39,7 @@ class ContentOptions
             'galleries'         => $this->pairs('galleries', 'title', $locale),
             'pages'             => $this->pages($locale, $record),
             'orgUnits'          => $this->orgUnits($locale, $record),
+            'submissionTypes'   => array_map(static fn (array $t): string => $t['label'], config('Submissions')->types),
             default             => [],
         };
     }
@@ -56,6 +57,12 @@ class ContentOptions
 
         if ($this->policy->allowedDepartmentIds($user) === [] && ! $user->can('content.publish-any')) {
             unset($categories['news'], $categories['statement']);
+        }
+
+        if (! $this->policy->canPublishDiaspora($user)) {
+            foreach ($this->types->diasporaArticleCategories as $category) {
+                unset($categories[$category]);
+            }
         }
 
         return $categories;

@@ -118,6 +118,10 @@ if (! function_exists('article_url')) {
      */
     function article_url(array $article): string
     {
+        if (in_array($article['category'], config('ContentTypes')->diasporaArticleCategories, true)) {
+            return locale_url('diaspora/stay-informed/' . $article['slug']);
+        }
+
         $segment = match ($article['category']) {
             'statement'        => 'statements',
             'mission_activity' => 'mission-activities',

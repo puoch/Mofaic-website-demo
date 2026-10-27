@@ -62,19 +62,42 @@ This is a proposal for review.
 | `missions`, `mission_coverage`, `countries` | Missions abroad and foreign missions, which countries each serves (resident or non-resident) |
 | `media`, `media_links` | Files and external links, attached to any record |
 | `content_revisions` | A full copy of each saved version |
-| `quick_links`, `social_accounts`, `site_blocks`, `org_units` | Home page links, official accounts, emergency contacts and contact information, organogram |
+| `quick_links`, `social_accounts`, `site_blocks`, `org_units` | Home page links, official accounts, fixed text blocks (emergency contacts, contact information, privacy notice and others), organogram |
+
+## Diaspora and inquiries (Gate 4)
+
+| Part | Where | Purpose |
+| --- | --- | --- |
+| Forms | `app/Controllers/Site/Contacts.php`, `Site/Diaspora.php`, `Site/FormController.php` | Inquiry, registration with mission choice, contribution, newsletter subscription |
+| Spam protection | `app/Libraries/FormGuard.php` | Hidden field, signed form time, hourly limit per address (PD-11) |
+| Submissions | `app/Libraries/SubmissionService.php`, `app/Config/Submissions.php` | Storing, references, notifications, status, assignment, notes |
+| Inboxes | `app/Controllers/Admin/Inbox.php` | Public Inquiries Inbox and Diaspora inbox |
+| Diaspora access | `app/Libraries/DiasporaAccess.php`, `Admin/DiasporaAccess.php` | Per-person grants (PD-02) |
+| Newsletter | `app/Libraries/Newsletter.php`, `Admin/Newsletter.php` | Double opt-in, unsubscribe, sending an issue |
+| Mail | `app/Libraries/MailQueue.php`, `app/Commands/SendMail.php` | Queued email sent by `php spark mail:send` (PD-10) |
+
+### Gate 4 tables
+
+| Table | Contents |
+| --- | --- |
+| `inquiries` | Public inquiries |
+| `diaspora_registrations`, `diaspora_contributions` | Diaspora submissions (no identity, financial or file fields) |
+| `submission_notes` | Staff-only notes on any submission |
+| `newsletter_subscriptions`, `newsletter_sends` | Subscriptions (kept apart from registrations) and which issues were sent |
+| `mail_queue` | Outgoing email |
+| `notification_rules` | Who is emailed for each submission type, and the subject and opening text |
+| `diaspora_country_pages` | Diaspora by Country, one page per country of residence |
+
+The registration flow keeps only the new registration's id in the visitor's
+session, so the mission-choice and confirmation pages cannot be opened for
+someone else's registration.
 
 ## Modules planned for later gates (proposed)
 
 | Gate | Module |
 | --- | --- |
-| 4 | Contacts (public inquiry form and Public Inquiries Inbox) |
-| 4 | Diaspora (registration, referral to missions, contributions, newsletter, Diaspora inbox) |
-| 4 | Notifications (rules per submission type, queued email) |
+| 5 | Production readiness: accessibility checks, load baseline, backups and restore drill, monitoring, handover |
 
-Each module will live under `app/Modules/<Name>/` with its own controllers,
-models, views, migrations and tests, and will use the shared permission and
-audit services rather than its own.
 
 ## Data in the foundation
 

@@ -17,6 +17,8 @@ use Config\ContentTypes;
  *  - Mission activities are published only by central Ministry administrators.
  *  - Mission records, countries and site-wide lists belong to central
  *    Ministry administrators.
+ *  - Diaspora content belongs to a diaspora department, so it is published
+ *    by that department's editors (and central administrators).
  */
 class ContentPolicy
 {
@@ -68,6 +70,31 @@ class ContentPolicy
         return $this->canEdit($user, $type);
     }
 
+    /**
+     * Diaspora announcements, events, newsletters and Diaspora by Country pages.
+     *
+     * @param array<string, mixed> $record
+     */
+    public function isDiasporaContent(string $type, array $record): bool
+    {
+        if (! empty($this->types->type($type)['diaspora'])) {
+            return true;
+        }
+
+        return $type === 'articles' && in_array($record['category'] ?? null, $this->types->diasporaArticleCategories, true);
+    }
+
+    /**
+     * May the user publish diaspora content in at least one department?
+     */
+    public function canPublishDiaspora(User $user): bool
+    {
+        $diaspora = $this->departments->diasporaDepartmentIds();
+        $allowed  = $this->allowedDepartmentIds($user);
+
+        return $diaspora !== [] && ($allowed === null || array_intersect($diaspora, $allowed) !== []);
+    }
+
     public function canRestore(User $user, string $type, array $record): bool
     {
         return $user->can('content.restore') && $this->canEdit($user, $type, $record);
@@ -97,6 +124,12 @@ class ContentPolicy
         }
 
         $departmentId = isset($record['department_id']) && $record['department_id'] !== '' ? (int) $record['department_id'] : null;
+
+        if ($this->isDiasporaContent($type, $record)) {
+            return $departmentId !== null
+                && $this->departments->isDiasporaDepartment($departmentId)
+                && $this->departments->canPublishIn($user, $departmentId);
+        }
 
         if ($departmentId === null) {
             return $user->can('content.publish-any');

@@ -31,6 +31,7 @@ error pages that hide technical details.
 | `Filters.php` | CSRF protection, secure headers, sign-in requirement for `/admin` |
 | `Session.php`, `Cookie.php`, `Security.php` | Session and cookie names, CSRF token name |
 | `ContentTypes.php` | Every editable content type: table, fields, validation, scope, whether it keeps versions or takes media; article and mission categories; the *Minister's engagements* tag |
+| `Submissions.php` | Submission types and their inboxes, inbox statuses (PD-05), contribution categories, which inquiry and registration fields are required (PD-08), which text blocks open each form, spam limits (PD-11) |
 | `Media.php` | Allowed file types and sizes for uploads (PD-12), and which kinds may link to an external address |
 
 ## Adding a language later

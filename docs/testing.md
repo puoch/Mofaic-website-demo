@@ -38,6 +38,15 @@ holds nothing else.
 | `tests/feature/PublicContentTest.php` | HOME-01 to HOME-05, ABT-01 to ABT-04, ASS-01, SRV-01 to SRV-06, NEWS-01 to NEWS-06, ARC-01, ARC-03, CON-01 | Only published content appears, drafts and unpublished parents return 404, search and date filters, tags, galleries, Markdown escaping, empty-state messages, emergency and contact text hidden until entered |
 | `tests/feature/MissionsTest.php` | MIS-01 to MIS-06, HOME-06 | Directory by category, profiles, coverage, related missions, country finder, neutral no-match message |
 | `tests/feature/AdminContentTest.php` | GOV-02, GOV-03, GOV-05, GOV-06, HOME-03 | Editors publish in their departments without approval, cannot reach others, mission activities, restore, coverage, 403 screens |
+| `tests/unit/FormGuardTest.php` | SEC-02 | Hidden field, too fast, expired, tampered or borrowed tokens, hourly limit |
+| `tests/unit/SubmissionServiceTest.php` | CON-03, CON-05, GOV-07, SEC-04 | References, notifications per type with no personal details, audit without personal details, status, assignment, notes |
+| `tests/unit/NewsletterTest.php` | DIA-09, DIA-10 | Double opt-in, link expiry, no flooding, signed unsubscribe, issue sent once to confirmed subscribers only |
+| `tests/unit/MailQueueTest.php` | CON-03 | Queue order, retries, failed messages |
+| `tests/unit/DiasporaAccessTest.php` | GOV-04 | No role has access, eligibility, grants audited, no self-grant |
+| `tests/feature/ContactFormTest.php` | CON-01 to CON-04, EXC-01 | Form closed without privacy notice, valid inquiry and reference, validation, spam checks, no uploads, separate inbox |
+| `tests/feature/DiasporaFormsTest.php` | DIA-01 to DIA-12, EXC-02 | Voluntary statement, no identity/financial/file fields, required fields, all serving missions listed and none chosen, only listed missions accepted, nothing sent to missions, no-match, separate newsletter opt-in, anonymous contributions, Stay Informed, Diaspora by Country |
+| `tests/feature/InboxTest.php` | CON-04, CON-05, DIA-13, GOV-04, SEC-04 | No role opens the Diaspora inbox, per-person grants, audited views, view-only cannot change, status, assignment, notes, inbox separation, access screen |
+| `tests/feature/DiasporaPublishingTest.php` | DIA-09, DIA-11, DIA-12 | Diaspora editors publish directly, diaspora department required, no mission activities, one page per country, newsletter sending, notification rules |
 
 ## Not covered yet
 
@@ -45,7 +54,9 @@ holds nothing else.
   which feature tests skip. The tests check that it is switched on, and it was
   checked by hand with `curl` against `php spark serve`.
 - Browser checks: keyboard navigation, screen reader, sticky header on scroll,
-  mobile menu, and WCAG 2.2 AA scans. Not run at Gate 3; planned for Gate 5.
+  mobile menu, and WCAG 2.2 AA scans. Not run at Gates 3 or 4; planned for Gate 5.
+- Real email delivery. Tests stop at the mail queue; `mail:send` has not been
+  run against an SMTP relay.
 - An upload through the real editing form. The media tests replace PHP's upload
   check with a test double, because `is_uploaded_file()` only accepts real HTTP
   uploads.

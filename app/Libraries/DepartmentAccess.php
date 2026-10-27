@@ -57,6 +57,21 @@ class DepartmentAccess
         return $user->can('missions.publish-activities');
     }
 
+    public function isDiasporaDepartment(int $departmentId): bool
+    {
+        return $this->db->table('departments')->where(['id' => $departmentId, 'is_diaspora' => 1])->countAllResults() > 0;
+    }
+
+    /**
+     * @return list<int>
+     */
+    public function diasporaDepartmentIds(): array
+    {
+        $rows = $this->db->table('departments')->select('id')->where('is_diaspora', 1)->get()->getResultArray();
+
+        return array_map(static fn (array $row): int => (int) $row['id'], $rows);
+    }
+
     public function assign(User $user, int $departmentId): void
     {
         if ($this->isMember($user, $departmentId)) {
