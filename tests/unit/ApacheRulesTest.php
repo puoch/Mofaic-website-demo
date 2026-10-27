@@ -20,6 +20,16 @@ final class ApacheRulesTest extends CIUnitTestCase
         $this->assertStringContainsString('<IfModule !mod_rewrite.c>', $rules, 'Without mod_rewrite nothing may be served.');
     }
 
+    public function testTheFrontControllerDoesNotNeedPathInfo(): void
+    {
+        $rules = (string) file_get_contents(FCPATH . '.htaccess');
+
+        // InfinityFree answers 404 for index.php/<path>; the path comes from REQUEST_URI.
+        $this->assertStringContainsString('RewriteRule ^ index.php [L,QSA]', $rules);
+        $this->assertStringNotContainsString('index.php/$1', $rules);
+        $this->assertSame('REQUEST_URI', config('App')->uriProtocol);
+    }
+
     public function testUploadedFilesCannotRunAsCode(): void
     {
         $rules = (string) file_get_contents(FCPATH . 'uploads/.htaccess');
