@@ -54,6 +54,6 @@ $nav    = config(Config\Navigation::class);
         </div>
     </footer>
 
-    <script src="<?= base_url('assets/vendor/bootstrap-5.3.8/js/bootstrap.bundle.min.js') ?>" defer></script>
+    <?= bootstrap_js() ?>
 </body>
 </html>

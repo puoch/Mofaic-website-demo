@@ -213,4 +213,19 @@ class ContentSecurityPolicy extends BaseConfig
      * Replace nonce tag automatically?
      */
     public bool $autoNonce = true;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        // PD-17: with assets.bootstrapSource = cdn, allow Bootstrap from the
+        // CDN host and nothing else from it.
+        $assets = new Assets();
+
+        if ($assets->usesCdn()) {
+            foreach (['scriptSrc', 'scriptSrcElem', 'styleSrc', 'styleSrcElem'] as $directive) {
+                $this->{$directive} = array_merge((array) $this->{$directive}, [$assets->cdnOrigin()]);
+            }
+        }
+    }
 }
