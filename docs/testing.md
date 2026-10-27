@@ -47,14 +47,35 @@ holds nothing else.
 | `tests/feature/DiasporaFormsTest.php` | DIA-01 to DIA-12, EXC-02 | Voluntary statement, no identity/financial/file fields, required fields, all serving missions listed and none chosen, only listed missions accepted, nothing sent to missions, no-match, separate newsletter opt-in, anonymous contributions, Stay Informed, Diaspora by Country |
 | `tests/feature/InboxTest.php` | CON-04, CON-05, DIA-13, GOV-04, SEC-04 | No role opens the Diaspora inbox, per-person grants, audited views, view-only cannot change, status, assignment, notes, inbox separation, access screen |
 | `tests/feature/DiasporaPublishingTest.php` | DIA-09, DIA-11, DIA-12 | Diaspora editors publish directly, diaspora department required, no mission activities, one page per country, newsletter sending, notification rules |
+| `tests/unit/LocalAssetsTest.php` | PRI-09, PD-17 | Every stylesheet and script the layouts load is in the repository, Bootstrap matches its checksums, no view loads scripts or styles from another host |
+| `tests/unit/GoLiveCheckTest.php` | G5-01 | Reads every proposal and deferred item from the decision log, unsettled ones block, a decision passes only with its recorded source, demo data, missing Ministry text, backup age, Super Administrator count |
+| `tests/unit/ContentSafetyTest.php` | DEMO-01 | No placeholder text copied from other governments' sites (terms listed in the test), no Cyrillic letters (or the Latin letters they are often transliterated with) anywhere in the repository |
+| `tests/unit/StaffCommandTest.php` | GOV-01, SEC-04 | Access review list, ban and unban, department membership, all audited; unknown accounts change nothing |
+
+## Browser checks
+
+`tests/browser/check.mjs` (Node.js, Playwright, axe-core) checks pages in a
+real browser: WCAG 2.2 AA rules, outside requests, fixed header, skip link,
+mobile menu and reflow. It needs a running copy of the site, so CI does not
+run it. See [accessibility.md](accessibility.md) for how to run it and the
+Gate 5 results.
+
+## Backup scripts
+
+`scripts/restore-drill.sh` is the test for `scripts/backup.sh` and
+`scripts/restore.sh`. It needs MySQL and was run by hand at Gate 5; the
+evidence is in [evidence/gate-5/restore-drill.md](evidence/gate-5/restore-drill.md).
 
 ## Not covered yet
 
 - The Content Security Policy header itself. It is added when a response is sent,
   which feature tests skip. The tests check that it is switched on, and it was
-  checked by hand with `curl` against `php spark serve`.
-- Browser checks: keyboard navigation, screen reader, sticky header on scroll,
-  mobile menu, and WCAG 2.2 AA scans. Not run at Gates 3 or 4; planned for Gate 5.
+  checked by hand with `curl` against `php spark serve`. At Gate 5 the browser
+  check also saw it enforced: Chromium refused an injected inline script until
+  the check was told to bypass the policy.
+- Screen readers, zoom, Firefox and Safari, and content written by staff. The
+  automated browser checks ran in Chromium only (see accessibility.md).
+- The browser checks and the restore drill in CI. Both ran by hand at Gate 5.
 - Real email delivery. Tests stop at the mail queue; `mail:send` has not been
   run against an SMTP relay.
 - An upload through the real editing form. The media tests replace PHP's upload

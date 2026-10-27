@@ -20,6 +20,7 @@ not be treated as Ministry policy.
 | 2026-10-26 | Coding approved ("APPROVE GATE 2: START CODING"). Gate 1 was not reviewed separately | Sponsor |
 | 2026-10-27 | Gate 3 approved ("APPROVE GATE 3: START CODING") | Sponsor |
 | 2026-10-27 | Gate 4 approved ("APPROVE GATE 4: START CODING"). The G3-01 to G3-05 proposals are still unreviewed | Sponsor |
+| 2026-10-27 | Gate 5 started on the sponsor's "proceed" after the Gate 4 pull request. This does not approve any G3 or G4 proposal | Sponsor |
 
 ## Proposed, in use as configurable defaults
 
@@ -50,8 +51,13 @@ not be treated as Ministry policy.
 | G4-05 | A newsletter issue is a published "Diaspora newsletter" article, sent once, as plain text with the summary and a link to the website | `Libraries\Newsletter::sendIssue()` |
 | G4-06 | Staff cannot delete submissions or subscriptions, and none are deleted automatically, until retention and deletion rules exist (deferred items 6 and 13) | — |
 | G4-07 | Personal data is protected by access control, TLS and audit. It is not encrypted column by column; at-rest encryption is part of deferred item 10 | — |
-| — | Permission matrix in `docs/permissions.md` | `Config\AuthGroups` |
-| — | Server baseline: Ubuntu 24.04 LTS, Nginx, PHP-FPM 8.3, MySQL 8.4 | `docs/deployment.md` |
+| G2-01 | Permission matrix in `docs/permissions.md` | `Config\AuthGroups` |
+| G5-01 | `php spark golive:check` blocks the live launch while any proposal in this table or any deferred item below is not recorded as settled in `Config\GoLive` | `Libraries\GoLiveCheck` |
+| G5-02 | Browser and accessibility checks (axe-core, Playwright) are a development tool run before each release, not installed on the live server | `tests/browser/` |
+| G5-03 | Backups: nightly at 01:30, kept 14 days on the server and copied off it; monthly restore drill straight after a backup, with the evidence kept. Real targets are deferred item 9 | `scripts/`, `docs/deployment.md` |
+| G5-04 | Quarterly access review and same-day offboarding (ban, never delete), at least two Super Administrators, using `php spark staff` until there is a staff-account screen | `docs/operations.md`, `Commands\Staff` |
+| G5-05 | Links use the site accent colour (7.2:1 on the footer band) instead of Bootstrap's blue (4.1:1, fails AA). Brand colours are deferred item 12 | `public/assets/css/site.css` |
+| G2-02 | Server baseline: Ubuntu 24.04 LTS, Nginx, PHP-FPM 8.3, MySQL 8.4 | `docs/deployment.md` |
 
 ## Proposed, not used yet
 
