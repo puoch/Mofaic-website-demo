@@ -3,7 +3,8 @@
 Public website and staff administration area for the Ministry of Foreign
 Affairs & International Cooperation (MFA&IC), Republic of South Sudan.
 
-> **Status: Gate 4 diaspora and inquiries, development only.** This is not an
+> **Status: Gate 5 production readiness, development only. Not ready for the
+> live launch:** `php spark golive:check` lists what still blocks it. This is not an
 > official website. It holds no Ministry content, and no Ministry data has been
 > entered. The page structure exists as empty drafts that Ministry staff fill in.
 > Public forms stay closed until MOFAIC's approved privacy notice is entered.
@@ -36,7 +37,8 @@ Full instructions: [docs/setup.md](docs/setup.md).
 composer test
 ```
 
-See [docs/testing.md](docs/testing.md) for running the tests against MySQL.
+See [docs/testing.md](docs/testing.md) for running the tests against MySQL, and
+[docs/accessibility.md](docs/accessibility.md) for the browser checks.
 
 ## Documentation
 
@@ -47,7 +49,9 @@ See [docs/testing.md](docs/testing.md) for running the tests against MySQL.
 | [docs/versions.md](docs/versions.md) | Supported and pinned versions |
 | [docs/architecture.md](docs/architecture.md) | Modules, data and request flow |
 | [docs/permissions.md](docs/permissions.md) | Roles, permissions and department scope |
-| [docs/deployment.md](docs/deployment.md) | VPS staging and on-premises production |
+| [docs/deployment.md](docs/deployment.md) | VPS staging and on-premises production, backups, the go-live check |
+| [docs/operations.md](docs/operations.md) | Runbook, access review, offboarding, capacity, training |
+| [docs/accessibility.md](docs/accessibility.md) | WCAG 2.2 AA checks, results and what still needs a person |
 | [docs/testing.md](docs/testing.md) | Test suites and how to run them |
 | [docs/decision-log.md](docs/decision-log.md) | Confirmed, proposed and deferred decisions |
 
