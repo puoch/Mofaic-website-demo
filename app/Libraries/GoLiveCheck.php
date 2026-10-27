@@ -74,6 +74,41 @@ class GoLiveCheck
         $this->add('Server', 'PHP does not show errors to visitors', ! filter_var(ini_get('display_errors'), FILTER_VALIDATE_BOOL), 'display_errors = Off in php.ini');
         $this->add('Server', 'PHP does not announce its version', ! filter_var(ini_get('expose_php'), FILTER_VALIDATE_BOOL) ? 'pass' : 'warn', 'expose_php = Off in the PHP-FPM php.ini (this reads the CLI php.ini, so confirm on the web server too)');
         $this->add('Server', 'writable/ is outside the web root', ! str_starts_with(realpath(WRITEPATH) ?: WRITEPATH, realpath(FCPATH) ?: FCPATH));
+        $this->add('Server', 'Project files are not served by the web server', ...$this->projectFilesHidden($app->baseURL));
+    }
+
+    /**
+     * Asks the site for composer.json, which sits next to .env. If it comes
+     * back, the document root is the project folder rather than public/ and
+     * .env with its passwords may be readable too (shared hosting, see
+     * docs/shared-hosting.md).
+     *
+     * @return array{0: string, 1: string} status and detail
+     */
+    private function projectFilesHidden(string $baseURL): array
+    {
+        $url    = rtrim($baseURL, '/') . '/composer.json';
+        $status = $this->httpStatus($url);
+
+        return match (true) {
+            $status === null => ['warn', "could not reach {$url} from this server; open it in a browser and expect 404"],
+            $status === 200  => ['fail', "{$url} is served: point the document root at public/ or add the root .htaccess"],
+            default          => ['pass', "{$url} answers {$status}"],
+        };
+    }
+
+    /** The HTTP status for a GET of $url, or null when it cannot be reached. */
+    protected function httpStatus(string $url): ?int
+    {
+        $context = stream_context_create(['http' => ['method' => 'GET', 'timeout' => 5, 'ignore_errors' => true, 'follow_location' => 0]]);
+
+        if (@file_get_contents($url, false, $context, 0, 1) === false) {
+            return null;
+        }
+
+        $headers = function_exists('http_get_last_response_headers') ? http_get_last_response_headers() : ($http_response_header ?? []);
+
+        return preg_match('#^HTTP/\S+\s+(\d{3})#', (string) ($headers[0] ?? ''), $m) === 1 ? (int) $m[1] : null;
     }
 
     private function content(): void

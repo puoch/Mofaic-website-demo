@@ -1,0 +1,20 @@
+# Only for hosting where the document root cannot be set to public/ (some
+# shared hosting; see docs/shared-hosting.md). Every request is sent into
+# public/, so .env, app/, vendor/, writable/ and the rest are never served.
+# Pointing the document root at public/ is still the safer setup.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Without mod_rewrite, serve nothing from here rather than everything.
+<IfModule !mod_rewrite.c>
+	<IfModule authz_core_module>
+		Require all denied
+	</IfModule>
+	<IfModule !authz_core_module>
+		Deny from all
+	</IfModule>
+</IfModule>

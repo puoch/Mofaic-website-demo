@@ -47,3 +47,11 @@ Options -Indexes
 # Disable server signature start
 ServerSignature Off
 # Disable server signature end
+
+# Headers for files Apache serves itself (stylesheets, scripts, uploads). The
+# application adds its own to the pages it builds; this matches the Nginx
+# example in docs/deployment.md for Apache hosting.
+<IfModule mod_headers.c>
+	Header always set X-Content-Type-Options "nosniff"
+	Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
+</IfModule>

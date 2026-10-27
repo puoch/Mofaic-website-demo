@@ -131,6 +131,7 @@ _modules/*
 # Uploaded public media
 /public/uploads/*
 !/public/uploads/index.html
+!/public/uploads/.htaccess
 
 # Browser check tooling (tests/browser)
 /tests/browser/node_modules/

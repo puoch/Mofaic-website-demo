@@ -39,14 +39,27 @@ final class GoLiveCheckTest extends StaffTestCase
     /**
      * @return array<string, array{area: string, check: string, status: string, detail: string}>
      */
-    private function results(?GoLive $config = null): array
+    private function results(?GoLive $config = null, ?int $composerJsonStatus = 404): array
     {
         $config ??= new GoLive();
         $config->backupDirectory = $this->backups;
 
+        // No real web request: answer as the web server would.
+        $check = new class ($config, $composerJsonStatus) extends GoLiveCheck {
+            public function __construct(GoLive $config, private readonly ?int $status)
+            {
+                parent::__construct($config);
+            }
+
+            protected function httpStatus(string $url): ?int
+            {
+                return $this->status;
+            }
+        };
+
         $results = [];
 
-        foreach ((new GoLiveCheck($config))->run() as $r) {
+        foreach ($check->run() as $r) {
             $results[$r['check']] = $r;
         }
 
@@ -116,6 +129,15 @@ final class GoLiveCheckTest extends StaffTestCase
         \CodeIgniter\Config\Factories::injectMock('config', 'Assets', $assets);
 
         $this->assertSame('warn', $this->results()['Bootstrap is served from this server']['status']);
+    }
+
+    public function testFailsWhenTheWebServerServesProjectFiles(): void
+    {
+        $check = 'Project files are not served by the web server';
+
+        $this->assertSame('pass', $this->results(null, 404)[$check]['status']);
+        $this->assertSame('fail', $this->results(null, 200)[$check]['status']);
+        $this->assertSame('warn', $this->results(null, null)[$check]['status']);
     }
 
     public function testTheTestEnvironmentIsNotReady(): void
