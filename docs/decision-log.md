@@ -22,6 +22,7 @@ not be treated as Ministry policy.
 | 2026-10-27 | Gate 4 approved ("APPROVE GATE 4: START CODING"). The G3-01 to G3-05 proposals are still unreviewed | Sponsor |
 | 2026-10-27 | Gate 5 started on the sponsor's "proceed" after the Gate 4 pull request. This does not approve any G3 or G4 proposal | Sponsor |
 | 2026-10-27 | Approved 33 proposals on the sheet: PD-01, PD-03 to PD-13, PD-15, PD-16, G2-01, G2-02, G3-01 to G3-05, G4-01 to G4-07 and G5-01 to G5-05. PD-04, PD-13, G4-01, G4-06, G4-07 and G5-03 are approved as interim defaults; the deferred items they wait on (2, 6, 9, 10 and 13) stay open | Sponsor, proposal sheet |
+| 2026-10-27 | An early test copy runs on InfinityFree's free tier, deployed from GitHub. Test and demonstration only; the hosting decision above is unchanged | Sponsor, thread message |
 | 2026-10-27 | PD-17 changed: support both a CDN and serving from the Ministry's own server, because the initial phase on the VPS needs the CDN. Implemented as a per-server switch (`assets.bootstrapSource`), local by default | Sponsor, thread message |
 
 ## Proposed, in use as configurable defaults

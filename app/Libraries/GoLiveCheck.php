@@ -61,7 +61,8 @@ class GoLiveCheck
         $this->add('Server', 'Every request is forced to https', $app->forceGlobalSecureRequests, 'set app.forceGlobalSecureRequests = true');
         $this->add('Server', 'Cookies are sent over https only', config('Cookie')->secure, 'set cookie.secure = true');
         $this->add('Server', 'Content Security Policy is on', $app->CSPEnabled);
-        $this->add('Server', 'Bootstrap is served from this server', config('Assets')->usesCdn() ? 'warn' : 'pass', 'assets.bootstrapSource = cdn, so visitors\' browsers contact ' . config('Assets')->cdnOrigin() . '. Use local on the on-premises server (PD-17)');
+        $assets = config('Assets');
+        $this->add('Server', 'Bootstrap is served from this server', $assets->usesCdn() ? 'warn' : 'pass', $assets->usesCdn() ? 'assets.bootstrapSource = cdn, so visitors\' browsers contact ' . $assets->cdnOrigin() . '. Use local on the on-premises server (PD-17)' : 'assets.bootstrapSource = local');
         $this->add('Server', 'encryption.key is set (32 bytes)', strlen((string) config('Encryption')->key) === 32, 'generate with php spark key:generate');
 
         $db = db_connect();
@@ -75,6 +76,10 @@ class GoLiveCheck
         $this->add('Server', 'PHP does not announce its version', ! filter_var(ini_get('expose_php'), FILTER_VALIDATE_BOOL) ? 'pass' : 'warn', 'expose_php = Off in the PHP-FPM php.ini (this reads the CLI php.ini, so confirm on the web server too)');
         $this->add('Server', 'writable/ is outside the web root', ! str_starts_with(realpath(WRITEPATH) ?: WRITEPATH, realpath(FCPATH) ?: FCPATH));
         $this->add('Server', 'Project files are not served by the web server', ...$this->projectFilesHidden($app->baseURL));
+
+        $hosting = config('Hosting');
+        $this->add('Server', 'Maintenance page is switched off', ! $hosting->maintenanceEnabled(), 'remove hosting.maintenanceToken from .env');
+        $this->add('Server', 'Email is sent by cron, not during page requests', $hosting->sendMailInRequest ? 'warn' : 'pass', 'hosting.sendMailInRequest is for hosts without cron; run php spark mail:send from cron instead (PD-10)');
     }
 
     /**
@@ -87,28 +92,45 @@ class GoLiveCheck
      */
     private function projectFilesHidden(string $baseURL): array
     {
-        $url    = rtrim($baseURL, '/') . '/composer.json';
-        $status = $this->httpStatus($url);
+        $url      = rtrim($baseURL, '/') . '/composer.json';
+        $response = $this->fetch($url);
 
-        return match (true) {
-            $status === null => ['warn', "could not reach {$url} from this server; open it in a browser and expect 404"],
-            $status === 200  => ['fail', "{$url} is served: point the document root at public/ or add the root .htaccess"],
-            default          => ['pass', "{$url} answers {$status}"],
-        };
+        if ($response === null) {
+            return ['warn', "could not reach {$url} from this server; open it in a browser and expect 404"];
+        }
+
+        [$status, $body] = $response;
+
+        // Some free hosts answer scripts with a browser check page instead.
+        if ($status === 200 && str_contains($body, 'codeigniter4/framework')) {
+            return ['fail', "{$url} is served: point the document root at public/ or add the root .htaccess"];
+        }
+
+        if ($status === 200) {
+            return ['warn', "{$url} answered with another page (perhaps the host's browser check); open it in a browser and expect 404"];
+        }
+
+        return ['pass', "{$url} answers {$status}"];
     }
 
-    /** The HTTP status for a GET of $url, or null when it cannot be reached. */
-    protected function httpStatus(string $url): ?int
+    /**
+     * GET $url: the status and the start of the body, or null when it cannot
+     * be reached.
+     *
+     * @return array{int, string}|null
+     */
+    protected function fetch(string $url): ?array
     {
         $context = stream_context_create(['http' => ['method' => 'GET', 'timeout' => 5, 'ignore_errors' => true, 'follow_location' => 0]]);
+        $body    = @file_get_contents($url, false, $context, 0, 65536);
 
-        if (@file_get_contents($url, false, $context, 0, 1) === false) {
+        if ($body === false) {
             return null;
         }
 
         $headers = function_exists('http_get_last_response_headers') ? http_get_last_response_headers() : ($http_response_header ?? []);
 
-        return preg_match('#^HTTP/\S+\s+(\d{3})#', (string) ($headers[0] ?? ''), $m) === 1 ? (int) $m[1] : null;
+        return preg_match('#^HTTP/\S+\s+(\d{3})#', (string) ($headers[0] ?? ''), $m) === 1 ? [(int) $m[1], $body] : null;
     }
 
     private function content(): void

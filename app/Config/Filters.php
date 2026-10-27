@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use App\Filters\SendQueuedMail;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
 use CodeIgniter\Filters\CSRF;
@@ -34,6 +35,7 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'sendmail'      => SendQueuedMail::class,
     ];
 
     /**
@@ -106,5 +108,7 @@ class Filters extends BaseFilters
      */
     public array $filters = [
         'session' => ['before' => ['admin', 'admin/*']],
+        // Only does anything with hosting.sendMailInRequest (Config\Hosting).
+        'sendmail' => ['after' => ['admin', 'admin/*']],
     ];
 }

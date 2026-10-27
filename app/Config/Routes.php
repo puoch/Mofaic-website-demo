@@ -13,6 +13,9 @@ $routes->get('/', static fn () => redirect()->to(site_url(config('App')->default
 
 $routes->get('health', 'Health::index');
 
+// Setup page for hosts without SSH; 404 unless hosting.maintenanceToken is set.
+$routes->match(['GET', 'POST'], 'maintenance', 'Maintenance::index');
+
 // Staff sign-in. Public registration and magic-link sign-in are switched off:
 // staff accounts are created by a Super Administrator.
 service('auth')->routes($routes, ['except' => ['register', 'magic-link']]);

@@ -61,4 +61,18 @@ class Media extends BaseConfig
      * @var list<string>
      */
     public array $externalKinds = ['video', 'audio'];
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        // A host may refuse large files whatever PHP allows (Config\Hosting).
+        $capKb = (new Hosting())->maxUploadMegabytes * 1024;
+
+        if ($capKb > 0) {
+            foreach ($this->kinds as $kind => $rules) {
+                $this->kinds[$kind]['maxKb'] = min($rules['maxKb'], $capKb);
+            }
+        }
+    }
 }

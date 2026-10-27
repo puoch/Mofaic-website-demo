@@ -9,7 +9,8 @@ use CodeIgniter\I18n\Time;
 
 /**
  * Outgoing email is queued and sent by a scheduled command, so public forms
- * never wait on the mail server (PD-10). Mail goes through the SMTP relay set
+ * never wait on the mail server (PD-10). Hosts without cron can send from
+ * the request instead (Config\Hosting::$sendMailInRequest). Mail goes through the SMTP relay set
  * in .env, which on the live site is MOFAIC's own relay (brief section 6
  * item 7 leaves the transport open).
  */
@@ -32,28 +33,38 @@ class MailQueue
             'created_at' => Time::now('UTC')->toDateTimeString(),
         ]);
 
-        return (int) $this->db->insertID();
+        $id = (int) $this->db->insertID();
+
+        // Hosting without cron (Config\Hosting): send single messages now.
+        // Newsletter issues stay queued and go out a few per staff page.
+        if ($purpose !== 'newsletter' && config('Hosting')->sendMailInRequest) {
+            $this->send(1, null, $id);
+        }
+
+        return $id;
     }
 
     /**
      * Sends up to $limit queued messages. Returns [sent, failed].
      *
      * @param callable(array<string, mixed>): ?string|null $transport Returns an error message or null. Defaults to the Email service.
+     * @param int|null                                       $onlyId    Send just this message, if it is still queued.
      *
      * @return array{int, int}
      */
-    public function send(int $limit = 50, ?callable $transport = null): array
+    public function send(int $limit = 50, ?callable $transport = null, ?int $onlyId = null): array
     {
         $transport ??= $this->smtp(...);
         $sent      = 0;
         $failed    = 0;
 
-        $rows = $this->db->table('mail_queue')
-            ->where('status', 'queued')
-            ->orderBy('id')
-            ->limit($limit)
-            ->get()
-            ->getResultArray();
+        $query = $this->db->table('mail_queue')->where('status', 'queued');
+
+        if ($onlyId !== null) {
+            $query->where('id', $onlyId);
+        }
+
+        $rows = $query->orderBy('id')->limit($limit)->get()->getResultArray();
 
         foreach ($rows as $row) {
             $error    = $transport($row);

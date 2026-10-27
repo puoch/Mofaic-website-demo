@@ -64,6 +64,14 @@ email.SMTPPass = ''
 # assets.bootstrapSource = local
 
 #--------------------------------------------------------------------
+# HOSTING WITHOUT SSH OR CRON (test copies only; docs/infinityfree.md)
+# Leave unset on the VPS and the on-premises server.
+#--------------------------------------------------------------------
+# hosting.maintenanceToken =
+# hosting.sendMailInRequest = true
+# hosting.maxUploadMegabytes = 10
+
+#--------------------------------------------------------------------
 # DEMO DATA (development and testing only)
 #--------------------------------------------------------------------
 # DEMO_PASSWORD = choose-a-local-password

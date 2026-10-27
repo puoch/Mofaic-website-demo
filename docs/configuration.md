@@ -15,6 +15,7 @@ All server-specific settings live in `.env`, copied from the `env` template.
 | `database.default.*` | local database | the server's MySQL 8.4 database, `utf8mb4` |
 | `email.*` | optional | SMTP relay. Required, because staff sign-in codes are emailed |
 | `assets.bootstrapSource` | `local` | `cdn` on the VPS while the initial phase needs it; `local` on the on-premises server (PD-17) |
+| `hosting.*` | unset | unset. Only for hosting without SSH or cron, such as the InfinityFree test copy (`Config\Hosting`, infinityfree.md) |
 | `DEMO_PASSWORD` | optional | never set |
 
 Staging uses `production` so it behaves exactly like the live site, including
@@ -34,6 +35,7 @@ error pages that hide technical details.
 | `ContentTypes.php` | Every editable content type: table, fields, validation, scope, whether it keeps versions or takes media; article and mission categories; the *Minister's engagements* tag |
 | `Submissions.php` | Submission types and their inboxes, inbox statuses (PD-05), contribution categories, which inquiry and registration fields are required (PD-08), which text blocks open each form, spam limits (PD-11) |
 | `Assets.php` | Where Bootstrap is loaded from (`local` or `cdn`, PD-17), the CDN address and the integrity hash of each file |
+| `Hosting.php` | For hosts without SSH or cron: the `/maintenance` token, sending email during requests, an upload cap. All off by default |
 | `Media.php` | Allowed file types and sizes for uploads (PD-12), and which kinds may link to an external address |
 
 ## Adding a language later

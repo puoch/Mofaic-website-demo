@@ -1,7 +1,8 @@
 # Testing on shared hosting
 
 The sponsor said on 27 October 2026 that the site will likely be tested on
-shared hosting first. This page covers that test copy only. The recorded
+shared hosting first, and then chose InfinityFree's free tier: see
+[infinityfree.md](infinityfree.md) for that host's step-by-step guide. This page covers that test copy only. The recorded
 hosting decision has not changed: development and staging on a VPS, the live
 site in MOFAIC's on-premises data centre ([deployment.md](deployment.md)).
 
