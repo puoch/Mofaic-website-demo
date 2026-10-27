@@ -50,12 +50,19 @@ class Maintenance extends BaseController
             return $this->page(error: 'Too many attempts. Try again in an hour.');
         }
 
-        $token = (string) $this->request->getPost('token');
+        // Pasting often brings a space or line break along.
+        $token = trim((string) $this->request->getPost('token'));
 
         if (! hash_equals($hosting->maintenanceToken, $token)) {
             $this->audit('maintenance.denied');
 
-            return $this->page(error: 'That is not the maintenance token.');
+            // Lengths only: enough to spot a pasted placeholder such as <...>
+            // or a cut-off copy, without revealing any of the token.
+            return $this->page(error: sprintf(
+                'That is not the maintenance token. You entered %d characters; the token in .env has %d.',
+                strlen($token),
+                strlen($hosting->maintenanceToken),
+            ));
         }
 
         $message = match ((string) $this->request->getPost('action')) {
