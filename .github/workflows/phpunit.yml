@@ -1,0 +1,67 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }} with ${{ matrix.database }}
+    runs-on: ubuntu-24.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3']
+        database: ['mysql-8.4', 'sqlite']
+
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: mofaic_test
+          MYSQL_USER: mofaic_test
+          MYSQL_PASSWORD: test-only-password
+          MYSQL_ROOT_PASSWORD: test-only-root-password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s --health-timeout=5s --health-retries=10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # 2.36.0
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
+          extensions: intl, mbstring, mysqli, sqlite3, xml
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-progress --no-interaction --prefer-dist
+
+      - name: Run tests against MySQL 8.4
+        if: matrix.database == 'mysql-8.4'
+        env:
+          database_tests_hostname: 127.0.0.1
+          database_tests_database: mofaic_test
+          database_tests_username: mofaic_test
+          database_tests_password: test-only-password
+          database_tests_DBDriver: MySQLi
+          database_tests_charset: utf8mb4
+          database_tests_DBCollat: utf8mb4_unicode_ci
+        run: vendor/bin/phpunit --no-coverage
+
+      - name: Run tests against SQLite
+        if: matrix.database == 'sqlite'
+        run: vendor/bin/phpunit --no-coverage
