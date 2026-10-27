@@ -4,17 +4,8 @@
 # Pointing the document root at public/ is still the safer setup.
 Options -Indexes
 
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteRule ^(.*)$ public/$1 [L]
-</IfModule>
-
-# Without mod_rewrite, serve nothing from here rather than everything.
-<IfModule !mod_rewrite.c>
-	<IfModule authz_core_module>
-		Require all denied
-	</IfModule>
-	<IfModule !authz_core_module>
-		Deny from all
-	</IfModule>
-</IfModule>
+# No <IfModule> check: InfinityFree served 404 for every request with one.
+# Without mod_rewrite these lines are an error (500), so nothing is served.
+# The target is a URL path (/public/...), the form InfinityFree documents.
+RewriteEngine On
+RewriteRule ^(.*)$ /public/$1 [L]

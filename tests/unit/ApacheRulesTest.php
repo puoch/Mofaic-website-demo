@@ -16,8 +16,9 @@ final class ApacheRulesTest extends CIUnitTestCase
     {
         $rules = (string) file_get_contents(ROOTPATH . '.htaccess');
 
-        $this->assertStringContainsString('RewriteRule ^(.*)$ public/$1 [L]', $rules);
-        $this->assertStringContainsString('<IfModule !mod_rewrite.c>', $rules, 'Without mod_rewrite nothing may be served.');
+        $this->assertStringContainsString('RewriteRule ^(.*)$ /public/$1 [L]', $rules);
+        // Unwrapped, so a server without mod_rewrite fails (500) instead of serving files.
+        $this->assertStringNotContainsString('<IfModule', $rules);
     }
 
     public function testTheFrontControllerDoesNotNeedPathInfo(): void
