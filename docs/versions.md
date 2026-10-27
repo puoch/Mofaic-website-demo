@@ -9,6 +9,7 @@ locked in `composer.lock` and by the vendored Bootstrap folder name.
 | CodeIgniter framework | 4.7.5 | `composer.lock` |
 | CodeIgniter Shield | 1.4.1 | `composer.lock` |
 | CodeIgniter Settings | 2.4.0 | `composer.lock` (Shield dependency) |
+| league/commonmark | 2.10.4 | `composer.lock`. Renders staff-written Markdown with raw HTML escaped and unsafe links removed |
 | PHPUnit (development only) | 10.5.66 | `composer.lock` |
 | MySQL | 8.4 LTS | CI runs tests on the `mysql:8.4` image. A local check also ran on 8.0.46 |
 | Bootstrap | 5.3.8 | `public/assets/vendor/bootstrap-5.3.8/`, with `SHA256SUMS` |

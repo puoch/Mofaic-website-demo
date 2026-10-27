@@ -127,3 +127,7 @@ _modules/*
 
 # Local SQLite databases
 /writable/*.db
+
+# Uploaded public media
+/public/uploads/*
+!/public/uploads/index.html

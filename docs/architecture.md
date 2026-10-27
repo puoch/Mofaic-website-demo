@@ -29,18 +29,45 @@ systems (brief section 1).
 | Staff sign-in | CodeIgniter Shield | Session sign-in, emailed second step, no public registration |
 | Roles and permissions | `app/Config/AuthGroups.php` | The four roles; see [permissions.md](permissions.md) |
 | Department scope | `app/Libraries/DepartmentAccess.php` | Editors publish only in their departments |
-| Audit log | `app/Libraries/AuditLog.php`, `audit_events` table | Records staff sign-in now; publishing and restores later |
+| Audit log | `app/Libraries/AuditLog.php`, `audit_events` table | Records staff sign-in, and from Gate 3 every content and media change. It is also the publishing log |
 | Health check | `GET /health` | For monitoring; returns status only |
 | Demo data | `app/Database/Seeds/DemoSeeder.php` | Labelled fictional data, blocked in production |
+
+## Content modules (Gate 3)
+
+| Part | Where | Purpose |
+| --- | --- | --- |
+| Content types | `app/Config/ContentTypes.php` | One definition per type drives the admin list, form, validation and scope |
+| Content service | `app/Libraries/ContentService.php` | Save, publish, unpublish, delete, versions and restore; writes the audit log |
+| Content policy | `app/Libraries/ContentPolicy.php` | Who may change what; see [permissions.md](permissions.md) |
+| Media | `app/Libraries/MediaService.php`, `app/Config/Media.php` | Checked uploads stored under random names in `public/uploads/`, and external audio/video links |
+| Missions directory | `app/Libraries/MissionDirectory.php` | Published missions, coverage, related missions, country finder |
+| Public controllers | `app/Controllers/Site/` | Home, About and Services pages, News & Press, Archives, Missions, Contacts (text only; the inquiry form is Gate 4) |
+| Editing screens | `app/Controllers/Admin/Content.php`, `Admin/Publishing.php` | Generic editing for every type; publishing dashboard and publishing log |
+| Page structure | `app/Database/Seeds/StructureSeeder.php` | The brief's page tree as empty system drafts |
+
+The brief's modules are kept apart by namespace and configuration within
+`app/` (Site controllers, one content-type definition each, one library per
+concern) rather than separate `app/Modules/<Name>/` folders as first proposed.
+A shared generic editor was simpler than seven near-identical module folders.
+This is a proposal for review.
+
+### Content tables
+
+| Table | Contents |
+| --- | --- |
+| `pages` | About MFA&IC, About South Sudan and Services pages, in a tree (`parent_id`, `path`) |
+| `articles`, `tags`, `article_tag` | News, statements and mission activities |
+| `galleries`, `archive_items` | Photo albums and archive entries (no classification until the Ministry decides) |
+| `missions`, `mission_coverage`, `countries` | Missions abroad and foreign missions, which countries each serves (resident or non-resident) |
+| `media`, `media_links` | Files and external links, attached to any record |
+| `content_revisions` | A full copy of each saved version |
+| `quick_links`, `social_accounts`, `site_blocks`, `org_units` | Home page links, official accounts, emergency contacts and contact information, organogram |
 
 ## Modules planned for later gates (proposed)
 
 | Gate | Module |
 | --- | --- |
-| 3 | Content (pages, revisions, publishing log, restore) |
-| 3 | News / Press (news, statements, tags, gallery, social links), Archives |
-| 3 | Missions (mission records, country coverage, country finder, profiles) |
-| 3 | About MFA&IC, About South Sudan, Services |
 | 4 | Contacts (public inquiry form and Public Inquiries Inbox) |
 | 4 | Diaspora (registration, referral to missions, contributions, newsletter, Diaspora inbox) |
 | 4 | Notifications (rules per submission type, queued email) |

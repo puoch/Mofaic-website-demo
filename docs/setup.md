@@ -55,6 +55,7 @@ No Node.js build step is needed. Bootstrap is stored in
    outside `development` and `testing`.
 
    ```bash
+   php spark db:seed StructureSeeder
    php spark db:seed DemoSeeder
    ```
 

@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use CodeIgniter\Exceptions\PageNotFoundException;
-use CodeIgniter\Test\CIUnitTestCase;
-use CodeIgniter\Test\FeatureTestTrait;
+use Tests\Support\StaffTestCase;
 
 /**
  * The public layout: identical, fixed navigation on every public page
  * (PRI-09, NAV-01), language and direction attributes (PRI-07) and locally
  * served assets (PRI-04).
  */
-final class PublicSiteTest extends CIUnitTestCase
+final class PublicSiteTest extends StaffTestCase
 {
-    use FeatureTestTrait;
-
     /**
      * @return list<array{string}>
      */

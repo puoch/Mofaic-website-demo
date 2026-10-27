@@ -26,6 +26,16 @@ abstract class StaffTestCase extends CIUnitTestCase
     protected $refresh     = true;
     protected $namespace   = null;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // actingAs() signs in through the shared auth service and session;
+        // start every test signed out so results do not depend on run order.
+        $_SESSION = [];
+        $this->resetServices(true);
+    }
+
     protected function staff(string $group, string $email = ''): User
     {
         /** @var User $user */
@@ -40,6 +50,39 @@ abstract class StaffTestCase extends CIUnitTestCase
         $user->addGroup($group);
 
         return $user;
+    }
+
+    /**
+     * Signs in as $user and posts a form with a valid CSRF token.
+     *
+     * @param array<string, mixed> $data
+     */
+    protected function postAs(User $user, string $uri, array $data = []): \CodeIgniter\Test\TestResponse
+    {
+        return $this->actingAs($user)->post($uri, [csrf_token() => csrf_hash()] + $data);
+    }
+
+    /**
+     * Creates a record through the content service, optionally published.
+     *
+     * @param array<string, mixed> $values
+     */
+    protected function content(string $type, array $values, bool $publish = true): int
+    {
+        $id = service('content')->save($type, null, $values, null);
+
+        if ($publish) {
+            service('content')->publish($type, $id, null);
+        }
+
+        return $id;
+    }
+
+    protected function country(string $iso, string $name): int
+    {
+        $this->db->table('countries')->insert(['iso_code' => $iso, 'name' => $name, 'is_demo' => 1]);
+
+        return (int) $this->db->insertID();
     }
 
     protected function department(string $slug, bool $diaspora = false): int

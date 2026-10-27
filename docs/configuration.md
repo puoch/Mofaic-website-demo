@@ -30,6 +30,8 @@ error pages that hide technical details.
 | `Auth.php` | Sign-in rules: no public registration, emailed sign-in code, 12-character minimum password |
 | `Filters.php` | CSRF protection, secure headers, sign-in requirement for `/admin` |
 | `Session.php`, `Cookie.php`, `Security.php` | Session and cookie names, CSRF token name |
+| `ContentTypes.php` | Every editable content type: table, fields, validation, scope, whether it keeps versions or takes media; article and mission categories; the *Minister's engagements* tag |
+| `Media.php` | Allowed file types and sizes for uploads (PD-12), and which kinds may link to an external address |
 
 ## Adding a language later
 
