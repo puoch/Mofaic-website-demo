@@ -4,7 +4,7 @@
 # Pointing the document root at public/ is still the safer setup.
 Options -Indexes
 
-# No <IfModule> check: InfinityFree served 404 for every request with one.
+# No mod_rewrite module check: InfinityFree served 404 for every request with one.
 # Without mod_rewrite these lines are an error (500), so nothing is served.
 # The target is a URL path (/public/...), the form InfinityFree documents.
 RewriteEngine On
