@@ -24,6 +24,23 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'pe
     $routes->get('audit', 'Audit::index', ['filter' => 'permission:audit.view']);
     $routes->get('publishing', 'Publishing::index', ['filter' => 'permission:content.view']);
 
+    // Public Inquiries Inbox and the separate Diaspora inbox (brief section 3).
+    // Inbox checks the view or manage permission of each submission type.
+    $routes->get('(inquiries|diaspora)', 'Inbox::index/$1');
+    $routes->get('(inquiries|diaspora)/(inquiry|registration|contribution)/(:num)', 'Inbox::show/$1/$2/$3');
+    $routes->post('(inquiries|diaspora)/(inquiry|registration|contribution)/(:num)/status', 'Inbox::status/$1/$2/$3');
+    $routes->post('(inquiries|diaspora)/(inquiry|registration|contribution)/(:num)/assign', 'Inbox::assign/$1/$2/$3');
+    $routes->post('(inquiries|diaspora)/(inquiry|registration|contribution)/(:num)/notes', 'Inbox::note/$1/$2/$3');
+
+    // Per-person access to the Diaspora inbox (PD-02).
+    $routes->get('diaspora-access', 'DiasporaAccess::index', ['filter' => 'permission:users.manage']);
+    $routes->post('diaspora-access', 'DiasporaAccess::grant', ['filter' => 'permission:users.manage']);
+    $routes->post('diaspora-access/(:num)/remove', 'DiasporaAccess::revoke/$1', ['filter' => 'permission:users.manage']);
+
+    // Diaspora newsletter: subscriber counts and sending a published issue.
+    $routes->get('newsletter', 'Newsletter::index', ['filter' => 'permission:content.view']);
+    $routes->post('newsletter/(:num)/send', 'Newsletter::send/$1', ['filter' => 'permission:content.view']);
+
     // Content editing. Each action checks ContentPolicy for the record.
     $routes->group('content', ['filter' => 'permission:content.view'], static function (RouteCollection $routes): void {
         $routes->post('missions/(:num)/coverage', 'Content::addCoverage/$1');
@@ -77,7 +94,28 @@ $routes->group('{locale}', ['namespace' => 'App\Controllers\Site'], static funct
     $routes->get('archives', 'Archives::index');
     $routes->get('archives/(:segment)', 'Archives::show/$1');
 
-    // SSD DIASPORA and CONTACTS are built at Gate 4.
-    $routes->get('diaspora', 'Placeholder::section/diaspora');
+    // SSD DIASPORA (brief section 2)
+    $routes->get('diaspora', 'Diaspora::index');
+    $routes->get('diaspora/register', 'Diaspora::register');
+    $routes->post('diaspora/register', 'Diaspora::registerSubmit');
+    $routes->get('diaspora/register/missions', 'Diaspora::missions');
+    $routes->post('diaspora/register/missions', 'Diaspora::chooseMission');
+    $routes->get('diaspora/register/confirmation', 'Diaspora::confirmation');
+    $routes->get('diaspora/contribute', 'Diaspora::contribute');
+    $routes->post('diaspora/contribute', 'Diaspora::contributeSubmit');
+    $routes->get('diaspora/contribute/thanks', 'Diaspora::contributeThanks');
+    $routes->get('diaspora/stay-informed', 'Diaspora::stayInformed');
+    $routes->post('diaspora/stay-informed/subscribe', 'Diaspora::subscribe');
+    $routes->get('diaspora/stay-informed/subscribed', 'Diaspora::subscribed');
+    $routes->get('diaspora/stay-informed/(:segment)', 'Diaspora::article/$1');
+    $routes->get('diaspora/newsletter/confirm/(:segment)', 'Diaspora::confirmSubscription/$1');
+    $routes->get('diaspora/newsletter/unsubscribe/(:num)/(:segment)', 'Diaspora::unsubscribe/$1/$2');
+    $routes->post('diaspora/newsletter/unsubscribe/(:num)/(:segment)', 'Diaspora::unsubscribeSubmit/$1/$2');
+    $routes->get('diaspora/countries', 'Diaspora::countries');
+    $routes->get('diaspora/countries/(:segment)', 'Diaspora::country/$1');
+
+    // CONTACTS
     $routes->get('contacts', 'Contacts::index');
+    $routes->post('contacts', 'Contacts::submit');
+    $routes->get('contacts/thanks', 'Contacts::thanks');
 });

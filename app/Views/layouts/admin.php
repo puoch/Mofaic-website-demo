@@ -32,6 +32,18 @@
                         </ul>
                     </li>
                     <?php endif ?>
+                    <?php if (auth()->user()?->can('inquiries.view')): ?>
+                    <li class="nav-item"><a class="nav-link" href="<?= esc(site_url('admin/inquiries'), 'attr') ?>">Inquiries</a></li>
+                    <?php endif ?>
+                    <?php if (auth()->user()?->can('diaspora.submissions-view')): ?>
+                    <li class="nav-item"><a class="nav-link" href="<?= esc(site_url('admin/diaspora'), 'attr') ?>">Diaspora inbox</a></li>
+                    <?php endif ?>
+                    <?php if (auth()->user()?->can('content.view')): ?>
+                    <li class="nav-item"><a class="nav-link" href="<?= esc(site_url('admin/newsletter'), 'attr') ?>">Newsletter</a></li>
+                    <?php endif ?>
+                    <?php if (auth()->user()?->can('users.manage')): ?>
+                    <li class="nav-item"><a class="nav-link" href="<?= esc(site_url('admin/diaspora-access'), 'attr') ?>">Diaspora access</a></li>
+                    <?php endif ?>
                     <?php if (auth()->user()?->can('audit.view')): ?>
                     <li class="nav-item"><a class="nav-link" href="<?= esc(site_url('admin/audit'), 'attr') ?>"><?= esc(lang('Admin.auditLog')) ?></a></li>
                     <?php endif ?>

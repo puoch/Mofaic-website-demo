@@ -10,6 +10,12 @@ use App\Libraries\Markdown;
 use App\Libraries\MediaService;
 use App\Libraries\MissionDirectory;
 use App\Libraries\DepartmentAccess;
+use App\Libraries\DiasporaAccess;
+use App\Libraries\FormGuard;
+use App\Libraries\MailQueue;
+use App\Libraries\Newsletter;
+use App\Libraries\StaffDirectory;
+use App\Libraries\SubmissionService;
 use CodeIgniter\Config\BaseService;
 use CodeIgniter\HTTP\IncomingRequest;
 
@@ -111,5 +117,59 @@ class Services extends BaseService
         }
 
         return new Markdown();
+    }
+
+    public static function formGuard(bool $getShared = true): FormGuard
+    {
+        if ($getShared) {
+            return static::getSharedInstance('formGuard');
+        }
+
+        return new FormGuard(config(Submissions::class));
+    }
+
+    public static function mailQueue(bool $getShared = true): MailQueue
+    {
+        if ($getShared) {
+            return static::getSharedInstance('mailQueue');
+        }
+
+        return new MailQueue(Database::connect());
+    }
+
+    public static function submissions(bool $getShared = true): SubmissionService
+    {
+        if ($getShared) {
+            return static::getSharedInstance('submissions');
+        }
+
+        return new SubmissionService(Database::connect(), config(Submissions::class), static::auditLog(), static::mailQueue());
+    }
+
+    public static function newsletter(bool $getShared = true): Newsletter
+    {
+        if ($getShared) {
+            return static::getSharedInstance('newsletter');
+        }
+
+        return new Newsletter(Database::connect(), static::mailQueue(), static::auditLog());
+    }
+
+    public static function staffDirectory(bool $getShared = true): StaffDirectory
+    {
+        if ($getShared) {
+            return static::getSharedInstance('staffDirectory');
+        }
+
+        return new StaffDirectory();
+    }
+
+    public static function diasporaAccess(bool $getShared = true): DiasporaAccess
+    {
+        if ($getShared) {
+            return static::getSharedInstance('diasporaAccess');
+        }
+
+        return new DiasporaAccess(Database::connect(), static::departmentAccess(), static::auditLog());
     }
 }

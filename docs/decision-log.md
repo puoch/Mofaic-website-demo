@@ -19,6 +19,7 @@ not be treated as Ministry policy.
 | 2026-10-26 | Accessibility target is WCAG 2.2 level AA (PD-14) | Sponsor, Gate 0 Q5 |
 | 2026-10-26 | Coding approved ("APPROVE GATE 2: START CODING"). Gate 1 was not reviewed separately | Sponsor |
 | 2026-10-27 | Gate 3 approved ("APPROVE GATE 3: START CODING") | Sponsor |
+| 2026-10-27 | Gate 4 approved ("APPROVE GATE 4: START CODING"). The G3-01 to G3-05 proposals are still unreviewed | Sponsor |
 
 ## Proposed, in use as configurable defaults
 
@@ -35,15 +36,26 @@ not be treated as Ministry policy.
 | G3-03 | External audio and video, and social media accounts, are shown as links, not embedded players or feeds. Embedding would load content from other hosts and needs a Content Security Policy change and Ministry approval | `site/partials/media.php`, `Site\News::social` |
 | G3-04 | Department Editors and Read-Only Staff can open the publishing screens; site-wide lists (tags, quick links, social accounts, organogram, emergency contacts, contact information) are edited by Ministry Administrators only | `Libraries\ContentPolicy` |
 | G3-05 | System pages from the brief's structure can be filled in and published but not deleted, moved or renamed | `StructureSeeder`, `lockedForSystem` |
+| PD-05 | Inbox statuses: New, In progress, Awaiting information, Closed | `Config\Submissions::$statuses` |
+| PD-06 | Notification emails carry only the submission type, its reference and a staff-area link | `SubmissionService::notify()` |
+| PD-07 | When no mission serves the country of residence: say so, show the headquarters contact text (Ministry-supplied block, hidden while empty) and keep the registration | `site/diaspora/missions.php` |
+| PD-08 | Diaspora registration: name required, nature of inquiry optional | `Config\Submissions::$registrationNameRequired` |
+| PD-09 | Newsletter double opt-in by emailed link (valid 7 days), signed unsubscribe link in every issue, subscriptions stored apart from registrations | `Libraries\Newsletter` |
+| PD-10 | Email is queued and sent by `php spark mail:send` from cron through the SMTP relay in `.env` | `Libraries\MailQueue` |
+| PD-11 | Spam protection without outside services: hidden field, signed form time (3 seconds to 2 hours), 10 submissions per form per address per hour, CSRF | `Libraries\FormGuard`, `Config\Submissions` |
+| G4-01 | Public forms stay closed until the privacy notice block holds approved text; registration also needs the voluntary-registration statement. There is no consent checkbox because consent wording is undecided | `Config\Submissions::$requiredBlocks` |
+| G4-02 | Inquiry fields: name, email and message required; telephone and subject optional. No acknowledgement email; the visitor sees a reference on screen | `Config\Submissions::$inquiryFields` |
+| G4-03 | Diaspora access is granted per person by a Super Administrator, only to Ministry Administrators or members of a diaspora department, never to oneself. View and handle are separate levels | `Libraries\DiasporaAccess` |
+| G4-04 | Diaspora announcements, events and newsletters are articles in diaspora categories and must belong to a diaspora department. Ministry Administrators can also publish them (they can publish in any department) | `ContentPolicy::isDiasporaContent()` |
+| G4-05 | A newsletter issue is a published "Diaspora newsletter" article, sent once, as plain text with the summary and a link to the website | `Libraries\Newsletter::sendIssue()` |
+| G4-06 | Staff cannot delete submissions or subscriptions, and none are deleted automatically, until retention and deletion rules exist (deferred items 6 and 13) | — |
+| G4-07 | Personal data is protected by access control, TLS and audit. It is not encrypted column by column; at-rest encryption is part of deferred item 10 | — |
 | — | Permission matrix in `docs/permissions.md` | `Config\AuthGroups` |
 | — | Server baseline: Ubuntu 24.04 LTS, Nginx, PHP-FPM 8.3, MySQL 8.4 | `docs/deployment.md` |
 
 ## Proposed, not used yet
 
-PD-03 (missing-translation notice), PD-05 (inbox statuses), PD-06 (no personal data
-in notification emails), PD-07 (no-match referral), PD-08 (diaspora name required),
-PD-09 (newsletter double opt-in), PD-10 (queued email via MOFAIC relay), PD-11
-(spam protection without third parties), PD-15 (MySQL full-text search).
+PD-03 (missing-translation notice), PD-15 (MySQL full-text search).
 
 ## Deferred (brief section 6)
 

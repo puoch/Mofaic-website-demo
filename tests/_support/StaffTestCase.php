@@ -34,6 +34,42 @@ abstract class StaffTestCase extends CIUnitTestCase
         // start every test signed out so results do not depend on run order.
         $_SESSION = [];
         $this->resetServices(true);
+
+        // The form rate limit is kept in the cache; start each test with none.
+        cache()->clean();
+    }
+
+    /**
+     * Posts a public form as a visitor would: CSRF token, a form token
+     * issued a little while ago and the hidden spam field left empty.
+     *
+     * @param array<string, mixed> $data
+     */
+    protected function submitForm(string $uri, string $form, array $data = [], int $secondsAgo = 30): \CodeIgniter\Test\TestResponse
+    {
+        return $this->post($uri, $data + [
+            csrf_token()                         => csrf_hash(),
+            'form_token'                         => \App\Libraries\FormGuard::token($form, time() - $secondsAgo),
+            config('Submissions')->honeypotField => '',
+        ]);
+    }
+
+    /**
+     * Fills a fixed text block, as a Ministry Administrator would.
+     */
+    protected function block(string $key, ?string $body): void
+    {
+        $this->db->table('site_blocks')->where('block_key', $key)->update(['body' => $body]);
+    }
+
+    /**
+     * Opens every public form by filling the text blocks they need.
+     */
+    protected function openForms(): void
+    {
+        foreach (['privacy_notice', 'diaspora_registration_statement', 'headquarters_contact'] as $key) {
+            $this->block($key, 'Approved test text for ' . $key . '.');
+        }
     }
 
     protected function staff(string $group, string $email = ''): User

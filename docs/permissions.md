@@ -44,7 +44,8 @@ and the submitted values, so content cannot be moved out of scope.
 | `department` | News and statements, pages, galleries, archive items | Ministry Administrators: any department. Department Editors: only records in their departments, and only their departments can be chosen |
 | `department`, mission activity | Articles in the *Mission activity* category | Ministry Administrators only (`missions.publish-activities`), whatever the department |
 | `missions` | Missions, countries | Ministry Administrators (`missions.manage`) |
-| `site` | Tags, quick links, social accounts, organogram units, emergency contacts, contact information | Ministry Administrators (`content.publish-any`) |
+| `department`, diaspora | Articles in the diaspora categories, Diaspora by Country pages | Editors of a department marked `is_diaspora` (and Ministry Administrators). The record must belong to a diaspora department |
+| `site` | Tags, quick links, social accounts, organogram units, fixed text blocks (emergency contacts, contact information, privacy notice, voluntary statement, headquarters contact), notification rules | Ministry Administrators (`content.publish-any`) |
 
 Content with no department can be changed only by Ministry Administrators.
 Restoring an earlier version also needs `content.restore`. Everyone with
@@ -73,8 +74,29 @@ The *Minister's engagements* listing is news tagged with the system tag
   $user->addPermission('diaspora.submissions-view');
   ```
 
-  A screen for this comes with the Diaspora inbox at Gate 4. Every grant and
-  removal will be written to the audit log.
+  From Gate 4 Super Administrators use **Diaspora access** (`/admin/diaspora-access`).
+  It offers only Ministry Administrators and members of a diaspora department,
+  never the person granting. "View only" gives `diaspora.submissions-view`;
+  "View and handle" adds `diaspora.submissions-manage`. Every grant and removal
+  is written to the audit log.
+
+## Inboxes (Gate 4)
+
+| Inbox | Who opens it | Who changes status, assignment and notes |
+| --- | --- | --- |
+| Public Inquiries Inbox (`/admin/inquiries`) | `inquiries.view` (Ministry Administrators) | `inquiries.manage` (Ministry Administrators) |
+| Diaspora inbox (`/admin/diaspora`), registrations and contributions | `diaspora.submissions-view`, per person only | `diaspora.submissions-manage`, per person only |
+
+- Opening a submission is audited (`submission.viewed`), as are status changes,
+  assignment and notes. Audit entries hold the reference, not personal details.
+- A submission can be assigned only to staff who can open that inbox.
+- Notes are visible to everyone who can open the inbox and are never shown
+  publicly or emailed.
+- Lists show references, dates, country or category and status, not names.
+- Notification rules (`/admin/content/notification_rules`) and the fixed text
+  blocks that open the forms are edited by Ministry Administrators.
+- Diaspora newsletters are sent by whoever may edit the newsletter article.
+  Subscriber addresses are not shown in the staff area.
 
 ## Open points for the final review
 

@@ -95,6 +95,7 @@ class News extends SiteController
             ->select('articles.*')
             ->join('article_tag', 'article_tag.article_id = articles.id')
             ->where('article_tag.tag_id', $tag['id'])
+            ->whereIn('articles.category', ['news', 'statement', 'mission_activity'])
             ->orderBy('published_at', 'DESC')
             ->limit(50)
             ->get()
