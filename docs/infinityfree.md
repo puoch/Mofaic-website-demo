@@ -21,7 +21,7 @@ change, so check again before relying on them.
 | Limit | Effect on this site | What the build does |
 | --- | --- | --- |
 | PHP 8.4, MySQL 8.0 or MariaDB 11.4 ([infinityfree.com](https://www.infinityfree.com/)) | Choose MySQL 8.0 if asked. MariaDB is not tested | CI now also tests PHP 8.4. The suite passes on MySQL 8.0 |
-| The web root is always `htdocs`; it cannot be pointed at `public/` ([forum guide](https://forum.infinityfree.com/t/how-to-install-a-laravel-site-on-infinityfree/118578)) | `.env` and the code sit inside the web root | The root `.htaccess` sends every request into `public/`; `.env`, `vendor/` and the rest return 404 |
+| The web root is always `<domain>/htdocs` (the `htdocs` folder at the FTP root is not served); it cannot be pointed at `public/` ([forum guide](https://forum.infinityfree.com/t/how-to-install-a-laravel-site-on-infinityfree/118578)) | `.env` and the code sit inside the web root | The root `.htaccess` sends every request into `public/`; `.env`, `vendor/` and the rest return 404 |
 | No SSH, no Composer | `php spark` cannot run | The bundle includes `vendor/`. `/maintenance` runs migrations and creates staff accounts |
 | No cron ([announcement](https://forum.infinityfree.com/t/cron-job-feature-is-now-disabled/80495)); outside services may not trigger it either | `mail:send` never runs | `hosting.sendMailInRequest` sends each message when it is queued; staff pages send waiting newsletter mail a few at a time |
 | `mail()` restricted; use an outside SMTP service ([article](https://forum.infinityfree.com/t/emails-from-my-website-arent-working/49242)) | Staff sign-in codes are emailed (PD-01), so **without SMTP nobody can sign in** | Set an outside SMTP service in `.env` |
@@ -66,10 +66,12 @@ change, so check again before relying on them.
    - `INFINITYFREE_FTP_USERNAME`
    - `INFINITYFREE_FTP_PASSWORD`
 6. **First upload.** In the repository: *Actions*, *Deploy test copy to
-   InfinityFree*, *Run workflow*, branch `main`. It runs the tests, builds the
-   bundle and uploads it to `htdocs`. The first upload takes a while (about
+   InfinityFree*, *Run workflow*, branch `main`, with the site folder set to
+   your domain. It runs the tests, builds the bundle and uploads it to
+   `<domain>/htdocs`, the folder named after the domain in the FTP root (not
+   the `htdocs` folder beside it, which no domain serves). The first upload takes a while (about
    2,800 files).
-7. **`.env`.** In InfinityFree's file manager, create `htdocs/.env` with the
+7. **`.env`.** In InfinityFree's file manager, create `<domain>/htdocs/.env` with the
    lines below, filled in. Make the two random values on your own computer:
    `openssl rand -hex 32` for the encryption key and `openssl rand -hex 24` for
    the maintenance token (or `php -r "echo bin2hex(random_bytes(32));"`).
@@ -133,7 +135,7 @@ change, so check again before relying on them.
 ## Without GitHub Actions
 
 Run `scripts/build-bundle.sh` on a computer with PHP 8.3 or later and Composer.
-Upload the contents of `build/bundle/` into `htdocs` with an FTP program
+Upload the contents of `build/bundle/` into `<domain>/htdocs` with an FTP program
 (FileZilla: *FTP over explicit TLS*, host `ftpupload.net`, port 21). Then follow
 steps 7 to 11.
 
