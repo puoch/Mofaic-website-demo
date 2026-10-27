@@ -71,7 +71,10 @@ final class GoLiveCheckTest extends StaffTestCase
 
     public function testUnsettledDecisionsBlockTheLaunch(): void
     {
-        $results = $this->results();
+        $config                    = new GoLive();
+        $config->approvedProposals = [];
+
+        $results = $this->results($config);
 
         $this->assertSame('fail', $results['PD-05 approved by MOFAIC']['status']);
         $this->assertSame('fail', $results['Deferred item 13 settled']['status']);
@@ -88,6 +91,22 @@ final class GoLiveCheckTest extends StaffTestCase
         $this->assertSame('pass', $results['PD-05 approved by MOFAIC']['status']);
         $this->assertSame('pass', $results['Deferred item 13 settled']['status']);
         $this->assertSame('fail', $results['PD-06 approved by MOFAIC']['status']);
+    }
+
+    public function testShippedApprovalsMatchTheDecisionLog(): void
+    {
+        $log      = (string) file_get_contents(ROOTPATH . 'docs/decision-log.md');
+        $approved = (new GoLive())->approvedProposals;
+
+        // Every approval names a real proposal and where it was decided.
+        foreach ($approved as $id => $source) {
+            $this->assertMatchesRegularExpression('/\\b' . preg_quote($id, '/') . '\\b/', $log, "{$id} is not in the decision log.");
+            $this->assertNotSame('', trim($source), "{$id} has no recorded source.");
+        }
+
+        // PD-17 has a change requested, so it must still block.
+        $this->assertArrayNotHasKey('PD-17', $approved);
+        $this->assertSame('fail', $this->results()['PD-17 approved by MOFAIC']['status']);
     }
 
     public function testTheTestEnvironmentIsNotReady(): void

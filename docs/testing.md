@@ -48,7 +48,7 @@ holds nothing else.
 | `tests/feature/InboxTest.php` | CON-04, CON-05, DIA-13, GOV-04, SEC-04 | No role opens the Diaspora inbox, per-person grants, audited views, view-only cannot change, status, assignment, notes, inbox separation, access screen |
 | `tests/feature/DiasporaPublishingTest.php` | DIA-09, DIA-11, DIA-12 | Diaspora editors publish directly, diaspora department required, no mission activities, one page per country, newsletter sending, notification rules |
 | `tests/unit/LocalAssetsTest.php` | PRI-09, PD-17 | Every stylesheet and script the layouts load is in the repository, Bootstrap matches its checksums, no view loads scripts or styles from another host |
-| `tests/unit/GoLiveCheckTest.php` | G5-01 | Reads every proposal and deferred item from the decision log, unsettled ones block, a decision passes only with its recorded source, demo data, missing Ministry text, backup age, Super Administrator count |
+| `tests/unit/GoLiveCheckTest.php` | G5-01 | Reads every proposal and deferred item from the decision log, unsettled ones block, a decision passes only with its recorded source, shipped approvals match the log, demo data, missing Ministry text, backup age, Super Administrator count |
 | `tests/unit/ContentSafetyTest.php` | DEMO-01 | No placeholder text copied from other governments' sites (terms listed in the test), no Cyrillic letters (or the Latin letters they are often transliterated with) anywhere in the repository |
 | `tests/unit/StaffCommandTest.php` | GOV-01, SEC-04 | Access review list, ban and unban, department membership, all audited; unknown accounts change nothing |
 

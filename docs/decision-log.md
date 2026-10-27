@@ -21,15 +21,20 @@ not be treated as Ministry policy.
 | 2026-10-27 | Gate 3 approved ("APPROVE GATE 3: START CODING") | Sponsor |
 | 2026-10-27 | Gate 4 approved ("APPROVE GATE 4: START CODING"). The G3-01 to G3-05 proposals are still unreviewed | Sponsor |
 | 2026-10-27 | Gate 5 started on the sponsor's "proceed" after the Gate 4 pull request. This does not approve any G3 or G4 proposal | Sponsor |
+| 2026-10-27 | Approved 33 proposals: PD-01, PD-03 to PD-13, PD-15, PD-16, G2-01, G2-02, G3-01 to G3-05, G4-01 to G4-07 and G5-01 to G5-05. PD-04, PD-13, G4-01, G4-06, G4-07 and G5-03 are approved as interim defaults; the deferred items they wait on (2, 6, 9, 10 and 13) stay open | Sponsor, proposal sheet |
+| 2026-10-27 | PD-17 (front-end assets served locally): the sponsor asked for a change; what to change is not yet stated, so PD-17 still blocks the launch | Sponsor, proposal sheet |
 
 ## Proposed, in use as configurable defaults
+
+Rows stay here as the list of defaults the code relies on. Approval of a row is
+recorded in "Confirmed after the brief" above and in `Config\GoLive`.
 
 | ID | Proposal | Where |
 | --- | --- | --- |
 | PD-01 | CodeIgniter Shield; emailed code at every staff sign-in; no public registration; 12-character passwords | `app/Config/Auth.php` |
 | PD-04 | ARCHIVES linked from the footer until the Ministry decides | `Config\Navigation::$archivesPlacement` |
 | PD-16 | Demo data labelled `DEMO, NOT OFFICIAL`, using `example.invalid`, blocked in production | `DemoSeeder` |
-| PD-17 | Front-end assets served locally, no CDN | `public/assets/vendor/` |
+| PD-17 | Front-end assets served locally, no CDN (change requested, details pending) | `public/assets/vendor/` |
 | PD-12 | Media limits: images JPG/PNG/WebP up to 10 MB, PDF up to 20 MB, MP3 up to 50 MB, MP4 up to 200 MB; audio and video may instead link to an `https://` address | `Config\Media` |
 | PD-13 | Every saved version of content is kept; nothing is pruned until retention is decided | `content_revisions` |
 | G3-01 | Search on News & Press uses a plain text match on title, summary and body, not MySQL full-text (PD-15 stays unused) | `Site\News::list` |
@@ -61,7 +66,8 @@ not be treated as Ministry policy.
 
 ## Proposed, not used yet
 
-PD-03 (missing-translation notice), PD-15 (MySQL full-text search).
+PD-03 (missing-translation notice), PD-15 (MySQL full-text search). Both were
+approved by the sponsor on 2026-10-27; neither is built yet.
 
 ## Deferred (brief section 6)
 
