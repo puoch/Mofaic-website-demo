@@ -107,6 +107,12 @@ change, so check again before relying on them.
    hosting.maxUploadMegabytes = 10
    ```
 
+   Replace each `<...>` **including the angle brackets**: the brackets left in
+   place broke the token, the database password and the encryption key on
+   the first test copy. Write the database password in single quotes if it
+   has special characters. The file manager cannot open or download `.env`,
+   so write it in Notepad as `env.txt`, upload it, and rename it to `.env`.
+
    Set `app.forceGlobalSecureRequests` and `cookie.secure` only once HTTPS
    works, or you will be redirected to a page that does not load. If pages
    then keep redirecting, remove those two lines and tell the developer: the
@@ -117,11 +123,31 @@ change, so check again before relying on them.
    email address. The page also shows the go-live check; a test copy is not
    meant to pass it.
 9. **Sign in** at `https://<your-subdomain>/login`. The sign-in code arrives by
-   email. If it does not, check the SMTP settings.
+   email. If it does not, check the SMTP settings. With Brevo, also turn off
+   *Security*, *Authorized IPs* blocking: otherwise Brevo answers
+   `525 5.7.1 Unauthorized IP address` and sign-in stops with an error page,
+   and InfinityFree does not send from one fixed address.
 10. **Close the setup page.** Delete the `hosting.maintenanceToken` line from
     `.env`. `/maintenance` then gives 404.
 11. **Check privacy.** `https://<your-subdomain>/.env` and `/composer.json` must
     both give 404.
+
+## When something goes wrong
+
+InfinityFree replaces the site's own 404 and 500 pages with its own, so an
+application error looks like a hosting error. Look in
+`<domain>/htdocs/writable/logs/` for the day's log (it opens in the file
+manager) and read the newest `CRITICAL` line.
+
+| What you see | Usually |
+|---|---|
+| InfinityFree 404 for every address, even a plain text file | Files are in the `htdocs` at the FTP root instead of `<domain>/htdocs` |
+| `/maintenance` gives 404 | No `hosting.maintenanceToken` of 32 or more characters in `.env` |
+| "That is not the maintenance token" | The page says both lengths; 2 extra characters are leftover `<` `>`. If the key appears twice in `.env`, the first one counts |
+| "Access denied for user" in the log | Wrong database password in `.env` (it is the hosting account's password) |
+| "hex2bin(): Hexadecimal input string must have an even length" | `encryption.key` still has `<` `>` or is cut short |
+| "The action you requested is not allowed" | A form was sent twice or from an older tab; close other tabs of the site and send once |
+| "Unauthorized IP address" in the log | Brevo's Authorized IPs blocking (step 9) |
 
 ## Updating the test copy
 
