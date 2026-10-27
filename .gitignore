@@ -84,7 +84,7 @@ php_errors.log
 #-------------------------
 # Composer
 #-------------------------
-vendor/
+/vendor/
 
 #-------------------------
 # IDE / Development Files
@@ -131,3 +131,7 @@ _modules/*
 # Uploaded public media
 /public/uploads/*
 !/public/uploads/index.html
+
+# Browser check tooling (tests/browser)
+/tests/browser/node_modules/
+/tests/browser/report/

@@ -12,7 +12,10 @@ locked in `composer.lock` and by the vendored Bootstrap folder name.
 | league/commonmark | 2.10.4 | `composer.lock`. Renders staff-written Markdown with raw HTML escaped and unsafe links removed |
 | PHPUnit (development only) | 10.5.66 | `composer.lock` |
 | MySQL | 8.4 LTS | CI runs tests on the `mysql:8.4` image. A local check also ran on 8.0.46 |
-| Bootstrap | 5.3.8 | `public/assets/vendor/bootstrap-5.3.8/`, with `SHA256SUMS` |
+| Bootstrap | 5.3.8 | `public/assets/vendor/bootstrap-5.3.8/`, with `SHA256SUMS`. Checked 27 October 2026: identical to the npm package `bootstrap@5.3.8` |
+| axe-core (browser checks only) | 4.14.0 | `tests/browser/package-lock.json`. Latest on npm on 27 October 2026 (released 5 October) |
+| Playwright (browser checks only) | 1.63.0 | `tests/browser/package-lock.json`. 1.64.1 exists; 1.63.0 matches the Chromium build installed on the test machine |
+| Node.js (browser checks only) | 22 | Not needed on the live server |
 
 ## Why these versions
 

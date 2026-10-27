@@ -1,0 +1,12 @@
+{
+  "name": "mofaic-web-browser-checks",
+  "private": true,
+  "description": "Browser checks for MOFAIC WEB: accessibility (axe-core, WCAG 2.2 AA rules), fixed navigation, keyboard, mobile layout, outside requests and page weight. Development tool only; nothing here is served by the website.",
+  "scripts": {
+    "check": "node check.mjs"
+  },
+  "devDependencies": {
+    "axe-core": "4.14.0",
+    "playwright": "1.63.0"
+  }
+}
