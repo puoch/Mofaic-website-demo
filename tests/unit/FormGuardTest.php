@@ -37,9 +37,12 @@ final class FormGuardTest extends StaffTestCase
     public function testRejectsMissingTamperedOrBorrowedTokens(): void
     {
         $valid = FormGuard::token('inquiry', time() - 30);
+        // Change the last signature character to a different one. Always
+        // writing "0" left the token valid whenever it already ended in "0".
+        $tampered = substr($valid, 0, -1) . (str_ends_with($valid, '0') ? '1' : '0');
 
         $this->assertSame(lang('Forms.expired'), $this->guard()->check($this->request([]), 'inquiry'));
-        $this->assertSame(lang('Forms.expired'), $this->guard()->check($this->request(['form_token' => substr($valid, 0, -1) . '0']), 'inquiry'));
+        $this->assertSame(lang('Forms.expired'), $this->guard()->check($this->request(['form_token' => $tampered]), 'inquiry'));
         $this->assertSame(lang('Forms.expired'), $this->guard()->check($this->request(['form_token' => $valid]), 'registration'), 'A token is valid for one form only.');
     }
 
