@@ -12,6 +12,11 @@ name: Deploy test copy to InfinityFree
 # .env is never uploaded: create it once on the server (docs/infinityfree.md).
 on:
   workflow_dispatch:
+    inputs:
+      site_folder:
+        description: Folder named after the domain in the FTP root (holds that site's htdocs)
+        default: mofaic-website-demo.infinityfree.io
+        required: true
 
 permissions:
   contents: read
@@ -59,7 +64,9 @@ jobs:
           # check fails. The transfer is still encrypted; see docs/infinityfree.md.
           security: loose
           local-dir: ${{ runner.temp }}/bundle/
-          server-dir: /htdocs/
+          # Each domain is served from <domain>/htdocs. The htdocs folder at the
+          # FTP root is not served by any domain.
+          server-dir: /${{ inputs.site_folder }}/htdocs/
           # The action only replaces or deletes files it uploaded itself, so
           # .env, uploaded media, logs and sessions on the server are kept.
           exclude: |
