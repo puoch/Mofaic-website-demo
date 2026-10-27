@@ -28,10 +28,12 @@ Options -Indexes
 
 	# Checks to see if the user is attempting to access a valid file,
 	# such as an image or css document, if this isn't true it sends the
-	# request to the front controller, index.php
+	# request to the front controller, index.php. The path is not added after
+	# index.php as PATH_INFO: some shared hosts, InfinityFree among them, turn it
+	# off and answer 404. CodeIgniter reads the path from REQUEST_URI.
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule ^([\s\S]*)$ index.php/$1 [L,NC,QSA]
+	RewriteRule ^ index.php [L,QSA]
 
 	# Ensure Authorization header is passed along
 	RewriteCond %{HTTP:Authorization} .
