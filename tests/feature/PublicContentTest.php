@@ -134,6 +134,32 @@ final class PublicContentTest extends StaffTestCase
         $this->assertStringContainsString('2 results', $this->get('en/news-press/news?from=not-a-date')->getBody());
     }
 
+    /**
+     * PD-15: the keyword search finds words in the summary and text, requires
+     * every word and matches word beginnings.
+     * On MySQL this goes through the full-text index; on SQLite it is a plain
+     * text match, which gives the same results for these words.
+     */
+    public function testKeywordSearchCoversSummaryAndTextAndRequiresEveryWord(): void
+    {
+        $this->content('articles', ['category' => 'news', 'title' => 'Item one', 'summary' => 'Talks with traders in Juba']);
+        $this->content('articles', ['category' => 'news', 'title' => 'Item two', 'body' => 'Scholarship announcement for students']);
+        $this->content('articles', ['category' => 'news', 'title' => 'Item three', 'body' => 'Scholarship results']);
+
+        $search = fn (string $q): string => $this->get('en/news-press/news?q=' . rawurlencode($q))->getBody();
+
+        $html = $search('trader');
+        $this->assertStringContainsString('Item one', $html);
+        $this->assertStringNotContainsString('Item two', $html);
+
+        $html = $search('scholarship announcement');
+        $this->assertStringContainsString('Item two', $html);
+        $this->assertStringNotContainsString('Item three', $html);
+
+        // A short word the full-text index skips still finds a match.
+        $this->assertStringContainsString('Item one', $search('Ju'));
+    }
+
     public function testNewsListIsPaginated(): void
     {
         for ($i = 1; $i <= 12; $i++) {

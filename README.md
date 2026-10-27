@@ -56,6 +56,8 @@ See [docs/testing.md](docs/testing.md) for running the tests against MySQL, and
 | [docs/accessibility.md](docs/accessibility.md) | WCAG 2.2 AA checks, results and what still needs a person |
 | [docs/testing.md](docs/testing.md) | Test suites and how to run them |
 | [docs/decision-log.md](docs/decision-log.md) | Confirmed, proposed and deferred decisions |
+| [docs/requirements-brief-v2.4.md](docs/requirements-brief-v2.4.md) | The requirements brief with those decisions written in, for any developer or AI tool |
 
 The requirements baseline is the MOFAIC WEB Requirements & Architecture Brief,
-version 2.3 (26 October 2026).
+[version 2.4](docs/requirements-brief-v2.4.md) (27 October 2026), which writes
+the sponsor's decisions into version 2.3 (26 October 2026).

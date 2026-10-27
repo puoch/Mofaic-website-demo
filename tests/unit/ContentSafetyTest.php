@@ -30,8 +30,13 @@ final class ContentSafetyTest extends CIUnitTestCase
         'Serbia', 'Serbian', 'Srbija', 'Srbije', 'Republika', 'Belgrade', 'Beograd', 'Kneza', 'dinars?', 'RSD', 'gov\.rs', 'mfa\.rs', '\+381',
     ];
 
-    /** Files that must name these words: the framework's list of country domains, and this test. */
-    private const ALLOWED = ['app/Config/Hostnames.php', 'tests/unit/ContentSafetyTest.php'];
+    /**
+     * Files that must name these words: the framework's list of country
+     * domains, this test, and the requirements brief, which names the
+     * Serbian sites as structure references and warns against the Kenyan
+     * placeholder text.
+     */
+    private const ALLOWED = ['app/Config/Hostnames.php', 'tests/unit/ContentSafetyTest.php', 'docs/requirements-brief-v2.4.md'];
 
     private static function pattern(): string
     {

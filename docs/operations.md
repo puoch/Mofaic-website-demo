@@ -44,7 +44,7 @@ MOFAIC to fill in; none have been invented.
 | Notifications or newsletter email not arriving | `mail_queue` rows with status `failed` and their `last_error`; cron for `mail:send` |
 | Public forms say they are closed | The privacy notice (and, for registration, the voluntary statement) block is empty under Content > Fixed text blocks |
 | "Too many forms" for many visitors at once | Visitors may share one address behind a proxy. Check that the web server passes the real visitor address, then `Config\Submissions::$submissionsPerHour` |
-| Suspected account misuse | `php spark staff ban <email>`, then read the audit log at `/admin/audit` |
+| Suspected account misuse | Ban the account on Admin > Staff accounts (or `php spark staff ban <email>`), then read the audit log at `/admin/audit` |
 | Data loss or corruption | Follow "Restoring after a failure" in deployment.md. Restore into a new database first |
 
 New accounts and role changes use Shield's command (see [setup.md](setup.md)):
@@ -60,11 +60,12 @@ never passwords or the contents of submissions.
 
 Every quarter a Super Administrator and the application owner go through the
 staff list together and record the result (date, who reviewed, changes made).
-There is no staff-account screen in the administration area yet, so the list
-comes from the server:
+The list is on **Admin > Staff accounts** (`/admin/staff`, Super
+Administrators only): username, email, role, departments, diaspora access,
+status and last sign-in. The same list is available on the server:
 
 ```bash
-php spark staff list    # email, roles, departments, diaspora access, status, last sign-in
+php spark staff list
 ```
 
 1. Every account belongs to someone who still works for the Ministry and still
@@ -72,7 +73,7 @@ php spark staff list    # email, roles, departments, diaspora access, status, la
 2. Each person has the lowest role that covers their work (Read-Only Staff,
    Department Editor, Ministry Administrator, Super Administrator).
 3. Department Editors are members of the right departments only
-   (`php spark staff department <email> <department-slug> [--remove]`).
+   (Admin > Staff accounts, or `php spark staff department <email> <department-slug> [--remove]`).
 4. **Admin > Diaspora access**: each grant is still needed, and "handle" is only
    given to people who answer diaspora submissions. Super Administrators have
    no diaspora access unless granted per person (decision PD-02).
@@ -85,7 +86,7 @@ php spark staff list    # email, roles, departments, diaspora access, status, la
 
 When someone leaves or changes job, on or before their last working day:
 
-1. Ban the account: `php spark staff ban <email> --reason "Left the Ministry"`.
+1. Ban the account on Admin > Staff accounts, with a reason such as "Left the Ministry" (or `php spark staff ban <email> --reason "Left the Ministry"`).
    Shield signs them out on their next request and refuses new sign-ins. Do
    not delete the account: the audit log and content history point at it.
 2. Remove their diaspora access grant (**Admin > Diaspora access**) and their

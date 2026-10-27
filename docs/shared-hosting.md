@@ -35,7 +35,7 @@ tested.
 | PHP 8.3 or later, with `intl`, `mbstring`, `mysqli`, `fileinfo`, `json` and `openssl` | CodeIgniter 4.7 and Shield. `fileinfo` checks uploaded file types |
 | MySQL 8.0 or 8.4 | Tested. MariaDB is not tested; avoid it, or run the test suite on it first |
 | Apache or LiteSpeed reading `.htaccess`, with `mod_rewrite` and `mod_headers` | Clean addresses and the protections above. Nginx-only hosts need the server block from deployment.md instead |
-| SSH or the cPanel Terminal | **Needed.** Creating the first staff account (`php spark shield:user create`) asks for the password interactively, and `php spark staff` has no web screen yet (G5-04). Migrations could run from a one-off cron job, but account setup cannot |
+| SSH or the cPanel Terminal | **Needed.** Creating the first staff account (`php spark shield:user create`) asks for the password interactively, although staff accounts can now be managed on Admin > Staff accounts once the first Super Administrator exists. Migrations could run from a one-off cron job, but account setup cannot |
 | Cron jobs | `mail:send` sends staff notifications and newsletters (PD-10). Many hosts allow every 5 or 15 minutes, not every minute; email then waits that long. Staff sign-in codes do not wait for cron, because Shield sends them directly |
 | SMTP with your sending address | Sign-in codes are emailed (PD-01), so without mail nobody can sign in. Hosts usually limit email per hour; send newsletters with `--limit` |
 | HTTPS (AutoSSL or Let's Encrypt) | Set `app.forceGlobalSecureRequests` and `cookie.secure` as for staging |
