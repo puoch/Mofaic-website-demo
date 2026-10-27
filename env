@@ -1,0 +1,60 @@
+#--------------------------------------------------------------------
+# MOFAIC WEB environment template
+#--------------------------------------------------------------------
+# Copy this file to .env on each server and fill in the values.
+# Never commit .env. See docs/configuration.md for every setting.
+
+#--------------------------------------------------------------------
+# ENVIRONMENT: development | testing | production
+# Staging on the VPS also uses "production" so it behaves like the live site.
+#--------------------------------------------------------------------
+CI_ENVIRONMENT = development
+
+#--------------------------------------------------------------------
+# APP
+#--------------------------------------------------------------------
+app.baseURL = 'http://localhost:8080/'
+# Production and staging: redirect all traffic to HTTPS.
+# app.forceGlobalSecureRequests = true
+
+#--------------------------------------------------------------------
+# DATABASE (MySQL 8.4 LTS)
+#--------------------------------------------------------------------
+database.default.hostname = 127.0.0.1
+database.default.database = mofaic_web
+database.default.username = mofaic_web
+database.default.password =
+database.default.DBDriver = MySQLi
+database.default.port = 3306
+database.default.charset = utf8mb4
+database.default.DBCollat = utf8mb4_unicode_ci
+
+#--------------------------------------------------------------------
+# ENCRYPTION
+# Generate once per server with: php spark key:generate
+#--------------------------------------------------------------------
+# encryption.key =
+
+#--------------------------------------------------------------------
+# COOKIES AND SESSIONS
+# Production and staging: send cookies over HTTPS only.
+#--------------------------------------------------------------------
+# cookie.secure = true
+
+#--------------------------------------------------------------------
+# EMAIL (sign-in codes now; notifications at Gate 4)
+# Live site: MOFAIC internal mail relay (decision pending, brief 6.7).
+#--------------------------------------------------------------------
+email.fromEmail = ''
+email.fromName = 'MOFAIC WEB'
+email.protocol = smtp
+email.SMTPHost = ''
+email.SMTPPort = 587
+email.SMTPCrypto = tls
+email.SMTPUser = ''
+email.SMTPPass = ''
+
+#--------------------------------------------------------------------
+# DEMO DATA (development and testing only)
+#--------------------------------------------------------------------
+# DEMO_PASSWORD = choose-a-local-password

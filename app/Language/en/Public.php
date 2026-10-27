@@ -1,0 +1,86 @@
+<?php
+
+/*
+ * English text for public pages. This is interface text only; Ministry
+ * content is entered by editors.
+ */
+return [
+    'breadcrumb'            => 'Breadcrumb',
+    'nothingPublished'      => 'Nothing has been published here yet.',
+    'readMore'              => 'Read more',
+    'viewAll'               => 'View all',
+    'published'             => 'Published {0}',
+    'downloads'             => 'Downloads',
+    'images'                => 'Images',
+    'audioVideo'            => 'Audio and video',
+    'externalLinks'         => 'Official links',
+    'opensExternal'         => '(external site)',
+    'watchListen'           => 'Open on the official channel',
+    'inThisSection'         => 'In this section',
+    'pageOf'                => 'Page {0} of {1}',
+    'previous'              => 'Previous',
+    'next'                  => 'Next',
+    'pagination'            => 'Pages',
+
+    // Home
+    'featuredNews'          => 'Featured news',
+    'ministerEngagements'   => "Minister's recent engagements",
+    'missionActivitiesHome' => 'Activities of our diplomatic missions',
+    'quickLinks'            => 'Quick links',
+    'emergencyContacts'     => 'Official emergency contacts',
+    'missionFinder'         => 'Diplomatic Mission Finder',
+    'missionFinderIntro'    => 'Choose a country to see every South Sudanese mission that serves it.',
+    'country'               => 'Country',
+    'chooseCountry'         => 'Choose a country',
+    'findMissions'          => 'Find missions',
+    'noCountriesYet'        => 'No mission records have been published yet.',
+
+    // News / Press
+    'news'                  => 'News',
+    'statements'            => 'Statements',
+    'socialMedia'           => 'Social Media',
+    'gallery'               => 'Gallery',
+    'missionActivities'     => 'Mission activities',
+    'latest'                => 'Latest news and statements',
+    'search'                => 'Search',
+    'keywords'              => 'Keywords',
+    'fromDate'              => 'From',
+    'toDate'                => 'To',
+    'applyFilters'          => 'Search',
+    'clearFilters'          => 'Clear',
+    'resultCount'           => '{0, plural, =0{No results} one{# result} other{# results}}',
+    'tagged'                => 'Tagged: {0}',
+    'tags'                  => 'Tags',
+    'fromMission'           => 'From:',
+    'officialAccounts'      => 'Official accounts',
+    'socialEmbedNote'       => 'Embedded feeds will be added if the Ministry approves them and the provider supports them.',
+    'albumItems'            => '{0, plural, one{# item} other{# items}}',
+
+    // Archives
+    'archives'              => 'Archives',
+    'relatedArticle'        => 'Related news',
+    'relatedGallery'        => 'Related gallery',
+
+    // Missions
+    'missionsAbroad'        => 'Missions Abroad',
+    'missionsInSouthSudan'  => 'Foreign Missions in South Sudan',
+    'missionCount'          => '{0, plural, =0{none listed} one{# mission} other{# missions}}',
+    'countryDirectory'      => 'Missions by country',
+    'countryDirectoryIntro' => 'Countries with a published mission record.',
+    'servingCountry'        => 'South Sudanese missions serving {0}',
+    'representationIn'      => 'Representation of {0} in South Sudan',
+    'noMissionForCountry'   => 'No South Sudanese mission is currently listed for {0}.',
+    'resident'              => 'Resident mission',
+    'nonResident'           => 'Non-resident: serves this country from {0}',
+    'nonResidentNoPlace'    => 'Non-resident',
+    'location'              => 'Location',
+    'contacts'              => 'Contacts',
+    'telephone'             => 'Telephone',
+    'email'                 => 'Email',
+    'website'               => 'Website',
+    'headOfMission'         => 'Head of mission',
+    'countriesServed'       => 'Countries served',
+    'relatedMissions'       => 'Other missions serving the same countries',
+    'activities'            => 'Activities',
+    'represents'            => 'Represents',
+];
