@@ -4,6 +4,10 @@ Decided 26 October 2026: **development and staging run on a VPS. The live site
 runs in MOFAIC's on-premises data centre.** The application uses no
 provider-specific services, so the same steps work in both places.
 
+An early test copy may run on shared hosting first (sponsor, 27 October 2026);
+see [shared-hosting.md](shared-hosting.md). That does not change the decision
+above.
+
 The on-premises hardware, network edge, mail relay and disaster recovery
 arrangements are still open (brief section 6, items 7, 9 and 10). Anything
 below marked *proposed* needs MOFAIC approval.

@@ -50,6 +50,8 @@ See [docs/testing.md](docs/testing.md) for running the tests against MySQL, and
 | [docs/architecture.md](docs/architecture.md) | Modules, data and request flow |
 | [docs/permissions.md](docs/permissions.md) | Roles, permissions and department scope |
 | [docs/deployment.md](docs/deployment.md) | VPS staging and on-premises production, backups, the go-live check |
+| [docs/shared-hosting.md](docs/shared-hosting.md) | Running an early test copy on shared hosting |
+| [docs/infinityfree.md](docs/infinityfree.md) | Step by step: the InfinityFree test copy, deployed from GitHub |
 | [docs/operations.md](docs/operations.md) | Runbook, access review, offboarding, capacity, training |
 | [docs/accessibility.md](docs/accessibility.md) | WCAG 2.2 AA checks, results and what still needs a person |
 | [docs/testing.md](docs/testing.md) | Test suites and how to run them |

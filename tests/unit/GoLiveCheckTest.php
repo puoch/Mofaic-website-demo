@@ -39,14 +39,30 @@ final class GoLiveCheckTest extends StaffTestCase
     /**
      * @return array<string, array{area: string, check: string, status: string, detail: string}>
      */
-    private function results(?GoLive $config = null): array
+    /**
+     * @param array{int, string}|null $composerJson what the web server answers for /composer.json
+     */
+    private function results(?GoLive $config = null, ?array $composerJson = [404, 'Not found']): array
     {
         $config ??= new GoLive();
         $config->backupDirectory = $this->backups;
 
+        // No real web request: answer as the web server would.
+        $check = new class ($config, $composerJson) extends GoLiveCheck {
+            public function __construct(GoLive $config, private readonly ?array $answer)
+            {
+                parent::__construct($config);
+            }
+
+            protected function fetch(string $url): ?array
+            {
+                return $this->answer;
+            }
+        };
+
         $results = [];
 
-        foreach ((new GoLiveCheck($config))->run() as $r) {
+        foreach ($check->run() as $r) {
             $results[$r['check']] = $r;
         }
 
@@ -116,6 +132,30 @@ final class GoLiveCheckTest extends StaffTestCase
         \CodeIgniter\Config\Factories::injectMock('config', 'Assets', $assets);
 
         $this->assertSame('warn', $this->results()['Bootstrap is served from this server']['status']);
+    }
+
+    public function testFailsWhenTheWebServerServesProjectFiles(): void
+    {
+        $check = 'Project files are not served by the web server';
+
+        $this->assertSame('pass', $this->results(null, [404, 'Not found'])[$check]['status']);
+        $this->assertSame('fail', $this->results(null, [200, (string) file_get_contents(ROOTPATH . 'composer.json')])[$check]['status']);
+        $this->assertSame('warn', $this->results(null, [200, '<script src="/aes.js"></script>'])[$check]['status'], 'A host browser check is not proof either way.');
+        $this->assertSame('warn', $this->results(null, null)[$check]['status']);
+    }
+
+    public function testHostingWorkaroundsAreFlaggedForTheLiveSite(): void
+    {
+        $this->assertSame('pass', $this->results()['Maintenance page is switched off']['status']);
+        $this->assertSame('pass', $this->results()['Email is sent by cron, not during page requests']['status']);
+
+        $hosting                    = new \Config\Hosting();
+        $hosting->maintenanceToken  = str_repeat('x', 32);
+        $hosting->sendMailInRequest = true;
+        \CodeIgniter\Config\Factories::injectMock('config', 'Hosting', $hosting);
+
+        $this->assertSame('fail', $this->results()['Maintenance page is switched off']['status']);
+        $this->assertSame('warn', $this->results()['Email is sent by cron, not during page requests']['status']);
     }
 
     public function testTheTestEnvironmentIsNotReady(): void

@@ -1,0 +1,68 @@
+name: Deploy test copy to InfinityFree
+
+# Test and demonstration copy only, never the live site. Runs only when started
+# by hand (Actions tab, "Run workflow"). See docs/infinityfree.md.
+#
+# Needs three repository secrets, set by the repository owner under
+# Settings > Secrets and variables > Actions:
+#   INFINITYFREE_FTP_SERVER    for example ftpupload.net
+#   INFINITYFREE_FTP_USERNAME  the account's FTP user, for example if0_12345678
+#   INFINITYFREE_FTP_PASSWORD  the account's FTP password
+#
+# .env is never uploaded: create it once on the server (docs/infinityfree.md).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-infinityfree
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Test, build and upload
+    runs-on: ubuntu-24.04
+    environment: infinityfree
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # 2.36.0
+        with:
+          php-version: '8.4'
+          tools: composer
+          extensions: intl, mbstring, mysqli, sqlite3, xml
+          coverage: none
+
+      - name: Run the tests first
+        run: |
+          composer install --no-progress --no-interaction --prefer-dist
+          vendor/bin/phpunit --no-coverage
+
+      - name: Build the upload bundle
+        run: scripts/build-bundle.sh "$RUNNER_TEMP/bundle"
+
+      - name: Upload over FTP with TLS
+        uses: SamKirkland/FTP-Deploy-Action@110f9186c050f71550953127052e77650219c287 # v4.4.0
+        with:
+          server: ${{ secrets.INFINITYFREE_FTP_SERVER }}
+          username: ${{ secrets.INFINITYFREE_FTP_USERNAME }}
+          password: ${{ secrets.INFINITYFREE_FTP_PASSWORD }}
+          protocol: ftps
+          # InfinityFree's FTP certificate chain is incomplete, so a strict
+          # check fails. The transfer is still encrypted; see docs/infinityfree.md.
+          security: loose
+          local-dir: ${{ runner.temp }}/bundle/
+          server-dir: /htdocs/
+          # The action only replaces or deletes files it uploaded itself, so
+          # .env, uploaded media, logs and sessions on the server are kept.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .env

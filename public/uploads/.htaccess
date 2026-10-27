@@ -1,0 +1,14 @@
+# Uploaded files are never run as code (the Nginx setup does the same with
+# its /uploads/ rule). Needed on Apache hosting, where .htaccess applies.
+<FilesMatch "\.(?i:php[0-9]?|phtml|phar|pht|pl|py|cgi|sh|shtml|htaccess)$">
+	<IfModule authz_core_module>
+		Require all denied
+	</IfModule>
+	<IfModule !authz_core_module>
+		Deny from all
+	</IfModule>
+</FilesMatch>
+
+<IfModule mod_headers.c>
+	Header always set X-Content-Type-Options "nosniff"
+</IfModule>
