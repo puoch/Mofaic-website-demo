@@ -60,6 +60,13 @@ final class MaintenanceTest extends StaffTestCase
         $this->assertSame(1, $this->db->table('audit_events')->where('event', 'maintenance.denied')->countAllResults());
     }
 
+    public function testTheTokenStaysOutOfErrorLogs(): void
+    {
+        $parameter = new \ReflectionParameter([\App\Controllers\Maintenance::class, 'page'], 'token');
+
+        $this->assertNotSame([], $parameter->getAttributes(\SensitiveParameter::class));
+    }
+
     public function testAcceptsAPastedTokenWithSpaceAround(): void
     {
         $this->enable();

@@ -129,7 +129,11 @@ class Maintenance extends BaseController
         }
     }
 
-    private function page(string $token = '', ?string $message = null, ?string $error = null, bool $unlocked = false): string
+    /**
+     * The token is marked sensitive so an error log's stack trace shows it as
+     * an object, not in plain text.
+     */
+    private function page(#[\SensitiveParameter] string $token = '', ?string $message = null, ?string $error = null, bool $unlocked = false): string
     {
         $data = ['token' => $token, 'message' => $message, 'error' => $error, 'unlocked' => $unlocked];
 
