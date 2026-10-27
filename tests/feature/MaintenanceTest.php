@@ -54,9 +54,19 @@ final class MaintenanceTest extends StaffTestCase
         $page->assertSee('Maintenance token');
 
         $result = $this->send(['token' => 'wrong', 'action' => 'migrate']);
-        $result->assertSee('That is not the maintenance token.');
+        $result->assertSee('That is not the maintenance token. You entered 5 characters; the token in .env has ' . strlen(self::TOKEN) . '.');
+        $result->assertDontSee(self::TOKEN);
         $result->assertDontSee('Create a staff account');
         $this->assertSame(1, $this->db->table('audit_events')->where('event', 'maintenance.denied')->countAllResults());
+    }
+
+    public function testAcceptsAPastedTokenWithSpaceAround(): void
+    {
+        $this->enable();
+
+        $result = $this->send(['token' => ' ' . self::TOKEN . "\r\n", 'action' => 'migrate']);
+
+        $result->assertSee('Migrations and structure pages are up to date.');
     }
 
     public function testRunsMigrationsAndShowsTheGoLiveCheck(): void
