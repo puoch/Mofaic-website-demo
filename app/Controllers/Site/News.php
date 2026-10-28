@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers\Site;
 
+use App\Libraries\FullTextQuery;
 use CodeIgniter\I18n\Time;
 use Exception;
 
@@ -12,7 +13,9 @@ use Exception;
  * plus mission activities and tag pages.
  *
  * News and statements are listed newest first, with keyword search and
- * date filters. Exact filter definitions are still to be confirmed.
+ * date filters. Exact filter definitions are still to be confirmed. On MySQL
+ * the keyword search uses the full-text index (PD-15); elsewhere, and for
+ * words the index skips, it is a plain text match.
  */
 class News extends SiteController
 {
@@ -164,11 +167,18 @@ class News extends SiteController
     private function applyFilters(\CodeIgniter\Database\BaseBuilder $builder, array $filters): void
     {
         if ($filters['q'] !== '') {
-            $builder->groupStart()
-                ->like('title', $filters['q'])
-                ->orLike('summary', $filters['q'])
-                ->orLike('body', $filters['q'])
-                ->groupEnd();
+            $db       = db_connect();
+            $fullText = $db->DBDriver === 'MySQLi' ? FullTextQuery::booleanMode($filters['q']) : null;
+
+            if ($fullText !== null) {
+                $builder->where('MATCH (title, summary, body) AGAINST (' . $db->escape($fullText) . ' IN BOOLEAN MODE)', null, false);
+            } else {
+                $builder->groupStart()
+                    ->like('title', $filters['q'])
+                    ->orLike('summary', $filters['q'])
+                    ->orLike('body', $filters['q'])
+                    ->groupEnd();
+            }
         }
 
         if ($filters['from'] !== '') {
