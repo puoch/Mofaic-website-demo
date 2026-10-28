@@ -25,6 +25,8 @@ $typeLabel  = $definition === null ? '' : lang('Site.nav.' . $definition['navKey
         $pending = '<span class="text-muted">' . esc(lang('Public.toBeConfirmed')) . '</span>';
         $place   = implode(', ', array_filter([$mission['city'], $mission['location_country']]));
         ?>
+        <div class="row gy-4 gx-lg-5">
+        <div class="<?= $media === [] ? 'col-12' : 'col-lg-7' ?>">
         <div class="mission-heading">
             <?php if ($flag !== null): ?>
             <img class="flag" src="<?= esc($flag, 'attr') ?>" alt="" width="96" height="72">
@@ -72,14 +74,6 @@ $typeLabel  = $definition === null ? '' : lang('Site.nav.' . $definition['navKey
             </tbody>
         </table>
 
-        <?php if ($media !== []): ?>
-        <div class="mission-photos">
-            <?php foreach ($media as $image): ?>
-            <img class="mission-image" src="<?= esc(MediaService::url($image), 'attr') ?>" alt="<?= esc((string) $image['alt_text'], 'attr') ?>" loading="lazy">
-            <?php endforeach ?>
-        </div>
-        <?php endif ?>
-
         <?php if ($bodyHtml !== ''): ?><div class="prose"><?= $bodyHtml ?></div><?php endif ?>
 
         <?php if ($coverage !== []): ?>
@@ -116,6 +110,24 @@ $typeLabel  = $definition === null ? '' : lang('Site.nav.' . $definition['navKey
             <h2 id="mission-activities" class="h5"><?= esc(lang('Public.activities')) ?></h2>
             <?= view('site/partials/article_list', ['articles' => $activities]) ?>
         </section>
+        </div>
+
+        <?php if ($media !== []): ?>
+        <?php /* The first image is the main photo of the mission; the rest are shown smaller below it. Each opens full size. */ ?>
+        <aside class="col-lg-5" aria-labelledby="mission-photos-heading" data-testid="mission-photos">
+            <h2 id="mission-photos-heading" class="visually-hidden"><?= esc(lang('Public.images')) ?></h2>
+            <ul class="mission-gallery">
+                <?php foreach ($media as $i => $image): ?>
+                <li class="<?= $i === 0 ? 'mission-gallery-main' : 'mission-gallery-thumb' ?>">
+                    <a href="<?= esc(MediaService::url($image), 'attr') ?>">
+                        <img src="<?= esc(MediaService::url($image), 'attr') ?>" alt="<?= esc((string) $image['alt_text'], 'attr') ?>"<?= $i === 0 ? '' : ' loading="lazy"' ?>>
+                    </a>
+                </li>
+                <?php endforeach ?>
+            </ul>
+        </aside>
+        <?php endif ?>
+        </div>
     </article>
 </div>
 <?= $this->endSection() ?>

@@ -154,6 +154,9 @@ if ($type === 'site_blocks' && ! $isNew) {
 <?php if (! $isNew && ! empty($definition['media'])): ?>
 <section class="mt-5" id="media" aria-labelledby="media-heading">
     <h2 id="media-heading" class="h4">Files and media</h2>
+    <?php if ($type === 'missions'): ?>
+    <p class="form-text" data-testid="mission-photos-help">Photos show beside the mission details on the public page. The first image added is the large main photo of the building; later images appear as smaller photos below it.</p>
+    <?php endif ?>
     <?php if ($media === []): ?>
     <p class="section-pending">No files yet.</p>
     <?php else: ?>

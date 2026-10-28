@@ -690,13 +690,39 @@ summary.org-unit {
     overflow-wrap: anywhere;
 }
 
-.mission-photos {
-    display: flex;
-    flex-wrap: wrap;
+.mission-gallery {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
     gap: 1rem;
-    margin-block-end: 1.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.mission-photos .mission-image {
-    max-inline-size: 20rem;
+.mission-gallery-main {
+    grid-column: 1 / -1;
+}
+
+.mission-gallery a {
+    display: block;
+    border-radius: 0.375rem;
+}
+
+.mission-gallery a:focus-visible {
+    outline: 0.1875rem solid #2f6fbf;
+    outline-offset: 0.125rem;
+}
+
+.mission-gallery img {
+    display: block;
+    inline-size: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border: 2px solid #2f6fbf;
+    border-radius: 0.375rem;
+    background: #e9f0f8;
+}
+
+.mission-gallery-main img {
+    aspect-ratio: 16 / 10;
 }
