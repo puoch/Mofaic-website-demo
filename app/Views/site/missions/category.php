@@ -26,5 +26,5 @@ $groupLabel = $group === 'abroad' ? lang('Site.nav.missionsAbroad') : lang('Site
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-    <script src="<?= esc(base_url('assets/js/mission-filter.js'), 'attr') ?>" defer></script>
+    <script src="<?= esc(asset_url('assets/js/mission-filter.js'), 'attr') ?>" defer></script>
 <?= $this->endSection() ?>

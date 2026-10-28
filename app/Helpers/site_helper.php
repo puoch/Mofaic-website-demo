@@ -159,6 +159,20 @@ if (! function_exists('mission_flag_iso')) {
     }
 }
 
+if (! function_exists('asset_url')) {
+    /**
+     * URL of one of our own stylesheets or scripts, with a version taken
+     * from its content, so browsers and host caches fetch the new file after
+     * each deployment instead of keeping an old copy.
+     */
+    function asset_url(string $path): string
+    {
+        $file = FCPATH . ltrim($path, '/');
+
+        return base_url($path) . (is_file($file) ? '?v=' . hash_file('crc32b', $file) : '');
+    }
+}
+
 if (! function_exists('flag_url')) {
     /**
      * URL of a country flag served from this server (flag-icons, MIT,
