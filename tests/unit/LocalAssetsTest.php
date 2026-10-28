@@ -23,7 +23,7 @@ final class LocalAssetsTest extends CIUnitTestCase
         $assets = [];
 
         foreach (glob(APPPATH . 'Views/{layouts,partials}/*.php', GLOB_BRACE) as $view) {
-            preg_match_all("/base_url\\('(assets\\/[^']+)'(?: \\. \\\$bootstrapCss)?\\)/", (string) file_get_contents($view), $m);
+            preg_match_all("/(?:base|asset)_url\\('(assets\\/[^']+)'(?: \\. \\\$bootstrapCss)?\\)/", (string) file_get_contents($view), $m);
             $assets = array_merge($assets, $m[1]);
         }
 
@@ -39,6 +39,14 @@ final class LocalAssetsTest extends CIUnitTestCase
         foreach (array_unique($assets) as $asset) {
             $this->assertFileExists(FCPATH . $asset);
         }
+    }
+
+    public function testOwnAssetsCarryAContentVersion(): void
+    {
+        $url = asset_url('assets/css/site.css');
+
+        $this->assertSame(base_url('assets/css/site.css') . '?v=' . hash_file('crc32b', FCPATH . 'assets/css/site.css'), $url);
+        $this->assertSame(base_url('assets/missing.css'), asset_url('assets/missing.css'));
     }
 
     public function testLocalModeServesBootstrapFromThisServer(): void

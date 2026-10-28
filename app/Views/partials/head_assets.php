@@ -9,4 +9,4 @@
 ?>
     <?= bootstrap_css($dir) ?>
 
-    <link rel="stylesheet" href="<?= base_url('assets/css/site.css') ?>">
+    <link rel="stylesheet" href="<?= esc(asset_url('assets/css/site.css'), 'attr') ?>">

@@ -95,6 +95,21 @@ final class MissionsTest extends StaffTestCase
         $beta->assertSee('No South Sudanese consulate is listed in Testland Beta.');
     }
 
+    public function testProfileShowsTheFirstImageLargeAndTheRestSmaller(): void
+    {
+        $this->get('en/missions/profile/test-embassy-alpha')->assertDontSee('data-testid="mission-photos"');
+
+        foreach (['Front of the embassy', 'Reception room', 'Garden'] as $i => $alt) {
+            $this->db->table('media')->insert(['kind' => 'image', 'source' => 'upload', 'path' => 'test-' . $i . '.jpg', 'mime' => 'image/jpeg', 'size' => 1, 'title' => $alt, 'alt_text' => $alt]);
+            $this->db->table('media_links')->insert(['media_id' => $this->db->insertID(), 'owner_type' => 'missions', 'owner_id' => $this->embassy, 'sort_order' => $i]);
+        }
+
+        $page = $this->get('en/missions/profile/test-embassy-alpha');
+        $page->assertSee('data-testid="mission-photos"');
+        $this->assertMatchesRegularExpression('/mission-gallery-main">\s*<a[^>]*>\s*<img[^>]*alt="Front of the embassy"/', $page->getBody());
+        $this->assertSame(2, substr_count($page->getBody(), 'mission-gallery-thumb'));
+    }
+
     public function testUnknownCategoryIsNotFound(): void
     {
         $this->expectException(PageNotFoundException::class);
