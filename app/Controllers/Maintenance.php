@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Database\Seeds\MissionsAbroadSeeder;
 use App\Database\Seeds\StructureSeeder;
 use App\Libraries\GoLiveCheck;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -14,8 +15,9 @@ use Config\Hosting;
 use Throwable;
 
 /**
- * /maintenance: database migrations, structure pages, staff accounts and the
- * go-live check for hosts without SSH (Config\Hosting, docs/infinityfree.md).
+ * /maintenance: database migrations, structure pages, the embassies list,
+ * staff accounts and the go-live check for hosts without SSH (Config\Hosting,
+ * docs/infinityfree.md).
  *
  * Switched off (404) unless hosting.maintenanceToken is set in .env. Every
  * action needs the token, attempts are limited per address, and every
@@ -63,9 +65,10 @@ class Maintenance extends BaseController
         }
 
         $message = match ((string) $this->request->getPost('action')) {
-            'migrate'     => $this->migrate(),
-            'create_user' => $this->createUser(),
-            default       => null,
+            'migrate'       => $this->migrate(),
+            'create_user'   => $this->createUser(),
+            'load_missions' => $this->loadMissions(),
+            default         => null,
         };
 
         return $this->page(token: $token, message: $message, unlocked: true);
@@ -78,6 +81,21 @@ class Maintenance extends BaseController
         $this->audit('maintenance.migrated');
 
         return 'Migrations and structure pages are up to date.';
+    }
+
+    private function loadMissions(): string
+    {
+        $before = $this->missionCount();
+        Database::seeder()->setSilent(true)->call(MissionsAbroadSeeder::class);
+        $added = $this->missionCount() - $before;
+        $this->audit('maintenance.missions_loaded', null, null, ['added' => $added]);
+
+        return "Added {$added} mission draft(s). Check and publish them under Content, Missions.";
+    }
+
+    private function missionCount(): int
+    {
+        return Database::connect()->table('missions')->countAllResults();
     }
 
     private function createUser(): string

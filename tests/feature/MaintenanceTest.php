@@ -89,6 +89,15 @@ final class MaintenanceTest extends StaffTestCase
         $this->assertSame('no-store', $result->response()->getHeaderLine('Cache-Control'));
     }
 
+    public function testLoadsTheEmbassiesAsDraftsOnce(): void
+    {
+        $this->enable();
+
+        $this->send(['token' => self::TOKEN, 'action' => 'load_missions'])->assertSee('Added 21 mission draft(s).');
+        $this->send(['token' => self::TOKEN, 'action' => 'load_missions'])->assertSee('Added 0 mission draft(s).');
+        $this->assertSame(0, $this->db->table('missions')->where('status', 'published')->countAllResults());
+    }
+
     public function testCreatesAStaffAccountWithItsRole(): void
     {
         $this->enable();

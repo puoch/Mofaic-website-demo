@@ -61,6 +61,40 @@ final class MissionsTest extends StaffTestCase
         $this->get('en/missions/in-south-sudan/embassies')->assertSee('Test Foreign Embassy');
     }
 
+    public function testCategoryShowsFlagCardsWithCountryNamesAndSearch(): void
+    {
+        $this->db->table('countries')->insert(['iso_code' => 'JP', 'name' => 'Japan', 'is_demo' => 1]);
+        $japan = (int) $this->db->insertID();
+        $this->content('missions', ['name' => 'Embassy in Tokyo', 'category' => 'abroad_embassy', 'location_country_id' => $japan, 'city' => 'Tokyo']);
+
+        $result = $this->get('en/missions/abroad/embassies');
+        $result->assertSee('data-testid="mission-cards"');
+        $result->assertSee('assets/flags/4x3/jp.svg');
+        $result->assertSee('Japan');
+        $result->assertSee('Also accredited to: Testland Gamma');
+        $result->assertSee('Search by country');
+        $result->assertSee('assets/js/mission-filter.js');
+        // A test country without a flag still shows its name.
+        $result->assertSee('Testland Alpha');
+        $result->assertDontSee('assets/flags/4x3/xa.svg');
+    }
+
+    public function testEmbassyProfileListsEveryDetailAndConsulatesInTheCountry(): void
+    {
+        $this->content('missions', ['name' => 'Test Consulate Alpha', 'category' => 'abroad_consulate', 'location_country_id' => $this->alpha, 'city' => 'Port Alpha']);
+        $this->content('missions', ['name' => 'Test Embassy Beta', 'category' => 'abroad_embassy', 'location_country_id' => $this->beta]);
+
+        $alpha = $this->get('en/missions/profile/test-embassy-alpha');
+        $alpha->assertSee('data-testid="mission-details"');
+        $alpha->assertSee('Consulates in Testland Alpha');
+        $alpha->assertSee('Test Consulate Alpha');
+        $alpha->assertDontSee('Test Draft Mission');
+
+        $beta = $this->get('en/missions/profile/test-embassy-beta');
+        $beta->assertSee('To be confirmed');
+        $beta->assertSee('No South Sudanese consulate is listed in Testland Beta.');
+    }
+
     public function testUnknownCategoryIsNotFound(): void
     {
         $this->expectException(PageNotFoundException::class);

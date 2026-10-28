@@ -32,11 +32,12 @@ final class ContentSafetyTest extends CIUnitTestCase
 
     /**
      * Files that must name these words: the framework's list of country
-     * domains, this test, and the requirements brief, which names the
-     * Serbian sites as structure references and warns against the Kenyan
-     * placeholder text.
+     * domains, this test, the requirements brief, which names the Serbian
+     * sites as structure references and warns against the Kenyan placeholder
+     * text, and the sponsor's embassies list (South Sudan has an embassy in
+     * Nairobi; MissionsAbroadSeeder names its source document).
      */
-    private const ALLOWED = ['app/Config/Hostnames.php', 'tests/unit/ContentSafetyTest.php', 'docs/requirements-brief-v2.4.md'];
+    private const ALLOWED = ['app/Config/Hostnames.php', 'tests/unit/ContentSafetyTest.php', 'docs/requirements-brief-v2.4.md', 'app/Database/Seeds/MissionsAbroadSeeder.php'];
 
     private static function pattern(): string
     {
