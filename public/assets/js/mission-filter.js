@@ -1,7 +1,8 @@
 /*
  * Country search on the missions directory (site/missions/_mission_cards).
- * Shows only the cards whose country, city, name or accredited countries
- * contain the typed text, and announces the count to screen readers.
+ * Shows only the cards whose country, city or name contain the typed text,
+ * or that cover a matching country from elsewhere (the card then says which
+ * countries it also covers), and announces the count to screen readers.
  */
 (function () {
     'use strict';
@@ -17,7 +18,7 @@
     var items  = Array.prototype.slice.call(document.querySelectorAll('[data-search]'));
 
     function normalise(text) {
-        return text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+        return (text || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
     }
 
     function apply() {
@@ -25,9 +26,15 @@
         var shown = 0;
 
         items.forEach(function (item) {
-            var match = query === '' || normalise(item.getAttribute('data-search')).indexOf(query) !== -1;
-            item.hidden = !match;
-            shown += match ? 1 : 0;
+            var direct  = query === '' || normalise(item.getAttribute('data-search')).indexOf(query) !== -1;
+            var covered = query !== '' && !direct && normalise(item.getAttribute('data-covers')).indexOf(query) !== -1;
+            var note    = item.querySelector('[data-covers-note]');
+
+            item.hidden = !(direct || covered);
+            if (note) {
+                note.hidden = !covered;
+            }
+            shown += direct || covered ? 1 : 0;
         });
 
         empty.hidden = shown !== 0;
