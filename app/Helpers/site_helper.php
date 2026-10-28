@@ -142,6 +142,40 @@ if (! function_exists('mission_url')) {
     }
 }
 
+if (! function_exists('mission_flag_iso')) {
+    /**
+     * The country whose flag stands for a mission: the host country for
+     * missions abroad, the country represented for foreign missions here.
+     *
+     * @param array<string, mixed> $mission
+     */
+    function mission_flag_iso(array $mission): ?string
+    {
+        $iso = str_starts_with((string) $mission['category'], 'abroad_')
+            ? ($mission['location_iso'] ?? null)
+            : ($mission['represents_iso'] ?? null);
+
+        return is_string($iso) && $iso !== '' ? $iso : null;
+    }
+}
+
+if (! function_exists('flag_url')) {
+    /**
+     * URL of a country flag served from this server (flag-icons, MIT,
+     * public/assets/flags), or null when there is no flag for the code.
+     */
+    function flag_url(?string $isoCode): ?string
+    {
+        $code = strtolower((string) $isoCode);
+
+        if (preg_match('/^[a-z]{2}$/', $code) !== 1 || ! is_file(FCPATH . 'assets/flags/4x3/' . $code . '.svg')) {
+            return null;
+        }
+
+        return base_url('assets/flags/4x3/' . $code . '.svg');
+    }
+}
+
 if (! function_exists('bootstrap_css')) {
     /**
      * The Bootstrap stylesheet tag, from this server or the CDN (PD-17,

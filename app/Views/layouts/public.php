@@ -55,5 +55,6 @@ $nav    = config(Config\Navigation::class);
     </footer>
 
     <?= bootstrap_js() ?>
+<?= $this->renderSection('scripts') ?>
 </body>
 </html>

@@ -131,6 +131,10 @@ change, so check again before relying on them.
 2. If the change has a database migration, put `hosting.maintenanceToken`
    back into `.env`, open `/maintenance`, run migrations, and remove the token
    again.
+3. To add the embassies from *Mission abroad.docx*, press *Load embassies as
+   drafts* on `/maintenance` (same token steps). Then sign in, open Content,
+   Missions, check each embassy and publish it. Pressing the button again adds
+   nothing twice.
 
 ## Without GitHub Actions
 

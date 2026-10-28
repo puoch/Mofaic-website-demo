@@ -88,6 +88,51 @@ class MissionDirectory
     }
 
     /**
+     * Non-resident coverage of several missions at once, for directory cards.
+     *
+     * @param list<int> $missionIds
+     *
+     * @return array<int, list<string>> mission id => country names
+     */
+    public function accreditationsOf(array $missionIds): array
+    {
+        if ($missionIds === []) {
+            return [];
+        }
+
+        $rows = $this->db->table('mission_coverage')
+            ->select('mission_coverage.mission_id, countries.name')
+            ->join('countries', 'countries.id = mission_coverage.country_id')
+            ->whereIn('mission_coverage.mission_id', $missionIds)
+            ->where('mission_coverage.coverage', 'non_resident')
+            ->orderBy('countries.name')
+            ->get()
+            ->getResultArray();
+
+        $names = [];
+        foreach ($rows as $row) {
+            $names[(int) $row['mission_id']][] = $row['name'];
+        }
+
+        return $names;
+    }
+
+    /**
+     * Published South Sudanese consulates located in a country.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function consulatesIn(int $countryId, string $locale): array
+    {
+        return $this->published($locale)
+            ->where('missions.category', 'abroad_consulate')
+            ->where('missions.location_country_id', $countryId)
+            ->orderBy('missions.name')
+            ->get()
+            ->getResultArray();
+    }
+
+    /**
      * South Sudanese missions abroad serving a country, resident first.
      *
      * @return list<array<string, mixed>>
@@ -184,7 +229,7 @@ class MissionDirectory
     private function published(string $locale): \CodeIgniter\Database\BaseBuilder
     {
         return $this->db->table('missions')
-            ->select('missions.*, countries.name AS location_country, countries.iso_code AS location_iso, represented.name AS represents_country')
+            ->select('missions.*, countries.name AS location_country, countries.iso_code AS location_iso, represented.name AS represents_country, represented.iso_code AS represents_iso')
             ->join('countries', 'countries.id = missions.location_country_id', 'left')
             ->join('countries AS represented', 'represented.id = missions.represents_country_id', 'left')
             ->where(['missions.status' => 'published', 'missions.locale' => $locale]);

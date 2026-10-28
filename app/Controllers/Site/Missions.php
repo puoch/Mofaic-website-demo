@@ -46,12 +46,15 @@ class Missions extends SiteController
 
     public function category(string $group, string $segment): string
     {
-        $category = $this->categoryFor($group . '/' . $segment) ?? $this->notFound();
+        $category  = $this->categoryFor($group . '/' . $segment) ?? $this->notFound();
+        $directory = service('missionDirectory');
+        $missions  = $directory->byCategory($category, $this->locale());
 
         return view('site/missions/category', [
-            'group'    => $group,
-            'category' => $category,
-            'missions' => service('missionDirectory')->byCategory($category, $this->locale()),
+            'group'          => $group,
+            'category'       => $category,
+            'missions'       => $missions,
+            'accreditations' => $directory->accreditationsOf(array_map('intval', array_column($missions, 'id'))),
         ]);
     }
 
@@ -66,6 +69,9 @@ class Missions extends SiteController
             'bodyHtml'   => service('markdown')->toHtml($mission['body']),
             'coverage'   => $directory->coverageOf($id),
             'related'    => $directory->relatedTo($id, $this->locale()),
+            'consulates' => $mission['category'] === 'abroad_embassy' && $mission['location_country_id'] !== null
+                ? $directory->consulatesIn((int) $mission['location_country_id'], $this->locale())
+                : null,
             'activities' => $this->published('articles')->where(['category' => 'mission_activity', 'mission_id' => $id])->orderBy('published_at', 'DESC')->limit(10)->get()->getResultArray(),
             'media'      => service('media')->forOwner('missions', $id, 'image'),
         ]);

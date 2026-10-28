@@ -69,6 +69,15 @@
         <button class="btn btn-primary" type="submit">Create account</button>
     </form>
 
+    <h2 class="h5 mt-4">Embassies abroad</h2>
+    <p>Adds the embassies from <em>Mission abroad.docx</em> as drafts, with their countries and accreditations. Existing records are left alone. Staff then check and publish them under Content, Missions.</p>
+    <form method="post" action="<?= esc(site_url('maintenance'), 'attr') ?>">
+        <?= csrf_field() ?>
+        <input type="hidden" name="token" value="<?= esc($token, 'attr') ?>">
+        <input type="hidden" name="action" value="load_missions">
+        <button class="btn btn-primary" type="submit">Load embassies as drafts</button>
+    </form>
+
     <h2 class="h5 mt-4">Go-live check</h2>
     <p>The same list as <code>php spark golive:check</code>. A test copy is not meant to pass it.</p>
     <table class="table table-sm">

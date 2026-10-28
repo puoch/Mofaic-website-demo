@@ -15,6 +15,10 @@ $groupLabel = $group === 'abroad' ? lang('Site.nav.missionsAbroad') : lang('Site
         [$heading],
     ]]) ?>
     <h1 class="page-title"><?= esc($heading) ?> <small class="text-muted">· <?= esc($groupLabel) ?></small></h1>
-    <?= view('site/missions/_mission_list', ['missions' => $missions]) ?>
+    <?= view('site/missions/_mission_cards', ['missions' => $missions, 'accreditations' => $accreditations]) ?>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+    <script src="<?= esc(base_url('assets/js/mission-filter.js'), 'attr') ?>" defer></script>
 <?= $this->endSection() ?>

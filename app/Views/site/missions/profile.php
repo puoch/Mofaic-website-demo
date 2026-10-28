@@ -20,45 +20,65 @@ $typeLabel  = $definition === null ? '' : lang('Site.nav.' . $definition['navKey
     ]]) ?>
 
     <article class="mission-profile" data-testid="mission-profile">
-        <h1 class="page-title"><?= esc($mission['name']) ?></h1>
-        <p class="text-muted"><?= esc($typeLabel) ?> · <?= esc($groupLabel) ?></p>
+        <?php
+        $flag    = flag_url(mission_flag_iso($mission));
+        $pending = '<span class="text-muted">' . esc(lang('Public.toBeConfirmed')) . '</span>';
+        $place   = implode(', ', array_filter([$mission['city'], $mission['location_country']]));
+        ?>
+        <div class="mission-heading">
+            <?php if ($flag !== null): ?>
+            <img class="flag" src="<?= esc($flag, 'attr') ?>" alt="" width="96" height="72">
+            <?php endif ?>
+            <div>
+                <h1 class="page-title"><?= esc($mission['name']) ?></h1>
+                <p class="text-muted mb-0"><?= esc(implode(' · ', array_filter([$place, $typeLabel]))) ?></p>
+            </div>
+        </div>
+
+        <?php /* Every row is shown, so a missing detail reads "To be confirmed" instead of disappearing. */ ?>
+        <table class="table mission-details" data-testid="mission-details">
+            <caption class="visually-hidden"><?= esc(lang('Public.missionDetails')) ?></caption>
+            <tbody>
+                <tr>
+                    <th scope="row"><?= esc(lang('Public.headOfMission')) ?></th>
+                    <td><?php if (! empty($mission['head_of_mission_name'])): ?><?= esc($mission['head_of_mission_name']) ?><?php if (! empty($mission['head_of_mission_title'])): ?><br><span class="text-muted"><?= esc($mission['head_of_mission_title']) ?></span><?php endif ?><?php else: ?><?= $pending ?><?php endif ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= esc(lang('Public.location')) ?></th>
+                    <td><?= $place !== '' ? esc($place) : $pending ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= esc(lang('Public.address')) ?></th>
+                    <td><?= ! empty($mission['address']) ? '<address class="mb-0">' . nl2br(esc($mission['address'])) . '</address>' : $pending ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= esc(lang('Public.telephone')) ?></th>
+                    <td><?= ! empty($mission['phone']) ? '<a href="tel:' . esc(preg_replace('/[^0-9+]/', '', $mission['phone']), 'attr') . '">' . esc($mission['phone']) . '</a>' : $pending ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= esc(lang('Public.email')) ?></th>
+                    <td><?= ! empty($mission['email']) ? '<a href="mailto:' . esc($mission['email'], 'attr') . '">' . esc($mission['email']) . '</a>' : $pending ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?= esc(lang('Public.website')) ?></th>
+                    <td><?= ! empty($mission['website']) ? '<a href="' . esc($mission['website'], 'attr') . '" rel="noopener" target="_blank">' . esc($mission['website']) . ' <span class="visually-hidden">' . esc(lang('Public.opensExternal')) . '</span></a>' : $pending ?></td>
+                </tr>
+                <?php if (! empty($mission['represents_country'])): ?>
+                <tr>
+                    <th scope="row"><?= esc(lang('Public.represents')) ?></th>
+                    <td><?= esc($mission['represents_country']) ?></td>
+                </tr>
+                <?php endif ?>
+            </tbody>
+        </table>
 
         <?php if ($media !== []): ?>
-        <img class="mission-image" src="<?= esc(MediaService::url($media[0]), 'attr') ?>" alt="<?= esc((string) $media[0]['alt_text'], 'attr') ?>">
-        <?php endif ?>
-
-        <div class="mission-facts">
-            <section aria-labelledby="mission-location">
-                <h2 id="mission-location" class="h5"><?= esc(lang('Public.location')) ?></h2>
-                <p><?= esc(implode(', ', array_filter([$mission['city'], $mission['location_country']]))) ?></p>
-                <?php if (! empty($mission['address'])): ?><address><?= nl2br(esc($mission['address'])) ?></address><?php endif ?>
-                <?php if (! empty($mission['represents_country'])): ?>
-                <p><?= esc(lang('Public.represents')) ?>: <?= esc($mission['represents_country']) ?></p>
-                <?php endif ?>
-            </section>
-
-            <section aria-labelledby="mission-contacts">
-                <h2 id="mission-contacts" class="h5"><?= esc(lang('Public.contacts')) ?></h2>
-                <dl class="contact-list">
-                    <?php if (! empty($mission['phone'])): ?>
-                    <dt><?= esc(lang('Public.telephone')) ?></dt><dd><a href="tel:<?= esc(preg_replace('/[^0-9+]/', '', $mission['phone']), 'attr') ?>"><?= esc($mission['phone']) ?></a></dd>
-                    <?php endif ?>
-                    <?php if (! empty($mission['email'])): ?>
-                    <dt><?= esc(lang('Public.email')) ?></dt><dd><a href="mailto:<?= esc($mission['email'], 'attr') ?>"><?= esc($mission['email']) ?></a></dd>
-                    <?php endif ?>
-                    <?php if (! empty($mission['website'])): ?>
-                    <dt><?= esc(lang('Public.website')) ?></dt><dd><a href="<?= esc($mission['website'], 'attr') ?>" rel="noopener" target="_blank"><?= esc($mission['website']) ?></a></dd>
-                    <?php endif ?>
-                </dl>
-            </section>
-
-            <?php if (! empty($mission['head_of_mission_name'])): ?>
-            <section aria-labelledby="mission-head">
-                <h2 id="mission-head" class="h5"><?= esc(lang('Public.headOfMission')) ?></h2>
-                <p><?= esc($mission['head_of_mission_name']) ?><?php if (! empty($mission['head_of_mission_title'])): ?><br><span class="text-muted"><?= esc($mission['head_of_mission_title']) ?></span><?php endif ?></p>
-            </section>
-            <?php endif ?>
+        <div class="mission-photos">
+            <?php foreach ($media as $image): ?>
+            <img class="mission-image" src="<?= esc(MediaService::url($image), 'attr') ?>" alt="<?= esc((string) $image['alt_text'], 'attr') ?>" loading="lazy">
+            <?php endforeach ?>
         </div>
+        <?php endif ?>
 
         <?php if ($bodyHtml !== ''): ?><div class="prose"><?= $bodyHtml ?></div><?php endif ?>
 
@@ -67,10 +87,21 @@ $typeLabel  = $definition === null ? '' : lang('Site.nav.' . $definition['navKey
             <h2 id="mission-coverage" class="h5"><?= esc(lang('Public.countriesServed')) ?></h2>
             <ul class="link-list">
                 <?php foreach ($coverage as $country): ?>
-                <li><a href="<?= esc(locale_url('missions/countries/' . $country['iso_code']), 'attr') ?>"><?= esc($country['name']) ?></a>
+                <li><?php if (($countryFlag = flag_url($country['iso_code'])) !== null): ?><img class="flag flag-sm" src="<?= esc($countryFlag, 'attr') ?>" alt="" width="24" height="18" loading="lazy"> <?php endif ?><a href="<?= esc(locale_url('missions/countries/' . $country['iso_code']), 'attr') ?>"><?= esc($country['name']) ?></a>
                     <span class="text-muted">(<?= esc($country['coverage'] === 'non_resident' ? lang('Public.nonResidentNoPlace') : lang('Public.resident')) ?>)</span></li>
                 <?php endforeach ?>
             </ul>
+        </section>
+        <?php endif ?>
+
+        <?php if ($consulates !== null): ?>
+        <section aria-labelledby="mission-consulates" data-testid="consulates">
+            <h2 id="mission-consulates" class="h5"><?= esc(lang('Public.consulatesIn', [$mission['location_country']])) ?></h2>
+            <?php if ($consulates === []): ?>
+            <p><?= esc(lang('Public.noConsulateIn', [$mission['location_country']])) ?></p>
+            <?php else: ?>
+            <?= view('site/missions/_mission_list', ['missions' => $consulates]) ?>
+            <?php endif ?>
         </section>
         <?php endif ?>
 
