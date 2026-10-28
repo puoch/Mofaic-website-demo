@@ -9,10 +9,10 @@ use CodeIgniter\Shield\Entities\User;
 use InvalidArgumentException;
 
 /**
- * Per-person access to the Diaspora inbox (brief section 3; PD-02, accepted
- * 26 October 2026). No role includes it. A Super Administrator grants it to
- * a named central administrator or a member of a diaspora department, and
- * every grant and removal is audited.
+ * Per-person access to the Diaspora inbox (brief section 3). Only the Super
+ * Administrator role includes it (sponsor, 28 October 2026). A Super
+ * Administrator grants it to a named central administrator or a member of a
+ * diaspora department, and every grant and removal is audited.
  */
 class DiasporaAccess
 {

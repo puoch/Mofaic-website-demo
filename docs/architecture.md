@@ -72,7 +72,7 @@ This is a proposal for review.
 | Spam protection | `app/Libraries/FormGuard.php` | Hidden field, signed form time, hourly limit per address (PD-11) |
 | Submissions | `app/Libraries/SubmissionService.php`, `app/Config/Submissions.php` | Storing, references, notifications, status, assignment, notes |
 | Inboxes | `app/Controllers/Admin/Inbox.php` | Public Inquiries Inbox and Diaspora inbox |
-| Diaspora access | `app/Libraries/DiasporaAccess.php`, `Admin/DiasporaAccess.php` | Per-person grants (PD-02) |
+| Diaspora access | `app/Libraries/DiasporaAccess.php`, `Admin/DiasporaAccess.php` | Per-person grants (Super Administrators have access by role) |
 | Staff accounts | `app/Libraries/StaffAccounts.php`, `Admin/Staff.php` | Access-review list, new accounts, roles, bans and departments for Super Administrators (G5-04); also used by `/maintenance` |
 | Newsletter | `app/Libraries/Newsletter.php`, `Admin/Newsletter.php` | Double opt-in, unsubscribe, sending an issue |
 | Mail | `app/Libraries/MailQueue.php`, `app/Commands/SendMail.php` | Queued email sent by `php spark mail:send` (PD-10) |

@@ -24,16 +24,19 @@ final class PermissionsTest extends StaffTestCase
         $this->assertSame('readonly', config(AuthGroups::class)->defaultGroup);
     }
 
-    public function testNoRoleGetsDiasporaSubmissionsAccess(): void
+    public function testOnlySuperAdministratorsGetDiasporaSubmissionsByRole(): void
     {
         foreach (config(AuthGroups::class)->matrix as $group => $permissions) {
             foreach ($permissions as $permission) {
-                $this->assertStringStartsNotWith('diaspora.', $permission, "{$group} must not have {$permission} by role");
+                if ($group !== 'superadmin') {
+                    $this->assertStringStartsNotWith('diaspora.', $permission, "{$group} must not have {$permission} by role");
+                }
                 $this->assertNotSame('*', $permission);
             }
         }
 
-        $this->assertFalse($this->staff('superadmin')->can('diaspora.submissions-view'));
+        $this->assertTrue($this->staff('superadmin')->can('diaspora.submissions-view'));
+        $this->assertFalse($this->staff('ministryadmin')->can('diaspora.submissions-view'));
     }
 
     public function testDiasporaSubmissionsAccessIsGrantedPerPerson(): void

@@ -30,7 +30,7 @@ New accounts start as Read-Only Staff.
 | `missions.manage`: mission records | ✓ | ✓ | | |
 | `missions.publish-activities`: mission activities | ✓ | ✓ | | |
 | `inquiries.view` / `inquiries.manage`: Public Inquiries Inbox | ✓ | ✓ | | |
-| `diaspora.submissions-view` / `-manage`: Diaspora inbox | per person | per person | per person | |
+| `diaspora.submissions-view` / `-manage`: Diaspora inbox | ✓ | per person | per person | |
 
 ## Content scopes (Gate 3)
 
@@ -65,9 +65,9 @@ The *Minister's engagements* listing is news tagged with the system tag
   (brief sections 2 and 3). Department membership does not change this.
 - **Diaspora content** is published by editors who belong to a department marked
   `is_diaspora`.
-- **Diaspora submissions** contain personal data. No role grants access to them,
-  not even Super Administrator (accepted 26 October 2026). Access is granted to
-  named people:
+- **Diaspora submissions** contain personal data. Only the Super Administrator
+  role includes access (sponsor, 28 October 2026, replacing the 26 October
+  per-person-only rule). Everyone else is granted access as a named person:
 
   ```php
   $user = auth()->getProvider()->findByCredentials(['email' => 'person@example.invalid']);
@@ -85,7 +85,7 @@ The *Minister's engagements* listing is news tagged with the system tag
 | Inbox | Who opens it | Who changes status, assignment and notes |
 | --- | --- | --- |
 | Public Inquiries Inbox (`/admin/inquiries`) | `inquiries.view` (Ministry Administrators) | `inquiries.manage` (Ministry Administrators) |
-| Diaspora inbox (`/admin/diaspora`), registrations and contributions | `diaspora.submissions-view`, per person only | `diaspora.submissions-manage`, per person only |
+| Diaspora inbox (`/admin/diaspora`), registrations and contributions | `diaspora.submissions-view`: Super Administrators, others per person | `diaspora.submissions-manage`: Super Administrators, others per person |
 
 - Opening a submission is audited (`submission.viewed`), as are status changes,
   assignment and notes. Audit entries hold the reference, not personal details.

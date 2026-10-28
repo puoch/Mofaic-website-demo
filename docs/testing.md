@@ -28,7 +28,7 @@ holds nothing else.
 | `tests/feature/PublicSiteTest.php` | PRI-04, PRI-07, PRI-09, SEC-02 | All 17 public routes: same fixed navigation, `lang`/`dir` attributes, no assets from other hosts, unsupported language returns 404, security headers, non-production banner |
 | `tests/unit/LanguagesTest.php` | PRI-07 | English-only launch, right-to-left by configuration |
 | `tests/feature/StaffAccessTest.php` | GOV-01, SEC-01, SEC-04 | No registration or magic link, admin needs sign-in, each role reaches the dashboard, audit log restricted, CSRF rejection, failed sign-in audited without the password, emailed code required |
-| `tests/unit/PermissionsTest.php` | GOV-01 to GOV-04, HOME-03 | Four roles, no role grants diaspora submissions, per-person grant, department scope, mission activities limited to Ministry Administrators |
+| `tests/unit/PermissionsTest.php` | GOV-01 to GOV-04, HOME-03 | Four roles, only Super Administrator grants diaspora submissions by role, per-person grant, department scope, mission activities limited to Ministry Administrators |
 | `tests/unit/AuditLogTest.php` | SEC-04 | Records events, strips secrets, newest first |
 | `tests/unit/DemoSeederTest.php` | DEMO-01 | Refuses production, labels every record (including demo countries, missions and articles), no duplicates |
 | `tests/feature/HealthTest.php` | SEC-06 | Health check response |

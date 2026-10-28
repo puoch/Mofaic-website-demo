@@ -17,7 +17,7 @@ not be treated as Ministry policy.
 | 2026-10-26 | English is the only launch language; right-to-left support stays in the design | Sponsor, Gate 0 Q2 |
 | 2026-10-26 | Development and staging on a VPS; live site in MOFAIC's on-premises data centre | Sponsor, Gate 0 Q4 |
 | 2026-10-26 | One modular CodeIgniter 4 application | Sponsor, Gate 0 Q1 |
-| 2026-10-26 | Super Administrators get no diaspora submission access by role; access is granted per person (PD-02) | Sponsor, Gate 0 Q3 |
+| 2026-10-26 | Super Administrators get no diaspora submission access by role; access is granted per person (PD-02). Replaced for Super Administrators on 28 October, below | Sponsor, Gate 0 Q3 |
 | 2026-10-26 | Accessibility target is WCAG 2.2 level AA (PD-14) | Sponsor, Gate 0 Q5 |
 | 2026-10-26 | Coding approved ("APPROVE GATE 2: START CODING"). Gate 1 was not reviewed separately | Sponsor |
 | 2026-10-27 | Gate 3 approved ("APPROVE GATE 3: START CODING") | Sponsor |
@@ -29,7 +29,8 @@ not be treated as Ministry policy.
 | 2026-10-27 | A staff accounts screen is added to the administration area, so hosts without a terminal can manage accounts | Sponsor, thread message |
 | 2026-10-27 | PD-17 changed: support both a CDN and serving from the Ministry's own server, because the initial phase on the VPS needs the CDN. Implemented as a per-server switch (`assets.bootstrapSource`), local by default | Sponsor, thread message |
 | 2026-10-28 | Embassies abroad loaded from the sponsor's *Mission abroad.docx* (20 embassies and the Consulate-General in Dubai; host city and accreditations only). Contact details stay "To be confirmed" until the Ministry supplies them | Sponsor, thread message |
-| 2026-10-28 | Super Administrators have every right of every other role (publishing, restoring, mission records and activities, public inquiries), as well as staff accounts and settings. Diaspora submissions stay per person (PD-02 unchanged) | Sponsor, thread message |
+| 2026-10-28 | Super Administrators have every right of every other role (publishing, restoring, mission records and activities, public inquiries), as well as staff accounts and settings | Sponsor, thread message |
+| 2026-10-28 | Super Administrators also view and handle diaspora submissions by role. This replaces the 26 October rule (PD-02) for Super Administrators; everyone else still needs a per-person grant | Sponsor, decision card |
 
 ## Proposed, in use as configurable defaults
 

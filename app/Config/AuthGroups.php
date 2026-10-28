@@ -13,9 +13,9 @@ use CodeIgniter\Shield\Config\AuthGroups as ShieldAuthGroups;
  * still subject to the final permissions review (brief section 3, GOV-08).
  * See docs/permissions.md.
  *
- * Diaspora submission access is deliberately not granted to any group,
- * including the Super Administrator (decision PD-02). It is given to named
- * staff accounts one by one with `$user->addPermission(...)`.
+ * Diaspora submission access is granted by role only to the Super
+ * Administrator (sponsor, 28 October 2026, replacing PD-02). Everyone else
+ * gets it one by one with `$user->addPermission(...)`.
  */
 class AuthGroups extends ShieldAuthGroups
 {
@@ -28,7 +28,7 @@ class AuthGroups extends ShieldAuthGroups
     public array $groups = [
         'superadmin' => [
             'title'       => 'Super Administrator',
-            'description' => 'Has every right of the other roles, and manages staff accounts, roles and system settings.',
+            'description' => 'Has every right of the other roles, sees diaspora submissions, and manages staff accounts, roles and system settings.',
         ],
         'ministryadmin' => [
             'title'       => 'Ministry Administrator',
@@ -57,13 +57,13 @@ class AuthGroups extends ShieldAuthGroups
         'missions.publish-activities'  => 'Can publish activities of diplomatic missions',
         'inquiries.view'               => 'Can view the Public Inquiries Inbox',
         'inquiries.manage'             => 'Can assign, annotate and change status of public inquiries',
-        'diaspora.submissions-view'    => 'Can view the Diaspora Submissions inbox (granted per person only)',
-        'diaspora.submissions-manage'  => 'Can assign, annotate and change status of diaspora submissions (granted per person only)',
+        'diaspora.submissions-view'    => 'Can view the Diaspora Submissions inbox (Super Administrators, or granted per person)',
+        'diaspora.submissions-manage'  => 'Can assign, annotate and change status of diaspora submissions (Super Administrators, or granted per person)',
     ];
 
     public array $matrix = [
-        // Every right of every other role, plus staff accounts and settings
-        // (sponsor, 28 October 2026). Diaspora submissions stay per person.
+        // Every right of every other role, plus staff accounts, settings and
+        // diaspora submissions (sponsor, 28 October 2026).
         'superadmin' => [
             'admin.access',
             'users.manage',
@@ -77,6 +77,8 @@ class AuthGroups extends ShieldAuthGroups
             'missions.publish-activities',
             'inquiries.view',
             'inquiries.manage',
+            'diaspora.submissions-view',
+            'diaspora.submissions-manage',
         ],
         'ministryadmin' => [
             'admin.access',

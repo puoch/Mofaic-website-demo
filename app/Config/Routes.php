@@ -45,7 +45,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'pe
         $routes->post('(:num)/department', 'Staff::department/$1');
     });
 
-    // Per-person access to the Diaspora inbox (PD-02).
+    // Per-person access to the Diaspora inbox.
     $routes->get('diaspora-access', 'DiasporaAccess::index', ['filter' => 'permission:users.manage']);
     $routes->post('diaspora-access', 'DiasporaAccess::grant', ['filter' => 'permission:users.manage']);
     $routes->post('diaspora-access/(:num)/remove', 'DiasporaAccess::revoke/$1', ['filter' => 'permission:users.manage']);
