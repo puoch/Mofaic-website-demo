@@ -75,8 +75,9 @@ php spark staff list
 3. Department Editors are members of the right departments only
    (Admin > Staff accounts, or `php spark staff department <email> <department-slug> [--remove]`).
 4. **Admin > Diaspora access**: each grant is still needed, and "handle" is only
-   given to people who answer diaspora submissions. Super Administrators have
-   no diaspora access unless granted per person (decision PD-02).
+   given to people who answer diaspora submissions. Super Administrators see
+   diaspora submissions by role (sponsor, 28 October 2026), so keep that role
+   to the few people who need it.
 5. There are at least two active Super Administrators, so one absence does not
    lock everyone out (`golive:check` warns otherwise).
 6. Anyone who has not signed in for 90 days is asked whether they still need

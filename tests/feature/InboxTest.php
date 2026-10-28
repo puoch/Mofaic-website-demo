@@ -26,9 +26,15 @@ final class InboxTest extends StaffTestCase
         $this->inquiry      = service('submissions')->create('inquiry', ['name' => 'Inquirer (test)', 'email' => 'i@example.invalid', 'message' => 'Inquiry text (test)'], 'en')['id'];
     }
 
-    public function testNoRoleOpensTheDiasporaInboxWithoutAGrant(): void
+    public function testOnlySuperAdministratorsOpenTheDiasporaInboxWithoutAGrant(): void
     {
-        foreach (['superadmin', 'ministryadmin', 'editor', 'readonly'] as $role) {
+        $super = $this->staff('superadmin');
+        $this->actingAs($super)->get('admin/diaspora')->assertOK();
+        $this->actingAs($super)->get('admin/diaspora/registration/' . $this->registration)->assertSee('Registrant (test)');
+        $this->assertSame(1, $this->db->table('audit_events')->where(['event' => 'submission.viewed', 'actor_user_id' => $super->id])->countAllResults());
+        $this->db->table('audit_events')->where('event', 'submission.viewed')->delete();
+
+        foreach (['ministryadmin', 'editor', 'readonly'] as $role) {
             $user = $this->staff($role);
             $this->actingAs($user)->get('admin/diaspora')->assertStatus(403);
             $this->actingAs($user)->get('admin/diaspora/registration/' . $this->registration)->assertStatus(403);

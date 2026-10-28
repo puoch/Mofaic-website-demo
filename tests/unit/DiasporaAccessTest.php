@@ -12,9 +12,11 @@ use Tests\Support\StaffTestCase;
  */
 final class DiasporaAccessTest extends StaffTestCase
 {
-    public function testNoRoleOpensTheDiasporaInboxByItself(): void
+    public function testOnlySuperAdministratorsOpenTheDiasporaInboxByRole(): void
     {
-        foreach (['superadmin', 'ministryadmin', 'editor', 'readonly'] as $role) {
+        $this->assertTrue($this->staff('superadmin')->can('diaspora.submissions-manage'));
+
+        foreach (['ministryadmin', 'editor', 'readonly'] as $role) {
             $this->assertFalse($this->staff($role)->can('diaspora.submissions-view'), $role);
         }
     }

@@ -13,9 +13,9 @@ use InvalidArgumentException;
 
 /**
  * Super Administrators grant or remove per-person access to the Diaspora
- * inbox (PD-02, accepted 26 October 2026). Only central Ministry
- * administrators and members of a diaspora department can receive it, and
- * nobody can grant it to themselves.
+ * inbox; they have it themselves by role (sponsor, 28 October 2026). Only
+ * central Ministry administrators and members of a diaspora department can
+ * receive it, and nobody can grant it to themselves.
  */
 class DiasporaAccess extends BaseController
 {

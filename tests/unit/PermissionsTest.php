@@ -24,16 +24,19 @@ final class PermissionsTest extends StaffTestCase
         $this->assertSame('readonly', config(AuthGroups::class)->defaultGroup);
     }
 
-    public function testNoRoleGetsDiasporaSubmissionsAccess(): void
+    public function testOnlySuperAdministratorsGetDiasporaSubmissionsByRole(): void
     {
         foreach (config(AuthGroups::class)->matrix as $group => $permissions) {
             foreach ($permissions as $permission) {
-                $this->assertStringStartsNotWith('diaspora.', $permission, "{$group} must not have {$permission} by role");
+                if ($group !== 'superadmin') {
+                    $this->assertStringStartsNotWith('diaspora.', $permission, "{$group} must not have {$permission} by role");
+                }
                 $this->assertNotSame('*', $permission);
             }
         }
 
-        $this->assertFalse($this->staff('superadmin')->can('diaspora.submissions-view'));
+        $this->assertTrue($this->staff('superadmin')->can('diaspora.submissions-view'));
+        $this->assertFalse($this->staff('ministryadmin')->can('diaspora.submissions-view'));
     }
 
     public function testDiasporaSubmissionsAccessIsGrantedPerPerson(): void
@@ -98,7 +101,16 @@ final class PermissionsTest extends StaffTestCase
         $this->assertFalse(service('departmentAccess')->canPublishIn($readonly, $a));
     }
 
-    public function testOnlyMinistryAdministratorsPublishMissionActivities(): void
+    public function testSuperAdministratorsHaveEveryRightOfTheOtherRoles(): void
+    {
+        $matrix = config(AuthGroups::class)->matrix;
+
+        foreach ($matrix as $group => $permissions) {
+            $this->assertSame([], array_values(array_diff($permissions, $matrix['superadmin'])), "superadmin lacks a right of {$group}");
+        }
+    }
+
+    public function testOnlyAdministratorsPublishMissionActivities(): void
     {
         $diaspora = $this->department('diaspora', true);
         $editor   = $this->staff('editor');
@@ -107,7 +119,7 @@ final class PermissionsTest extends StaffTestCase
         $access = service('departmentAccess');
         $this->assertTrue($access->canPublishMissionActivities($this->staff('ministryadmin')));
         $this->assertFalse($access->canPublishMissionActivities($editor));
-        $this->assertFalse($access->canPublishMissionActivities($this->staff('superadmin')));
+        $this->assertTrue($access->canPublishMissionActivities($this->staff('superadmin')));
         $this->assertFalse($access->canPublishMissionActivities($this->staff('readonly')));
     }
 }

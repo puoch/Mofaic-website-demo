@@ -16,7 +16,7 @@ use InvalidArgumentException;
  * access-review list, new accounts, roles, banning and department
  * membership (brief section 3, G5-04). It does the same work as
  * `php spark staff`, for hosts without a terminal. Diaspora inbox access
- * stays on its own screen (PD-02).
+ * stays on its own screen.
  */
 class Staff extends BaseController
 {
