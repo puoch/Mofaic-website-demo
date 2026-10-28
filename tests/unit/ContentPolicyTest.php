@@ -35,7 +35,7 @@ final class ContentPolicyTest extends StaffTestCase
 
         $this->assertFalse($policy->canEdit($editor, 'articles', $record));
         $this->assertTrue($policy->canEdit($this->staff('ministryadmin'), 'articles', $record));
-        $this->assertFalse($policy->canEdit($this->staff('superadmin'), 'articles', $record));
+        $this->assertTrue($policy->canEdit($this->staff('superadmin'), 'articles', $record));
     }
 
     public function testDiasporaEditorsPublishInTheDiasporaDepartment(): void

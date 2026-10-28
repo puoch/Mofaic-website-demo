@@ -28,7 +28,7 @@ class AuthGroups extends ShieldAuthGroups
     public array $groups = [
         'superadmin' => [
             'title'       => 'Super Administrator',
-            'description' => 'Manages staff accounts, roles and system settings.',
+            'description' => 'Has every right of the other roles, and manages staff accounts, roles and system settings.',
         ],
         'ministryadmin' => [
             'title'       => 'Ministry Administrator',
@@ -62,12 +62,21 @@ class AuthGroups extends ShieldAuthGroups
     ];
 
     public array $matrix = [
+        // Every right of every other role, plus staff accounts and settings
+        // (sponsor, 28 October 2026). Diaspora submissions stay per person.
         'superadmin' => [
             'admin.access',
             'users.manage',
             'settings.manage',
             'audit.view',
             'content.view',
+            'content.publish-department',
+            'content.publish-any',
+            'content.restore',
+            'missions.manage',
+            'missions.publish-activities',
+            'inquiries.view',
+            'inquiries.manage',
         ],
         'ministryadmin' => [
             'admin.access',

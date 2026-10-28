@@ -97,7 +97,9 @@ final class ContactFormTest extends StaffTestCase
         $this->actingAs($admin)->get('admin/inquiries')->assertSee('INQ-');
         $this->actingAs($admin)->get("admin/inquiries/inquiry/{$id}")->assertSee('Hello Ministry.');
 
-        foreach (['editor', 'readonly', 'superadmin'] as $role) {
+        $this->actingAs($this->staff('superadmin'))->get('admin/inquiries')->assertOK();
+
+        foreach (['editor', 'readonly'] as $role) {
             $this->actingAs($this->staff($role))->get('admin/inquiries')->assertStatus(403);
         }
 

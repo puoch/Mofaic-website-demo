@@ -98,7 +98,16 @@ final class PermissionsTest extends StaffTestCase
         $this->assertFalse(service('departmentAccess')->canPublishIn($readonly, $a));
     }
 
-    public function testOnlyMinistryAdministratorsPublishMissionActivities(): void
+    public function testSuperAdministratorsHaveEveryRightOfTheOtherRoles(): void
+    {
+        $matrix = config(AuthGroups::class)->matrix;
+
+        foreach ($matrix as $group => $permissions) {
+            $this->assertSame([], array_values(array_diff($permissions, $matrix['superadmin'])), "superadmin lacks a right of {$group}");
+        }
+    }
+
+    public function testOnlyAdministratorsPublishMissionActivities(): void
     {
         $diaspora = $this->department('diaspora', true);
         $editor   = $this->staff('editor');
@@ -107,7 +116,7 @@ final class PermissionsTest extends StaffTestCase
         $access = service('departmentAccess');
         $this->assertTrue($access->canPublishMissionActivities($this->staff('ministryadmin')));
         $this->assertFalse($access->canPublishMissionActivities($editor));
-        $this->assertFalse($access->canPublishMissionActivities($this->staff('superadmin')));
+        $this->assertTrue($access->canPublishMissionActivities($this->staff('superadmin')));
         $this->assertFalse($access->canPublishMissionActivities($this->staff('readonly')));
     }
 }

@@ -28,6 +28,8 @@ not be treated as Ministry policy.
 | 2026-10-27 | Keyword search uses MySQL full-text search (PD-15). G3-01 (plain text match) is withdrawn; a plain match remains only for words the full-text index skips and on databases other than MySQL | Sponsor, thread message |
 | 2026-10-27 | A staff accounts screen is added to the administration area, so hosts without a terminal can manage accounts | Sponsor, thread message |
 | 2026-10-27 | PD-17 changed: support both a CDN and serving from the Ministry's own server, because the initial phase on the VPS needs the CDN. Implemented as a per-server switch (`assets.bootstrapSource`), local by default | Sponsor, thread message |
+| 2026-10-28 | Embassies abroad loaded from the sponsor's *Mission abroad.docx* (20 embassies and the Consulate-General in Dubai; host city and accreditations only). Contact details stay "To be confirmed" until the Ministry supplies them | Sponsor, thread message |
+| 2026-10-28 | Super Administrators have every right of every other role (publishing, restoring, mission records and activities, public inquiries), as well as staff accounts and settings. Diaspora submissions stay per person (PD-02 unchanged) | Sponsor, thread message |
 
 ## Proposed, in use as configurable defaults
 

@@ -8,7 +8,7 @@
 
 | Role (group) | Who |
 | --- | --- |
-| Super Administrator (`superadmin`) | Technical owners. Manage staff accounts, roles and settings |
+| Super Administrator (`superadmin`) | Technical owners. Every right of the other roles, plus staff accounts, roles and settings (sponsor, 28 October 2026) |
 | Ministry Administrator (`ministryadmin`) | Central Ministry administrators |
 | Department Editor (`editor`) | Staff who publish for one or more departments |
 | Read-Only Staff (`readonly`) | Staff who need to see the administration area only |
@@ -24,12 +24,12 @@ New accounts start as Read-Only Staff.
 | `settings.manage`: system settings | ✓ | | | |
 | `audit.view`: audit log | ✓ | ✓ | | |
 | `content.view`: all content, including drafts | ✓ | ✓ | ✓ | ✓ |
-| `content.publish-department`: publish in own departments | | | ✓ | |
-| `content.publish-any`: publish in any department | | ✓ | | |
-| `content.restore`: restore a retained version | | ✓ | | |
-| `missions.manage`: mission records | | ✓ | | |
-| `missions.publish-activities`: mission activities | | ✓ | | |
-| `inquiries.view` / `inquiries.manage`: Public Inquiries Inbox | | ✓ | | |
+| `content.publish-department`: publish in own departments | ✓ | | ✓ | |
+| `content.publish-any`: publish in any department | ✓ | ✓ | | |
+| `content.restore`: restore a retained version | ✓ | ✓ | | |
+| `missions.manage`: mission records | ✓ | ✓ | | |
+| `missions.publish-activities`: mission activities | ✓ | ✓ | | |
+| `inquiries.view` / `inquiries.manage`: Public Inquiries Inbox | ✓ | ✓ | | |
 | `diaspora.submissions-view` / `-manage`: Diaspora inbox | per person | per person | per person | |
 
 ## Content scopes (Gate 3)
@@ -100,7 +100,5 @@ The *Minister's engagements* listing is news tagged with the system tag
 
 ## Open points for the final review
 
-- Should Super Administrators be able to publish content and mission activities?
-  They currently cannot.
 - Who restores earlier versions besides Ministry Administrators?
 - Access review frequency and the offboarding procedure.
