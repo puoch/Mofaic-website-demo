@@ -8,13 +8,19 @@ $groupLabel = $group === 'abroad' ? lang('Site.nav.missionsAbroad') : lang('Site
 <?= $this->section('title') ?><?= esc($heading . ' · ' . $groupLabel) ?><?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<div class="container-xl page-body">
+<div class="container-xl pt-3">
     <?= view('site/partials/breadcrumb', ['crumbs' => [
         [lang('Site.nav.missions'), locale_url('missions')],
         [$groupLabel, locale_url('missions/' . $group)],
         [$heading],
     ]]) ?>
-    <h1 class="page-title"><?= esc($heading) ?> <small class="text-muted">· <?= esc($groupLabel) ?></small></h1>
+</div>
+<div class="directory-band">
+    <div class="container-xl">
+        <h1 class="directory-title"><?= esc($heading) ?> <span class="visually-hidden">· <?= esc($groupLabel) ?></span></h1>
+    </div>
+</div>
+<div class="container-xl directory-body">
     <?= view('site/missions/_mission_cards', ['missions' => $missions, 'accreditations' => $accreditations]) ?>
 </div>
 <?= $this->endSection() ?>
