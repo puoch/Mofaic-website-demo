@@ -458,6 +458,10 @@ body {
     color: var(--site-navy);
 }
 
+.home-head-blank {
+    min-block-size: 2.5rem;
+}
+
 .home-more {
     font-weight: 600;
     text-decoration: none;
@@ -519,9 +523,9 @@ body {
     margin-block-end: 0;
 }
 
-/* Mission finder to the left of the lead story, latest statements
-   underneath. Side by side only from 1200px, where the lead photo still
-   gets its 859px minimum (1116px container - 15rem - 1rem gap = 860px). */
+/* Lead story (859px wide) with the mission finder to its right, latest
+   statements underneath. Side by side from 1200px, where the finder gets
+   the rest of the row (at least 241px); smaller screens stack them. */
 .home-lead-grid {
     display: grid;
     gap: 2rem;
@@ -531,7 +535,7 @@ body {
 @media (min-width: 1200px) {
     .home-lead-grid {
         gap: 2rem 1rem;
-        grid-template-columns: 15rem minmax(0, 1fr);
+        grid-template-columns: 859px minmax(0, 1fr);
         align-items: start;
     }
 
@@ -558,14 +562,17 @@ body {
     min-block-size: 18rem;
 }
 
-/* Desktop: the lead photo is never smaller than 859 x 412 (sponsor's
-   minimum). The column is at least 936px wide from 992px up; a very wide
-   photo, or a tall one, is letterboxed on navy rather than cropped. */
+/* Desktop: the lead story is 859px wide and its photo 412 to 501px high
+   (sponsor's sizes). A photo of another shape is letterboxed on navy
+   rather than cropped. */
 @media (min-width: 992px) {
+    .home-lead {
+        inline-size: 859px;
+    }
+
     .home-lead-photo {
-        min-inline-size: 859px;
         min-block-size: 412px;
-        max-block-size: 720px;
+        max-block-size: 501px;
         object-fit: contain;
     }
 }
