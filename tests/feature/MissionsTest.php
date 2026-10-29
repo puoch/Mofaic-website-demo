@@ -162,9 +162,15 @@ final class MissionsTest extends StaffTestCase
         $result->assertSee('No South Sudanese mission is currently listed for Testland Beta.');
     }
 
+    public function testFinderGoesStraightToTheOnlyMissionServingACountry(): void
+    {
+        $this->get('en/missions/finder?country=xa')->assertRedirectTo(site_url('en/missions/profile/test-embassy-alpha'));
+    }
+
     public function testFinderRedirectsToTheCountryPage(): void
     {
         $this->get('en/missions/finder?country=xc')->assertRedirectTo(site_url('en/missions/countries/XC'));
+        $this->get('en/missions/finder?country=xb')->assertRedirectTo(site_url('en/missions/countries/XB'));
         $this->get('en/missions/finder?country=<script>')->assertRedirectTo(site_url('en/missions/countries'));
     }
 

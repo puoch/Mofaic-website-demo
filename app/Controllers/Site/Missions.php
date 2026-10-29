@@ -97,7 +97,9 @@ class Missions extends SiteController
     }
 
     /**
-     * Mission Finder form target: send the visitor to the country page.
+     * Mission Finder form target: straight to the mission's own page when one
+     * South Sudanese mission serves the country, otherwise to the country
+     * page listing them all.
      */
     public function finder(): RedirectResponse
     {
@@ -105,6 +107,14 @@ class Missions extends SiteController
 
         if (! is_string($iso) || preg_match('/^[A-Za-z]{2}$/', $iso) !== 1) {
             return redirect()->to(locale_url('missions/countries'));
+        }
+
+        $directory = service('missionDirectory');
+        $country   = $directory->country($iso);
+        $serving   = $country === null ? [] : $directory->servingCountry((int) $country['id'], $this->locale());
+
+        if (count($serving) === 1) {
+            return redirect()->to(mission_url($serving[0]));
         }
 
         return redirect()->to(locale_url('missions/countries/' . strtoupper($iso)));
