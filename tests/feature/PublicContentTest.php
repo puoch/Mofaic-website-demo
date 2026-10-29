@@ -184,6 +184,31 @@ final class PublicContentTest extends StaffTestCase
         $this->assertStringContainsString('Press statement', $this->get('en/news-press/tags/trade')->getBody());
     }
 
+    public function testArticleShowsTheFirstPhotoLargeAndInLists(): void
+    {
+        $id = $this->content('articles', ['category' => 'news', 'title' => 'News with photos']);
+        $this->photos('articles', $id, ['Minister at the signing', 'Delegations', 'Press conference']);
+
+        $page = $this->get('en/news-press/news/news-with-photos')->getBody();
+        $this->assertMatchesRegularExpression('/photo-gallery-main">\s*<figure[^>]*>\s*<a[^>]*>\s*<img[^>]*alt="Minister at the signing"/', $page);
+        $this->assertSame(2, substr_count($page, 'photo-gallery-thumb'));
+
+        $list = $this->get('en/news-press/news')->getBody();
+        $this->assertStringContainsString('article-item has-photo', $list);
+        $this->assertStringContainsString('src="' . base_url('uploads/test-0.jpg') . '"', $list);
+    }
+
+    public function testAlbumShowsItsPhotos(): void
+    {
+        $id = $this->content('galleries', ['title' => 'Photo album']);
+        $this->photos('galleries', $id, ['First photo', 'Second photo']);
+
+        $album = $this->get('en/news-press/gallery/photo-album')->getBody();
+        $this->assertMatchesRegularExpression('/photo-gallery-main">\s*<figure[^>]*>\s*<a[^>]*>\s*<img[^>]*alt="First photo"/', $album);
+        $this->assertSame(1, substr_count($album, 'photo-gallery-thumb'));
+        $this->assertStringContainsString(base_url('uploads/test-0.jpg'), $this->get('en/news-press/gallery')->getBody());
+    }
+
     public function testNewsUrlMustMatchItsCategory(): void
     {
         $this->content('articles', ['category' => 'statement', 'title' => 'Only a statement']);
@@ -264,5 +289,16 @@ final class PublicContentTest extends StaffTestCase
         $page = $this->db->table('pages')->where(['section' => $section, 'path' => $path])->get()->getRowArray();
         service('content')->save('pages', (int) $page['id'], $values + ['title' => $page['title']], null);
         service('content')->publish('pages', (int) $page['id'], null);
+    }
+
+    /**
+     * @param list<string> $descriptions
+     */
+    private function photos(string $ownerType, int $ownerId, array $descriptions): void
+    {
+        foreach ($descriptions as $i => $alt) {
+            $this->db->table('media')->insert(['kind' => 'image', 'source' => 'upload', 'path' => 'uploads/test-' . $i . '.jpg', 'mime' => 'image/jpeg', 'size' => 1, 'title' => $alt, 'alt_text' => $alt]);
+            $this->db->table('media_links')->insert(['media_id' => $this->db->insertID(), 'owner_type' => $ownerType, 'owner_id' => $ownerId, 'sort_order' => $i]);
+        }
     }
 }
