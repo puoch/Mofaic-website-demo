@@ -690,6 +690,8 @@ summary.org-unit {
     overflow-wrap: anywhere;
 }
 
+/* Photos keep their own proportions, with no frame (sponsor, 29 October
+   2026). The outline on focus stays for keyboard users only. */
 .mission-gallery {
     list-style: none;
     padding: 0;
@@ -697,6 +699,7 @@ summary.org-unit {
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
 }
 
 .mission-gallery-main {
@@ -705,7 +708,6 @@ summary.org-unit {
 
 .mission-gallery a {
     display: block;
-    border-radius: 0.375rem;
 }
 
 .mission-gallery a:focus-visible {
@@ -716,13 +718,5 @@ summary.org-unit {
 .mission-gallery img {
     display: block;
     inline-size: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    border: 2px solid #2f6fbf;
-    border-radius: 0.375rem;
-    background: #e9f0f8;
-}
-
-.mission-gallery-main img {
-    aspect-ratio: 16 / 10;
+    block-size: auto;
 }
