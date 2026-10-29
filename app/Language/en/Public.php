@@ -31,6 +31,7 @@ return [
     'latestStatements'      => 'Latest statements',
     'currentAffairs'        => 'Current affairs',
     'moreNews'              => 'More news',
+    'latestNews'            => 'Latest news',
     'moreActivities'        => 'More activities',
     'featuredPages'         => 'Featured pages',
     'tileAboutSouthSudan'       => 'About South Sudan',
