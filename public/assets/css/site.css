@@ -510,9 +510,11 @@ body {
     margin-block-end: 0;
 }
 
-/* Lead story (859px wide) with two stacked boxes to its right (mission
-   finder, latest news) that together match its height; latest statements
-   underneath. Side by side from 1200px; smaller screens stack them. */
+/* Box 1: the featured story, at least 859px wide, filling the row. Box 2:
+   the mission finder on its right. Latest news and latest statements run
+   underneath. Side by side from 1200px; from 1600px the section widens so
+   the finder sits further right, as the sponsor marked. Smaller screens
+   stack everything. */
 .home-lead-grid {
     display: grid;
     gap: 2rem;
@@ -522,19 +524,19 @@ body {
 @media (min-width: 1200px) {
     .home-lead-grid {
         gap: 2rem 1rem;
-        grid-template-columns: 859px minmax(0, 1fr);
+        grid-template-columns: minmax(859px, 1fr) minmax(0, 22rem);
+        align-items: start;
     }
 
-    .home-lead {
-        align-self: start;
-    }
-
-    .home-side .home-box {
-        flex: 1 1 0;
-    }
-
+    .home-side-news,
     .home-latest {
         grid-column: 1 / -1;
+    }
+}
+
+@media (min-width: 1600px) {
+    .home-wide {
+        max-inline-size: 1600px;
     }
 }
 
@@ -556,17 +558,13 @@ body {
     min-block-size: 18rem;
 }
 
-/* Desktop: the lead story is 859px wide and its photo 412 to 501px high
-   (sponsor's sizes). A photo of another shape is letterboxed on navy
-   rather than cropped. */
+/* Desktop: the lead photo fills the box's width and is at least 412px
+   high. Very tall photos stop at 680px and are letterboxed on navy rather
+   than cropped. */
 @media (min-width: 992px) {
-    .home-lead {
-        inline-size: 859px;
-    }
-
     .home-lead-photo {
         min-block-size: 412px;
-        max-block-size: 501px;
+        max-block-size: 680px;
         object-fit: contain;
     }
 }
@@ -859,14 +857,7 @@ body {
     padding: 1rem 1.25rem;
 }
 
-/* Boxes beside the lead story */
-.home-side {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    min-inline-size: 0;
-}
-
+/* Mission finder box and the latest news row under the featured story */
 .home-box {
     border: 1px solid var(--site-line);
     border-radius: .375rem;
@@ -874,8 +865,11 @@ body {
 }
 
 .home-side-list {
+    display: grid;
+    gap: 0 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
     list-style: none;
-    margin: 0 0 .75rem;
+    margin: 0;
     padding: 0;
 }
 

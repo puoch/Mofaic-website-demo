@@ -50,7 +50,7 @@ $tiles = [
     <?php endif ?>
 
     <section class="home-section" aria-labelledby="home-featured" data-testid="featured-news">
-        <div class="container-xl">
+        <div class="container-xl home-wide">
             <?php // Visible heading removed at the sponsor's request; the space stays blank. ?>
             <div class="home-head home-head-blank">
                 <h2 id="home-featured" class="visually-hidden"><?= esc(lang('Public.featuredNews')) ?></h2>
@@ -69,33 +69,35 @@ $tiles = [
                 </article>
                 <?php endif ?>
 
-                <?php // Two boxes beside the lead story: the finder, then the latest news. ?>
-                <div class="home-side">
-                    <section class="home-finder home-box" aria-labelledby="home-finder" data-testid="mission-finder">
-                        <h3 id="home-finder" class="section-heading"><?= esc(lang('Public.missionFinder')) ?></h3>
-                        <?= view('site/partials/finder', ['countries' => $finderCountries]) ?>
-                    </section>
+                <?php // Box 2, to the right of the featured story. ?>
+                <section class="home-finder home-box" aria-labelledby="home-finder" data-testid="mission-finder">
+                    <h3 id="home-finder" class="section-heading"><?= esc(lang('Public.missionFinder')) ?></h3>
+                    <?= view('site/partials/finder', ['countries' => $finderCountries]) ?>
+                </section>
 
-                    <section class="home-box home-side-news" aria-labelledby="home-latest-news" data-testid="latest-news">
-                        <h3 id="home-latest-news" class="section-heading"><?= esc(lang('Public.latestNews')) ?></h3>
-                        <?php if ($latestNews === []): ?>
-                            <?= view('site/partials/empty') ?>
-                        <?php else: ?>
-                        <ul class="home-side-list">
-                            <?php foreach ($latestNews as $article): ?>
-                            <li>
-                                <?= $photo($article, 'home-side-photo') ?>
-                                <div>
-                                    <a href="<?= esc(article_url($article), 'attr') ?>"><?= esc($article['title']) ?></a>
-                                    <?= $date($article) ?>
-                                </div>
-                            </li>
-                            <?php endforeach ?>
-                        </ul>
+                <section class="home-side-news" aria-labelledby="home-latest-news" data-testid="latest-news">
+                    <div class="home-head">
+                        <h3 id="home-latest-news" class="h2"><?= esc(lang('Public.latestNews')) ?></h3>
+                        <?php if ($latestNews !== []): ?>
                         <a class="home-more" href="<?= esc(locale_url('news-press/news'), 'attr') ?>"><?= esc(lang('Public.moreNews')) ?></a>
                         <?php endif ?>
-                    </section>
-                </div>
+                    </div>
+                    <?php if ($latestNews === []): ?>
+                        <?= view('site/partials/empty') ?>
+                    <?php else: ?>
+                    <ul class="home-side-list">
+                        <?php foreach ($latestNews as $article): ?>
+                        <li>
+                            <?= $photo($article, 'home-side-photo') ?>
+                            <div>
+                                <a href="<?= esc(article_url($article), 'attr') ?>"><?= esc($article['title']) ?></a>
+                                <?= $date($article) ?>
+                            </div>
+                        </li>
+                        <?php endforeach ?>
+                    </ul>
+                    <?php endif ?>
+                </section>
 
                 <div class="home-latest" data-testid="latest-statements">
                     <h3 class="home-side-title"><?= esc(lang('Public.latestStatements')) ?></h3>
