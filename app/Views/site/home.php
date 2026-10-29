@@ -5,6 +5,7 @@
  *
  * @var array<string, mixed>|null           $lead
  * @var list<array<string, mixed>>          $statements
+ * @var list<array<string, mixed>>          $latestNews
  * @var list<array<string, mixed>>          $news
  * @var array<int, array<string, mixed>>    $images
  * @var list<array<string, mixed>>          $engagements
@@ -68,10 +69,33 @@ $tiles = [
                 </article>
                 <?php endif ?>
 
-                <section class="home-finder" aria-labelledby="home-finder" data-testid="mission-finder">
-                    <h3 id="home-finder" class="section-heading"><?= esc(lang('Public.missionFinder')) ?></h3>
-                    <?= view('site/partials/finder', ['countries' => $finderCountries]) ?>
-                </section>
+                <?php // Two boxes beside the lead story: the finder, then the latest news. ?>
+                <div class="home-side">
+                    <section class="home-finder home-box" aria-labelledby="home-finder" data-testid="mission-finder">
+                        <h3 id="home-finder" class="section-heading"><?= esc(lang('Public.missionFinder')) ?></h3>
+                        <?= view('site/partials/finder', ['countries' => $finderCountries]) ?>
+                    </section>
+
+                    <section class="home-box home-side-news" aria-labelledby="home-latest-news" data-testid="latest-news">
+                        <h3 id="home-latest-news" class="section-heading"><?= esc(lang('Public.latestNews')) ?></h3>
+                        <?php if ($latestNews === []): ?>
+                            <?= view('site/partials/empty') ?>
+                        <?php else: ?>
+                        <ul class="home-side-list">
+                            <?php foreach ($latestNews as $article): ?>
+                            <li>
+                                <?= $photo($article, 'home-side-photo') ?>
+                                <div>
+                                    <a href="<?= esc(article_url($article), 'attr') ?>"><?= esc($article['title']) ?></a>
+                                    <?= $date($article) ?>
+                                </div>
+                            </li>
+                            <?php endforeach ?>
+                        </ul>
+                        <a class="home-more" href="<?= esc(locale_url('news-press/news'), 'attr') ?>"><?= esc(lang('Public.moreNews')) ?></a>
+                        <?php endif ?>
+                    </section>
+                </div>
 
                 <div class="home-latest" data-testid="latest-statements">
                     <h3 class="home-side-title"><?= esc(lang('Public.latestStatements')) ?></h3>

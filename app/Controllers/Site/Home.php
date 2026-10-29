@@ -33,7 +33,12 @@ class Home extends SiteController
         $notLead = static fn ($query) => $lead === null ? $query : $query->where('articles.id !=', (int) $lead['id']);
 
         $statements = $notLead($articles()->where('category', 'statement'))->limit(4)->get()->getResultArray();
-        $news       = $notLead($articles()->where('category', 'news'))->limit(3)->get()->getResultArray();
+        // The newest three news items sit in the box beside the lead story;
+        // current affairs shows the next three, or the same three while
+        // there are no more, so it is never empty when news exists.
+        $recentNews  = $notLead($articles()->where('category', 'news'))->limit(6)->get()->getResultArray();
+        $latestNews  = array_slice($recentNews, 0, 3);
+        $news        = array_slice($recentNews, 3) ?: $latestNews;
 
         $engagements = $articles()
             ->join('article_tag', 'article_tag.article_id = articles.id')
@@ -57,12 +62,13 @@ class Home extends SiteController
             ->get()
             ->getRowArray();
 
-        $withPhotos = array_merge($lead === null ? [] : [$lead], $news, $missionActivities);
+        $withPhotos = array_merge($lead === null ? [] : [$lead], $recentNews, $missionActivities);
         $images     = service('media')->firstImages('articles', array_map('intval', array_column($withPhotos, 'id')));
 
         return view('site/home', [
             'lead'              => $lead,
             'statements'        => $statements,
+            'latestNews'        => $latestNews,
             'news'              => $news,
             'images'            => $images,
             'engagements'       => $engagements,
