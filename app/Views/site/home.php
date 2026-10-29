@@ -55,6 +55,11 @@ $tiles = [
                 <a class="home-more" href="<?= esc(locale_url('news-press/statements'), 'attr') ?>"><?= esc(lang('Public.allStatements')) ?></a>
             </div>
             <div class="home-lead-grid">
+                <section class="home-finder" aria-labelledby="home-finder" data-testid="mission-finder">
+                    <h3 id="home-finder" class="section-heading"><?= esc(lang('Public.missionFinder')) ?></h3>
+                    <?= view('site/partials/finder', ['countries' => $finderCountries]) ?>
+                </section>
+
                 <?php if ($lead === null): ?>
                     <?= view('site/partials/empty') ?>
                 <?php else: ?>
@@ -68,7 +73,7 @@ $tiles = [
                 </article>
                 <?php endif ?>
 
-                <div data-testid="latest-statements">
+                <div class="home-latest" data-testid="latest-statements">
                     <h3 class="home-side-title"><?= esc(lang('Public.latestStatements')) ?></h3>
                     <?php if ($statements === []): ?>
                         <?= view('site/partials/empty') ?>
@@ -84,12 +89,7 @@ $tiles = [
         </div>
     </section>
 
-    <div class="container-xl home-finder-row">
-        <section class="home-finder" aria-labelledby="home-finder" data-testid="mission-finder">
-            <h2 id="home-finder" class="section-heading"><?= esc(lang('Public.missionFinder')) ?></h2>
-            <?= view('site/partials/finder', ['countries' => $finderCountries]) ?>
-        </section>
-
+    <div class="container-xl home-tiles-row">
         <nav class="home-tiles" aria-label="<?= esc(lang('Public.featuredPages'), 'attr') ?>">
             <?php foreach ($tiles as $tile): ?>
             <a class="home-tile" href="<?= esc(locale_url($tile['path']), 'attr') ?>">

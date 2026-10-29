@@ -519,11 +519,25 @@ body {
     margin-block-end: 0;
 }
 
-/* Lead story across the full width, latest statements underneath */
+/* Mission finder to the left of the lead story, latest statements
+   underneath. Side by side only from 1200px, where the lead photo still
+   gets its 859px minimum (1116px container - 15rem - 1rem gap = 860px). */
 .home-lead-grid {
     display: grid;
     gap: 2rem;
     grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 1200px) {
+    .home-lead-grid {
+        gap: 2rem 1rem;
+        grid-template-columns: 15rem minmax(0, 1fr);
+        align-items: start;
+    }
+
+    .home-latest {
+        grid-column: 1 / -1;
+    }
 }
 
 .home-lead {
@@ -642,19 +656,15 @@ body {
     text-decoration: underline;
 }
 
-/* Mission finder beside the picture tiles */
-.home-finder-row {
-    display: grid;
-    gap: 1.5rem;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    align-items: start;
+/* Picture tiles */
+.home-tiles-row {
     padding-block-end: 2.75rem;
 }
 
 .home-tiles {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .home-tile {
@@ -859,14 +869,13 @@ body {
 }
 
 @media (max-width: 991.98px) {
-    .home-lead-grid,
-    .home-finder-row,
     .home-split {
         grid-template-columns: minmax(0, 1fr);
     }
 
     .home-cards,
-    .home-links {
+    .home-links,
+    .home-tiles {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
