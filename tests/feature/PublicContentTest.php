@@ -256,6 +256,9 @@ final class PublicContentTest extends StaffTestCase
         $this->assertMatchesRegularExpression('#data-testid="minister-engagements".*Engagement item.*data-testid="mission-activities"#s', $html);
         $this->assertMatchesRegularExpression('#data-testid="mission-activities".*Activity item.*data-testid="quick-links"#s', $html);
         $this->assertStringContainsString('Test quick link', $html);
+        $this->assertStringContainsString('data-testid="latest-statements"', $html);
+        $this->assertMatchesRegularExpression('#data-testid="current-affairs".*Engagement item#s', $html);
+        $this->assertStringContainsString('assets/brand/coat-of-arms.svg', $html);
     }
 
     public function testEmergencyContactsAreHiddenUntilApprovedTextIsEntered(): void
