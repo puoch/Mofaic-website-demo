@@ -8,6 +8,7 @@
 $locale = site_locale();
 $dir    = site_dir($locale);
 $nav    = config(Config\Navigation::class);
+$emblem = config(Config\Branding::class)->emblem;
 ?>
 <!doctype html>
 <html lang="<?= esc($locale, 'attr') ?>" dir="<?= esc($dir, 'attr') ?>">
@@ -27,10 +28,16 @@ $nav    = config(Config\Navigation::class);
         <?php if (ENVIRONMENT !== 'production'): ?>
         <div class="dev-banner" role="note"><?= esc(lang('Site.devBanner')) ?></div>
         <?php endif ?>
+        <div class="flag-stripe" aria-hidden="true"></div>
         <div class="container-xl site-identity">
             <a class="site-name" href="<?= esc(locale_url(), 'attr') ?>">
-                <span class="site-name-country"><?= esc(lang('Site.countryName')) ?></span>
-                <span class="site-name-ministry"><?= esc(lang('Site.ministryName')) ?></span>
+                <?php if ($emblem !== ''): ?>
+                <img class="site-emblem" src="<?= esc(asset_url($emblem), 'attr') ?>" alt="" width="64" height="64">
+                <?php endif ?>
+                <span class="site-name-text">
+                    <span class="site-name-country"><?= esc(lang('Site.countryName')) ?></span>
+                    <span class="site-name-ministry"><?= esc(lang('Site.ministryName')) ?></span>
+                </span>
             </a>
         </div>
         <?= view('partials/primary_nav') ?>
@@ -41,7 +48,10 @@ $nav    = config(Config\Navigation::class);
     </main>
 
     <footer class="site-footer">
-        <div class="container-xl">
+        <div class="container-xl site-footer-inner">
+            <?php if ($emblem !== ''): ?>
+            <img class="footer-emblem" src="<?= esc(asset_url($emblem), 'attr') ?>" alt="" width="52" height="52">
+            <?php endif ?>
             <nav aria-label="<?= esc(lang('Site.footerNavigation'), 'attr') ?>">
                 <ul class="footer-links">
                     <?php if ($nav->archivesPlacement === 'footer'): ?>

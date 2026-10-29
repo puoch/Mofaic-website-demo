@@ -10,7 +10,9 @@ use Config\ContentTypes;
  * Home page areas confirmed in the brief (section 2): featured news, the
  * Minister's recent engagements (tagged news), activities of diplomatic
  * missions, quick links, official emergency contacts and the country-based
- * Diplomatic Mission Finder.
+ * Diplomatic Mission Finder. Laid out like the sponsor's reference
+ * ministry home page: lead story beside the latest statements, then picture tiles,
+ * news cards and mission activity cards.
  */
 class Home extends SiteController
 {
@@ -23,7 +25,15 @@ class Home extends SiteController
             ->where(['articles.status' => 'published', 'articles.locale' => $locale])
             ->orderBy('articles.published_at', 'DESC');
 
-        $featured = $articles()->whereIn('category', ['news', 'statement'])->where('is_featured', 1)->limit(3)->get()->getResultArray();
+        // The lead story is the newest featured item, or else the newest
+        // news item or statement, so the top of the page is never empty
+        // once anything is published.
+        $lead = $articles()->whereIn('category', ['news', 'statement'])->where('is_featured', 1)->limit(1)->get()->getRowArray()
+            ?? $articles()->whereIn('category', ['news', 'statement'])->limit(1)->get()->getRowArray();
+        $notLead = static fn ($query) => $lead === null ? $query : $query->where('articles.id !=', (int) $lead['id']);
+
+        $statements = $notLead($articles()->where('category', 'statement'))->limit(4)->get()->getResultArray();
+        $news       = $notLead($articles()->where('category', 'news'))->limit(3)->get()->getResultArray();
 
         $engagements = $articles()
             ->join('article_tag', 'article_tag.article_id = articles.id')
@@ -34,21 +44,31 @@ class Home extends SiteController
             ->get()
             ->getResultArray();
 
-        $missionActivities = $articles()->where('category', 'mission_activity')->limit(4)->get()->getResultArray();
+        $missionActivities = $articles()
+            ->select('missions.name AS mission_name')
+            ->join('missions', 'missions.id = articles.mission_id', 'left')
+            ->where('articles.category', 'mission_activity')
+            ->limit(3)
+            ->get()
+            ->getResultArray();
 
         $emergency = db_connect()->table('site_blocks')
             ->where(['block_key' => 'emergency_contacts', 'locale' => $locale])
             ->get()
             ->getRowArray();
 
-        $images = service('media')->firstImages('articles', array_map('intval', array_column($featured, 'id')));
+        $withPhotos = array_merge($lead === null ? [] : [$lead], $news, $missionActivities);
+        $images     = service('media')->firstImages('articles', array_map('intval', array_column($withPhotos, 'id')));
 
         return view('site/home', [
-            'featured'          => $featured,
-            'featuredImages'    => $images,
+            'lead'              => $lead,
+            'statements'        => $statements,
+            'news'              => $news,
+            'images'            => $images,
             'engagements'       => $engagements,
             'missionActivities' => $missionActivities,
             'quickLinks'        => db_connect()->table('quick_links')->where(['locale' => $locale, 'is_active' => 1])->orderBy('sort_order')->get()->getResultArray(),
+            'socialAccounts'    => db_connect()->table('social_accounts')->where('is_active', 1)->orderBy('sort_order')->orderBy('label')->get()->getResultArray(),
             'emergencyHtml'     => service('markdown')->toHtml($emergency['body'] ?? null),
             'finderCountries'   => service('missionDirectory')->countriesWithMissions($locale),
         ]);

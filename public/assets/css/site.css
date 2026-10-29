@@ -9,24 +9,60 @@
  * rules work for right-to-left languages.
  */
 :root {
-    --site-ink: #1c2321;
-    --site-muted: #56605c;
+    --site-ink: #1f2d3d;
+    --site-muted: #56616d;
     --site-surface: #ffffff;
     --site-band: #f3f5f4;
-    --site-accent: #1f5c46;
+    --site-paper: #f5f7fa;
+    --site-line: #d7dfe8;
+    --site-accent: #22589c;
     --site-accent-ink: #ffffff;
+    --site-navy: #1f2d3d;
+    --site-blue: #2f6fbf;
+    --site-alert: #a3141c;
+    /* National flag colours, used for the thin stripe above the header. */
+    --site-flag-black: #000000;
+    --site-flag-red: #da121a;
+    --site-flag-green: #078930;
     --site-warning-bg: #fff3cd;
     --site-warning-ink: #5c4400;
     --site-focus: #0b57d0;
-    --site-font: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif;
+    --site-font: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
     /* Bootstrap's default link blue is 4.1:1 on --site-band, below WCAG AA
        (found by the Gate 5 browser check). Links use the accent instead:
-       7.8:1 on white, 7.2:1 on --site-band. */
-    --bs-link-color: #1f5c46;
-    --bs-link-color-rgb: 31, 92, 70;
-    --bs-link-hover-color: #143c2e;
-    --bs-link-hover-color-rgb: 20, 60, 46;
+       7.1:1 on white, 6.5:1 on --site-band. */
+    --bs-link-color: #22589c;
+    --bs-link-color-rgb: 34, 88, 156;
+    --bs-link-hover-color: #1f2d3d;
+    --bs-link-hover-color-rgb: 31, 45, 61;
+}
+
+/* Noto Sans, served from this server (SIL Open Font License,
+   public/assets/fonts/noto-sans/LICENSE). Noto also covers Arabic script
+   for a later right-to-left language. */
+@font-face {
+    font-family: "Noto Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("../fonts/noto-sans/noto-sans-latin-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Noto Sans";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("../fonts/noto-sans/noto-sans-latin-600-normal.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Noto Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("../fonts/noto-sans/noto-sans-latin-700-normal.woff2") format("woff2");
 }
 
 body {
@@ -55,7 +91,7 @@ body {
 
 .site-header {
     background: var(--site-surface);
-    border-block-end: 1px solid #d8dedb;
+    border-block-end: 1px solid var(--site-line);
 }
 
 .dev-banner {
@@ -66,40 +102,65 @@ body {
     padding: .25rem 1rem;
 }
 
+.flag-stripe {
+    block-size: 5px;
+    background: linear-gradient(to right, var(--site-flag-black) 0 33.33%, var(--site-flag-red) 33.33% 66.66%, var(--site-flag-green) 66.66%);
+}
+
+[dir="rtl"] .flag-stripe {
+    background: linear-gradient(to left, var(--site-flag-black) 0 33.33%, var(--site-flag-red) 33.33% 66.66%, var(--site-flag-green) 66.66%);
+}
+
 .site-identity {
-    padding-block: .75rem .25rem;
+    padding-block: .75rem;
 }
 
 .site-name {
     display: inline-flex;
-    flex-direction: column;
-    color: var(--site-ink);
+    align-items: center;
+    gap: .9rem;
+    color: var(--site-navy);
     text-decoration: none;
     line-height: 1.25;
 }
 
+.site-emblem {
+    flex: none;
+    inline-size: 64px;
+    block-size: 64px;
+}
+
+.site-name-text {
+    display: flex;
+    flex-direction: column;
+    padding-inline-start: .9rem;
+    border-inline-start: 1px solid var(--site-line);
+}
+
 .site-name-country {
     font-size: .8125rem;
-    letter-spacing: .06em;
+    font-weight: 600;
+    letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--site-muted);
 }
 
 .site-name-ministry {
-    font-size: 1.125rem;
-    font-weight: 600;
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    font-weight: 700;
 }
 
 .site-nav {
     padding-block: 0;
+    border-block-start: 1px solid var(--site-line);
 }
 
 .site-nav .nav-link {
-    font-size: .875rem;
-    font-weight: 600;
-    letter-spacing: .03em;
-    color: var(--site-ink);
-    padding-inline: .75rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    color: var(--site-navy);
+    padding-inline: .5rem;
 }
 
 .site-nav .nav-link.active,
@@ -112,6 +173,30 @@ body {
     .site-nav .navbar-nav {
         flex: 1 1 auto;
         justify-content: space-between;
+    }
+
+    .site-nav .nav-link {
+        padding-block: .95rem;
+        border-block-end: 3px solid transparent;
+    }
+
+    .site-nav .nav-link.active {
+        border-block-end-color: var(--site-blue);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .site-emblem {
+        inline-size: 48px;
+        block-size: 48px;
+    }
+
+    .site-name {
+        gap: .6rem;
+    }
+
+    .site-name-text {
+        padding-inline-start: .6rem;
     }
 }
 
@@ -141,9 +226,32 @@ body {
 }
 
 .site-footer {
-    background: var(--site-band);
-    padding-block: 1.5rem;
+    background: var(--site-navy);
+    color: #d3dbe5;
+    padding-block: 2rem;
     font-size: .875rem;
+}
+
+.site-footer a {
+    color: #ffffff;
+}
+
+.site-footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+}
+
+.footer-emblem {
+    flex: none;
+    inline-size: 52px;
+    block-size: 52px;
+}
+
+.site-footer-inner nav {
+    order: 3;
+    margin-inline-start: auto;
 }
 
 .footer-links {
@@ -152,12 +260,15 @@ body {
     flex-wrap: wrap;
     gap: .5rem 1.5rem;
     padding: 0;
-    margin: 0 0 .75rem;
+    margin: 0;
 }
 
 .footer-name {
+    order: 2;
     margin: 0;
-    color: var(--site-muted);
+    color: #ffffff;
+    font-weight: 600;
+    max-inline-size: 32rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -272,38 +383,398 @@ body {
     cursor: pointer;
 }
 
-/* Home */
-.home-emergency {
-    border: 2px solid #b02a37;
-    border-radius: .375rem;
-    padding: 1rem 1.25rem;
+/* Home, laid out like the sponsor's reference ministry home page. */
+.home-section {
+    padding-block: 2.75rem;
+}
+
+.home-band {
+    background: var(--site-paper);
+}
+
+.home-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: .5rem 1rem;
     margin-block-end: 1.5rem;
 }
 
-.home-grid {
+.home-head h2 {
+    margin: 0;
+    font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+    font-weight: 700;
+    color: var(--site-navy);
+}
+
+.home-more {
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.home-more::after {
+    content: " \2192";
+}
+
+[dir="rtl"] .home-more::after {
+    content: " \2190";
+}
+
+.home-more:hover {
+    text-decoration: underline;
+}
+
+.home-date {
+    display: block;
+    font-size: .8125rem;
+    color: var(--site-muted);
+}
+
+.home-photo-none {
+    background: linear-gradient(135deg, #c6d3e2, #e6edf5);
+}
+
+.home-emergency {
+    background: #fbeeee;
+    border-block-end: 1px solid #efc9cb;
+}
+
+.home-emergency-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .5rem 1rem;
+    padding-block: .75rem;
+}
+
+.home-emergency-tag {
+    margin: 0;
+    padding: .3rem .55rem;
+    border-radius: 3px;
+    background: var(--site-alert);
+    color: #ffffff;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.home-emergency .prose {
+    flex: 1 1 20rem;
+    min-inline-size: 0;
+}
+
+.home-emergency .prose > :last-child {
+    margin-block-end: 0;
+}
+
+/* Lead story beside the latest statements */
+.home-lead-grid {
     display: grid;
     gap: 2rem;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
 }
 
-.home-columns {
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+.home-lead {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--site-navy);
+    min-block-size: 18rem;
 }
 
-.featured-list {
-    display: grid;
-    gap: 1.25rem;
-}
-
-.featured-image,
-.mission-image {
-    width: 100%;
-    max-height: 18rem;
+.home-lead-photo {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 18rem;
+    aspect-ratio: 16 / 10;
     object-fit: cover;
-    border-radius: .375rem;
-    margin-block-end: .5rem;
+}
+
+.home-lead-text {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 4rem 1.75rem 1.5rem;
+    background: linear-gradient(to top, rgba(20, 30, 42, .95) 35%, rgba(20, 30, 42, 0));
+    color: #ffffff;
+}
+
+.home-lead-text h3 {
+    margin: 0;
+    font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+    font-weight: 700;
+}
+
+.home-lead-text a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.home-lead-text a:hover,
+.home-lead-text a:focus-visible {
+    text-decoration: underline;
+}
+
+.home-lead-text .home-date {
+    color: #e1e7ef;
+    margin-block-start: .5rem;
+}
+
+.home-kicker {
+    display: inline-block;
+    margin-block-end: .75rem;
+    padding: .2rem .55rem;
+    border-radius: 2px;
+    background: var(--site-accent);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.home-side-title {
+    margin-block-end: 1rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--site-accent);
+}
+
+.home-statements,
+.home-engagements,
+.home-cards,
+.home-links,
+.home-social-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.home-statements li {
+    padding-block: 1rem;
+    border-block-end: 1px solid var(--site-line);
+}
+
+.home-statements li:first-child {
+    padding-block-start: 0;
+}
+
+.home-statements a {
+    display: block;
+    margin-block-start: .2rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--site-ink);
+    text-decoration: none;
+}
+
+.home-statements a:hover {
+    color: var(--site-accent);
+    text-decoration: underline;
+}
+
+/* Mission finder beside the picture tiles */
+.home-finder-row {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    align-items: start;
+    padding-block-end: 2.75rem;
+}
+
+.home-tiles {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.home-tile {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-block-size: 8.5rem;
+    padding: 1.25rem;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #46607f, var(--site-navy));
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.home-tile strong {
+    font-size: 1.125rem;
+}
+
+.home-tile span {
+    font-size: .875rem;
+    color: #dbe3ec;
+}
+
+.home-tile:hover strong,
+.home-tile:focus-visible strong {
+    text-decoration: underline;
+}
+
+/* Photo cards: current affairs and mission activities */
+.home-cards {
+    display: grid;
+    gap: 1.75rem 1.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.home-card-photo {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.home-card h3 {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.home-card h3 a {
+    color: var(--site-ink);
+    text-decoration: none;
+}
+
+.home-card:hover h3 a,
+.home-card h3 a:focus-visible {
+    color: var(--site-accent);
+    text-decoration: underline;
+}
+
+.home-card-where {
+    margin: 0;
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--site-accent);
+}
+
+/* Minister's engagements beside social media */
+.home-split {
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: start;
+}
+
+.home-engagements li {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+    padding-block: .9rem;
+    border-block-end: 1px solid var(--site-line);
+}
+
+.home-engagements a {
+    font-weight: 600;
+    color: var(--site-ink);
+    text-decoration: none;
+}
+
+.home-engagements a:hover {
+    color: var(--site-accent);
+    text-decoration: underline;
+}
+
+.home-cal {
+    display: block;
+    padding-block: .35rem;
+    border: 1px solid var(--site-line);
+    border-radius: 4px;
+    text-align: center;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+.home-cal b {
+    display: block;
+    font-size: 1.35rem;
+    color: var(--site-navy);
+}
+
+.home-cal small {
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--site-muted);
+}
+
+.home-social {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--site-line);
+    border-radius: 4px;
+}
+
+.home-social h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--site-navy);
+}
+
+.home-social p {
+    margin: 0;
+}
+
+.home-social-list {
+    display: grid;
+    gap: .5rem;
+}
+
+.home-social-list span {
+    font-weight: 700;
+}
+
+/* Important links */
+.home-links {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-links a {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--site-line);
+    border-radius: 4px;
+    font-weight: 600;
+    color: var(--site-navy);
+    text-decoration: none;
+}
+
+.home-links a::after {
+    content: "\2197";
+    color: var(--site-accent);
+}
+
+.home-links a:hover {
+    border-color: var(--site-accent);
 }
 
 .home-finder {
@@ -322,9 +793,32 @@ body {
     flex: 1 1 12rem;
 }
 
-@media (max-width: 767.98px) {
-    .home-grid {
+@media (max-width: 991.98px) {
+    .home-lead-grid,
+    .home-finder-row,
+    .home-split {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    .home-cards,
+    .home-links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 575.98px) {
+    .home-cards,
+    .home-links,
+    .home-tiles {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .home-lead-text {
+        padding: 3rem 1.25rem 1.25rem;
+    }
+
+    .home-tile {
+        min-block-size: 6rem;
     }
 }
 
