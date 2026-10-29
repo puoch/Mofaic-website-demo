@@ -50,16 +50,11 @@ $tiles = [
 
     <section class="home-section" aria-labelledby="home-featured" data-testid="featured-news">
         <div class="container-xl">
-            <div class="home-head">
-                <h2 id="home-featured"><?= esc(lang('Public.statements')) ?></h2>
-                <a class="home-more" href="<?= esc(locale_url('news-press/statements'), 'attr') ?>"><?= esc(lang('Public.allStatements')) ?></a>
+            <?php // Visible heading removed at the sponsor's request; the space stays blank. ?>
+            <div class="home-head home-head-blank">
+                <h2 id="home-featured" class="visually-hidden"><?= esc(lang('Public.featuredNews')) ?></h2>
             </div>
             <div class="home-lead-grid">
-                <section class="home-finder" aria-labelledby="home-finder" data-testid="mission-finder">
-                    <h3 id="home-finder" class="section-heading"><?= esc(lang('Public.missionFinder')) ?></h3>
-                    <?= view('site/partials/finder', ['countries' => $finderCountries]) ?>
-                </section>
-
                 <?php if ($lead === null): ?>
                     <?= view('site/partials/empty') ?>
                 <?php else: ?>
@@ -72,6 +67,11 @@ $tiles = [
                     </div>
                 </article>
                 <?php endif ?>
+
+                <section class="home-finder" aria-labelledby="home-finder" data-testid="mission-finder">
+                    <h3 id="home-finder" class="section-heading"><?= esc(lang('Public.missionFinder')) ?></h3>
+                    <?= view('site/partials/finder', ['countries' => $finderCountries]) ?>
+                </section>
 
                 <div class="home-latest" data-testid="latest-statements">
                     <h3 class="home-side-title"><?= esc(lang('Public.latestStatements')) ?></h3>

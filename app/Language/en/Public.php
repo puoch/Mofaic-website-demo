@@ -28,7 +28,6 @@ return [
     'missionActivitiesHome' => 'Activities of our diplomatic missions',
     'quickLinks'            => 'Important links',
     'featured'              => 'Featured',
-    'allStatements'         => 'All statements',
     'latestStatements'      => 'Latest statements',
     'currentAffairs'        => 'Current affairs',
     'moreNews'              => 'More news',
