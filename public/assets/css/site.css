@@ -544,6 +544,18 @@ body {
     min-block-size: 18rem;
 }
 
+/* Desktop: the lead photo is never smaller than 859 x 412 (sponsor's
+   minimum). The column is at least 936px wide from 992px up; a very wide
+   photo, or a tall one, is letterboxed on navy rather than cropped. */
+@media (min-width: 992px) {
+    .home-lead-photo {
+        min-inline-size: 859px;
+        min-block-size: 412px;
+        max-block-size: 720px;
+        object-fit: contain;
+    }
+}
+
 /* Title sits in a band under the photo so no part of the picture is covered. */
 .home-lead-text {
     padding: 1.25rem 1.75rem 1.5rem;
