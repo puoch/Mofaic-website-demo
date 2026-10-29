@@ -519,11 +519,25 @@ body {
     margin-block-end: 0;
 }
 
-/* Lead story beside the latest statements */
+/* Mission finder to the left of the lead story, latest statements
+   underneath. Side by side only from 1200px, where the lead photo still
+   gets its 859px minimum (1116px container - 15rem - 1rem gap = 860px). */
 .home-lead-grid {
     display: grid;
     gap: 2rem;
-    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 1200px) {
+    .home-lead-grid {
+        gap: 2rem 1rem;
+        grid-template-columns: 15rem minmax(0, 1fr);
+        align-items: start;
+    }
+
+    .home-latest {
+        grid-column: 1 / -1;
+    }
 }
 
 .home-lead {
@@ -531,23 +545,35 @@ body {
     overflow: hidden;
     border-radius: 4px;
     background: var(--site-navy);
-    min-block-size: 18rem;
 }
 
+/* The lead photo keeps its own proportions: full column width, never cropped. */
 .home-lead-photo {
     display: block;
     inline-size: 100%;
-    block-size: 100%;
-    min-block-size: 18rem;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
+    block-size: auto;
 }
 
+.home-lead-photo.home-photo-none {
+    min-block-size: 18rem;
+}
+
+/* Desktop: the lead photo is never smaller than 859 x 412 (sponsor's
+   minimum). The column is at least 936px wide from 992px up; a very wide
+   photo, or a tall one, is letterboxed on navy rather than cropped. */
+@media (min-width: 992px) {
+    .home-lead-photo {
+        min-inline-size: 859px;
+        min-block-size: 412px;
+        max-block-size: 720px;
+        object-fit: contain;
+    }
+}
+
+/* Title sits in a band under the photo so no part of the picture is covered. */
 .home-lead-text {
-    position: absolute;
-    inset: auto 0 0 0;
-    padding: 4rem 1.75rem 1.5rem;
-    background: linear-gradient(to top, rgba(20, 30, 42, .95) 35%, rgba(20, 30, 42, 0));
+    padding: 1.25rem 1.75rem 1.5rem;
+    background: var(--site-navy);
     color: #ffffff;
 }
 
@@ -604,13 +630,15 @@ body {
     padding: 0;
 }
 
+.home-statements {
+    display: grid;
+    gap: 0 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+
 .home-statements li {
     padding-block: 1rem;
     border-block-end: 1px solid var(--site-line);
-}
-
-.home-statements li:first-child {
-    padding-block-start: 0;
 }
 
 .home-statements a {
@@ -628,19 +656,15 @@ body {
     text-decoration: underline;
 }
 
-/* Mission finder beside the picture tiles */
-.home-finder-row {
-    display: grid;
-    gap: 1.5rem;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    align-items: start;
+/* Picture tiles */
+.home-tiles-row {
     padding-block-end: 2.75rem;
 }
 
 .home-tiles {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .home-tile {
@@ -845,14 +869,13 @@ body {
 }
 
 @media (max-width: 991.98px) {
-    .home-lead-grid,
-    .home-finder-row,
     .home-split {
         grid-template-columns: minmax(0, 1fr);
     }
 
     .home-cards,
-    .home-links {
+    .home-links,
+    .home-tiles {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
@@ -865,7 +888,7 @@ body {
     }
 
     .home-lead-text {
-        padding: 3rem 1.25rem 1.25rem;
+        padding: 1rem 1.25rem 1.25rem;
     }
 
     .home-tile {
