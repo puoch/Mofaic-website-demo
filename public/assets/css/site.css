@@ -107,6 +107,14 @@ body {
     color: var(--site-accent);
 }
 
+/* Desktop: spread the top-level items evenly across the full container width. */
+@media (min-width: 992px) {
+    .site-nav .navbar-nav {
+        flex: 1 1 auto;
+        justify-content: space-between;
+    }
+}
+
 .site-nav .dropdown-group {
     font-weight: 600;
 }
