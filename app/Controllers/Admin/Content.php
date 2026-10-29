@@ -119,6 +119,10 @@ class Content extends BaseController
             return $this->form($type, null, $input, ['_form' => $e->getMessage()]);
         }
 
+        if (! empty($this->definition($type)['media'])) {
+            return redirect()->to(site_url("admin/content/{$type}/{$id}") . '#media')->with('message', 'Saved. You can now add photos below.');
+        }
+
         return redirect()->to(site_url("admin/content/{$type}/{$id}"))->with('message', 'Saved.');
     }
 
@@ -257,7 +261,7 @@ class Content extends BaseController
             return $back->with('error', $e->getMessage());
         }
 
-        return $back->with('message', 'File added.');
+        return $back->with('message', $kind === 'image' ? 'Photo added.' : 'File added.');
     }
 
     public function removeMedia(string $type, int $id, int $linkId): ResponseInterface|RedirectResponse

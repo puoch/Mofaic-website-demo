@@ -11,16 +11,21 @@ $images    = array_filter($media, static fn ($m) => $m['kind'] === 'image');
 $av        = array_filter($media, static fn ($m) => in_array($m['kind'], ['audio', 'video'], true));
 ?>
 <?php if ($images !== []): ?>
-<section class="media-section" aria-labelledby="media-images">
+<?php /* Same layout as the mission photos: the first image large, the rest smaller below it, each in its own proportions and opening full size. */ ?>
+<section class="media-section" aria-labelledby="media-images" data-testid="photos">
     <h2 id="media-images" class="h5"><?= esc(lang('Public.images')) ?></h2>
-    <div class="media-grid">
-        <?php foreach ($images as $image): ?>
-        <figure class="media-figure">
-            <img src="<?= esc(MediaService::url($image), 'attr') ?>" alt="<?= esc((string) $image['alt_text'], 'attr') ?>" loading="lazy">
-            <?php if ($image['title'] !== ''): ?><figcaption><?= esc($image['title']) ?></figcaption><?php endif ?>
-        </figure>
+    <ul class="photo-gallery">
+        <?php foreach (array_values($images) as $i => $image): ?>
+        <li class="<?= $i === 0 ? 'photo-gallery-main' : 'photo-gallery-thumb' ?>">
+            <figure class="media-figure">
+                <a href="<?= esc(MediaService::url($image), 'attr') ?>">
+                    <img src="<?= esc(MediaService::url($image), 'attr') ?>" alt="<?= esc((string) $image['alt_text'], 'attr') ?>"<?= $i === 0 ? '' : ' loading="lazy"' ?>>
+                </a>
+                <?php if ($image['title'] !== ''): ?><figcaption><?= esc($image['title']) ?></figcaption><?php endif ?>
+            </figure>
+        </li>
         <?php endforeach ?>
-    </div>
+    </ul>
 </section>
 <?php endif ?>
 

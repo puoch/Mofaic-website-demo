@@ -39,6 +39,7 @@ if ($type === 'site_blocks' && ! $isNew) {
     </form>
     <?php endif ?>
     <?php if (! empty($definition['revisions'])): ?><a href="<?= esc($action . '/revisions', 'attr') ?>">Revision history</a><?php endif ?>
+    <?php if (! empty($definition['media'])): ?><a href="#media">Photos and files</a><?php endif ?>
 </div>
 <?php endif ?>
 
@@ -151,11 +152,22 @@ if ($type === 'site_blocks' && ! $isNew) {
 </section>
 <?php endif ?>
 
+<?php if ($isNew && ! empty($definition['media'])): ?>
+<section class="mt-5" id="media" aria-labelledby="media-heading" data-testid="media-after-save">
+    <h2 id="media-heading" class="h4">Photos and files</h2>
+    <p class="section-pending">Save first. The place to upload photos then appears here.</p>
+</section>
+<?php endif ?>
+
 <?php if (! $isNew && ! empty($definition['media'])): ?>
 <section class="mt-5" id="media" aria-labelledby="media-heading">
-    <h2 id="media-heading" class="h4">Files and media</h2>
+    <h2 id="media-heading" class="h4">Photos and files</h2>
     <?php if ($type === 'missions'): ?>
     <p class="form-text" data-testid="mission-photos-help">Photos show beside the mission details on the public page. The first image added is the large main photo of the building; later images appear as smaller photos below it.</p>
+    <?php elseif ($type === 'articles'): ?>
+    <p class="form-text" data-testid="article-photos-help">For news, statements and mission activities. The first photo added is shown large at the top of the public page and next to the title in news lists; later photos appear smaller below it. Choose Kind "Image".</p>
+    <?php elseif ($type === 'galleries'): ?>
+    <p class="form-text" data-testid="album-photos-help">Add the album's photos one at a time. The first photo is the album cover and is shown large on the album page; the rest appear smaller below it. Choose Kind "Image".</p>
     <?php endif ?>
     <?php if ($media === []): ?>
     <p class="section-pending">No files yet.</p>
@@ -206,7 +218,7 @@ if ($type === 'site_blocks' && ! $isNew) {
                 <input class="form-control" type="url" id="media-url" name="external_url" placeholder="https://">
             </div>
         </div>
-        <button class="btn btn-outline-primary mt-3" type="submit">Add file</button>
+        <button class="btn btn-outline-primary mt-3" type="submit">Upload</button>
     </form>
     <?php endif ?>
 </section>

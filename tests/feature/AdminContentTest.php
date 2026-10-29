@@ -40,7 +40,7 @@ final class AdminContentTest extends StaffTestCase
         ]);
         $article = $this->db->table('articles')->where('title', 'Editor news')->get()->getRowArray();
         $this->assertNotNull($article);
-        $result->assertRedirectTo(site_url('admin/content/articles/' . $article['id']));
+        $result->assertRedirectTo(site_url('admin/content/articles/' . $article['id']) . '#media');
         $this->assertSame('draft', $article['status']);
 
         $this->postAs($editor, 'admin/content/articles/' . $article['id'] . '/publish');
@@ -104,6 +104,29 @@ final class AdminContentTest extends StaffTestCase
         $this->postAs($admin, 'admin/content/articles', ['category' => 'mission_activity', 'title' => 'Activity', 'mission_id' => (string) $mission]);
 
         $this->assertSame((string) $mission, (string) $this->db->table('articles')->where('title', 'Activity')->get()->getRow()->mission_id);
+    }
+
+    public function testNewsGalleryAndMissionActivityFormsHaveAPlaceForPhotos(): void
+    {
+        $admin = $this->staff('superadmin');
+
+        foreach (['articles', 'galleries'] as $type) {
+            $new = $this->actingAs($admin)->get('admin/content/' . $type . '/new');
+            $new->assertSee('data-testid="media-after-save"');
+            $new->assertSee('Save first. The place to upload photos then appears here.');
+        }
+
+        $mission  = $this->content('missions', ['name' => 'Test mission', 'category' => 'abroad_embassy']);
+        $activity = $this->content('articles', ['category' => 'mission_activity', 'title' => 'Test activity', 'mission_id' => $mission]);
+        $album    = $this->content('galleries', ['title' => 'Test album']);
+
+        $edit = $this->actingAs($admin)->get('admin/content/articles/' . $activity);
+        $edit->assertSee('Photos and files');
+        $edit->assertSee('data-testid="article-photos-help"');
+        $edit->assertSee('name="file"', null);
+        $edit->assertSee('enctype="multipart/form-data"', null);
+
+        $this->actingAs($admin)->get('admin/content/galleries/' . $album)->assertSee('data-testid="album-photos-help"');
     }
 
     public function testReadOnlyStaffCanLookButNotChange(): void

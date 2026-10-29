@@ -346,12 +346,64 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
 }
 
-.media-figure img,
+/* Album covers keep their own proportions, like every other photo. */
+.album-grid {
+    align-items: start;
+}
+
 .album-card img {
-    width: 100%;
-    height: 10rem;
-    object-fit: cover;
-    border-radius: .25rem;
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+}
+
+.media-figure {
+    margin: 0;
+}
+
+/* Photos on news, statements, mission activities, albums and pages: the first
+   one large, the rest smaller below it, each at its natural height. */
+.photo-gallery {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    align-items: start;
+}
+
+.photo-gallery-main {
+    grid-column: 1 / -1;
+    max-inline-size: 48rem;
+}
+
+.photo-gallery a {
+    display: block;
+}
+
+.photo-gallery a:focus-visible {
+    outline: 0.1875rem solid #2f6fbf;
+    outline-offset: 0.125rem;
+}
+
+.photo-gallery img {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+}
+
+/* First photo of an article, next to its title in lists. */
+.article-item.has-photo {
+    display: flow-root;
+}
+
+.article-photo {
+    float: inline-start;
+    inline-size: 6rem;
+    block-size: auto;
+    margin-inline-end: 1rem;
+    margin-block-end: .25rem;
 }
 
 .media-figure figcaption {
