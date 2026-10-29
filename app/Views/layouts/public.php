@@ -28,7 +28,6 @@ $emblem = config(Config\Branding::class)->emblem;
         <?php if (ENVIRONMENT !== 'production'): ?>
         <div class="dev-banner" role="note"><?= esc(lang('Site.devBanner')) ?></div>
         <?php endif ?>
-        <div class="flag-stripe" aria-hidden="true"></div>
         <div class="container-xl site-identity">
             <a class="site-name" href="<?= esc(locale_url(), 'attr') ?>">
                 <?php if ($emblem !== ''): ?>
