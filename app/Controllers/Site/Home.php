@@ -42,7 +42,9 @@ class Home extends SiteController
             ->join('article_tag', 'article_tag.article_id = articles.id')
             ->join('tags', 'tags.id = article_tag.tag_id')
             ->where('tags.slug', $types->ministerEngagementTag)
-            ->whereIn('articles.category', ['news', 'statement'])
+            // Same content types as the tag's "View all" page, so a tagged
+            // mission activity shows here too.
+            ->whereIn('articles.category', ['news', 'statement', 'mission_activity'])
             ->limit(3)
             ->get()
             ->getResultArray();

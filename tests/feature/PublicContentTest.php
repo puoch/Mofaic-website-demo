@@ -265,6 +265,20 @@ final class PublicContentTest extends StaffTestCase
         $this->assertStringContainsString('assets/brand/coat-of-arms.svg', $html);
     }
 
+    public function testHomeEngagementsShowEveryTaggedTypeLikeTheTagPage(): void
+    {
+        $this->content('articles', ['category' => 'news', 'title' => 'Tagged news', 'tags' => "Minister's engagements"]);
+        $this->content('articles', ['category' => 'statement', 'title' => 'Tagged statement', 'tags' => "Minister's engagements"]);
+        $this->content('articles', ['category' => 'mission_activity', 'title' => 'Tagged activity', 'tags' => "Minister's engagements"]);
+
+        $html = $this->get('en')->getBody();
+        $this->assertSame(1, preg_match('#data-testid="minister-engagements".*?</section>#s', $html, $row));
+        $this->assertSame(3, substr_count($row[0], 'class="home-card"'));
+        foreach (['Tagged news', 'Tagged statement', 'Tagged activity'] as $title) {
+            $this->assertStringContainsString($title, $row[0]);
+        }
+    }
+
     public function testEmergencyContactsAreHiddenUntilApprovedTextIsEntered(): void
     {
         $this->assertStringNotContainsString('data-testid="emergency-contacts"', $this->get('en')->getBody());
