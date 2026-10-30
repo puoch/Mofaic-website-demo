@@ -306,6 +306,21 @@ class ContentService
     }
 
     /**
+     * Turns "fancy font" letters pasted from social media (the Unicode
+     * mathematical bold, italic, serif and script letters) back into plain
+     * letters, so every title and text shows in the site font. Other
+     * characters are left as typed.
+     */
+    public static function plainLetters(string $text): string
+    {
+        return (string) preg_replace_callback(
+            '/[\x{1D400}-\x{1D7FF}]+/u',
+            static fn (array $match): string => (string) \Normalizer::normalize($match[0], \Normalizer::FORM_KC),
+            $text,
+        );
+    }
+
+    /**
      * @param array<string, mixed>      $definition
      * @param array<string, mixed>      $input
      * @param array<string, mixed>|null $existing
@@ -331,6 +346,7 @@ class ContentService
             $data[$name] = match ($field['type']) {
                 'checkbox' => ! empty($value) ? 1 : 0,
                 'number'   => $value === null || $value === '' ? 0 : (int) $value,
+                'text', 'textarea', 'markdown' => is_string($value) && trim($value) !== '' ? self::plainLetters(trim($value)) : null,
                 default    => is_string($value) && trim($value) === '' ? null : (is_string($value) ? trim($value) : $value),
             };
         }

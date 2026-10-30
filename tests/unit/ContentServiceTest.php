@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use App\Database\Migrations\PlainLettersInContent;
+use Config\Database;
 use InvalidArgumentException;
 use Tests\Support\StaffTestCase;
 
@@ -73,6 +75,30 @@ final class ContentServiceTest extends StaffTestCase
             ['content.created', 'content.published', 'content.unpublished', 'content.published'],
             array_column($this->db->table('audit_events')->orderBy('id')->get()->getResultArray(), 'event'),
         );
+    }
+
+    public function testFancyFontLettersAreSavedAsPlainLetters(): void
+    {
+        $content = service('content');
+        $bold    = "\u{1D40F}\u{1D411}\u{1D404}\u{1D412}\u{1D408}\u{1D403}\u{1D404}\u{1D40D}\u{1D413}"; // bold serif PRESIDENT
+        $italic  = "\u{1D472}\u{1D48A}\u{1D48A}\u{1D493}";                                  // bold italic Kiir
+        $id      = $content->save('articles', null, ['category' => 'news', 'title' => "{$bold} {$italic} speaks", 'summary' => "{$italic} 50 km²", 'body' => "**{$bold}**"], 5);
+
+        $record = $content->find('articles', $id);
+        $this->assertSame('PRESIDENT Kiir speaks', $record['title']);
+        $this->assertSame('Kiir 50 km²', $record['summary']);
+        $this->assertSame('**PRESIDENT**', $record['body']);
+        $this->assertSame('president-kiir-speaks', $record['slug']);
+    }
+
+    public function testTheMigrationCleansFancyLettersInExistingContent(): void
+    {
+        $id = $this->content('articles', ['category' => 'news', 'title' => 'Plain']);
+        $this->db->table('articles')->where('id', $id)->update(['title' => "\u{1D40F}\u{1D411}\u{1D404}\u{1D412}\u{1D408}\u{1D403}\u{1D404}\u{1D40D}\u{1D413} visits"]);
+
+        (new PlainLettersInContent(Database::forge()))->up();
+
+        $this->assertSame('PRESIDENT visits', service('content')->find('articles', $id)['title']);
     }
 
     public function testSlugsAreCreatedFromTitlesAndKeptUnique(): void

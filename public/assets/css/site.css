@@ -1165,7 +1165,7 @@ summary.org-unit {
 
 .directory-title {
     margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--site-font);
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 400;
     color: #1f2d3d;
@@ -1208,7 +1208,7 @@ summary.org-unit {
     border: 0;
     outline: 0;
     background: transparent;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--site-font);
     font-size: clamp(1.25rem, 2.5vw, 1.75rem);
     color: #1f2d3d;
 }
@@ -1299,7 +1299,7 @@ summary.org-unit {
 }
 
 .mission-flag-card-country {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--site-font);
     font-size: 1.5rem;
     line-height: 1.3;
     overflow-wrap: anywhere;
