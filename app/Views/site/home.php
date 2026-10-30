@@ -4,8 +4,6 @@
  * comes from content editors publish; empty areas say so.
  *
  * @var list<array<string, mixed>>          $slides
- * @var list<array<string, mixed>>          $statements
- * @var list<array<string, mixed>>          $latestNews
  * @var list<array<string, mixed>>          $news
  * @var array<int, array<string, mixed>>    $images
  * @var list<array<string, mixed>>          $engagements
@@ -85,49 +83,6 @@ $tiles = [
             </section>
         </div>
     </section>
-
-    <div class="home-section">
-        <div class="container-xl home-wide">
-            <div class="home-lead-grid">
-                <section class="home-side-news" aria-labelledby="home-latest-news" data-testid="latest-news">
-                    <div class="home-head">
-                        <h2 id="home-latest-news"><?= esc(lang('Public.latestNews')) ?></h2>
-                        <?php if ($latestNews !== []): ?>
-                        <a class="home-more" href="<?= esc(locale_url('news-press/news'), 'attr') ?>"><?= esc(lang('Public.moreNews')) ?></a>
-                        <?php endif ?>
-                    </div>
-                    <?php if ($latestNews === []): ?>
-                        <?= view('site/partials/empty') ?>
-                    <?php else: ?>
-                    <ul class="home-side-list">
-                        <?php foreach ($latestNews as $article): ?>
-                        <li>
-                            <?= $photo($article, 'home-side-photo') ?>
-                            <div>
-                                <a href="<?= esc(article_url($article), 'attr') ?>"><?= esc($article['title']) ?></a>
-                                <?= $date($article) ?>
-                            </div>
-                        </li>
-                        <?php endforeach ?>
-                    </ul>
-                    <?php endif ?>
-                </section>
-
-                <div class="home-latest" data-testid="latest-statements">
-                    <h2 class="home-side-title"><?= esc(lang('Public.latestStatements')) ?></h2>
-                    <?php if ($statements === []): ?>
-                        <?= view('site/partials/empty') ?>
-                    <?php else: ?>
-                    <ul class="home-statements">
-                        <?php foreach ($statements as $article): ?>
-                        <li><?= $date($article) ?><a href="<?= esc(article_url($article), 'attr') ?>"><?= esc($article['title']) ?></a></li>
-                        <?php endforeach ?>
-                    </ul>
-                    <?php endif ?>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="container-xl home-tiles-row">
         <nav class="home-tiles" aria-label="<?= esc(lang('Public.featuredPages'), 'attr') ?>">

@@ -691,13 +691,6 @@ body {
     }
 }
 
-/* Latest news and latest statements under the band. */
-.home-lead-grid {
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: minmax(0, 1fr);
-}
-
 .home-kicker {
     display: inline-block;
     margin-block-end: .75rem;
@@ -711,16 +704,6 @@ body {
     text-transform: uppercase;
 }
 
-.home-side-title {
-    margin-block-end: 1rem;
-    font-size: .8125rem;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--site-accent);
-}
-
-.home-statements,
 .home-engagements,
 .home-cards,
 .home-links,
@@ -730,35 +713,9 @@ body {
     padding: 0;
 }
 
-.home-statements {
-    display: grid;
-    gap: 0 1.5rem;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-}
-
-.home-statements li {
-    padding-block: 1rem;
-    border-block-end: 1px solid var(--site-line);
-}
-
-.home-statements a {
-    display: block;
-    margin-block-start: .2rem;
-    font-size: 1.0625rem;
-    font-weight: 600;
-    line-height: 1.4;
-    color: var(--site-ink);
-    text-decoration: none;
-}
-
-.home-statements a:hover {
-    color: var(--site-accent);
-    text-decoration: underline;
-}
-
 /* Picture tiles */
 .home-tiles-row {
-    padding-block-end: 2.75rem;
+    padding-block: 2.75rem;
 }
 
 .home-tiles {
@@ -958,51 +915,11 @@ body {
     padding: 1rem 1.25rem;
 }
 
-/* Mission finder box and the latest news row under the featured story */
+/* Mission finder box */
 .home-box {
     border: 1px solid var(--site-line);
     border-radius: .375rem;
     padding: 1rem 1.25rem;
-}
-
-.home-side-list {
-    display: grid;
-    gap: 0 1.5rem;
-    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.home-side-list li {
-    display: flex;
-    gap: .75rem;
-    align-items: flex-start;
-    padding-block: .6rem;
-    border-block-end: 1px solid var(--site-line);
-}
-
-.home-side-photo {
-    flex: 0 0 5.5rem;
-    inline-size: 5.5rem;
-    block-size: 3.75rem;
-    object-fit: cover;
-    border-radius: 3px;
-    background: var(--site-paper);
-}
-
-.home-side-list a {
-    display: block;
-    font-weight: 600;
-    line-height: 1.35;
-    color: var(--site-ink);
-    text-decoration: none;
-}
-
-.home-side-list a:hover,
-.home-side-list a:focus-visible {
-    color: var(--site-accent);
-    text-decoration: underline;
 }
 
 .finder-row {
