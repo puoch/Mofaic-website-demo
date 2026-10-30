@@ -95,29 +95,29 @@ $tiles = [
         </nav>
     </div>
 
-    <div class="container-xl home-section home-split">
-        <section aria-labelledby="home-engagements" data-testid="minister-engagements">
-            <div class="home-head">
-                <h2 id="home-engagements"><?= esc(lang('Public.ministerEngagements')) ?></h2>
-                <?php if ($engagements !== []): ?>
-                <a class="home-more" href="<?= esc(locale_url('news-press/tags/' . config('ContentTypes')->ministerEngagementTag), 'attr') ?>"><?= esc(lang('Public.viewAll')) ?></a>
-                <?php endif ?>
-            </div>
-            <?php if ($engagements === []): ?>
-                <?= view('site/partials/empty') ?>
-            <?php else: ?>
-            <ul class="home-engagements">
-                <?php foreach ($engagements as $article): ?>
-                <?php $time = \CodeIgniter\I18n\Time::parse((string) $article['published_at'], 'UTC'); ?>
-                <li>
-                    <time class="home-cal" datetime="<?= esc($time->format('Y-m-d'), 'attr') ?>"><b><?= esc($time->toLocalizedString('d')) ?></b> <small><?= esc($time->toLocalizedString('MMM')) ?></small></time>
-                    <a href="<?= esc(article_url($article), 'attr') ?>"><?= esc($article['title']) ?></a>
-                </li>
-                <?php endforeach ?>
-            </ul>
+    <section class="container-xl home-section" aria-labelledby="home-engagements" data-testid="minister-engagements">
+        <div class="home-head">
+            <h2 id="home-engagements"><?= esc(lang('Public.ministerEngagements')) ?></h2>
+            <?php if ($engagements !== []): ?>
+            <a class="home-more" href="<?= esc(locale_url('news-press/tags/' . config('ContentTypes')->ministerEngagementTag), 'attr') ?>"><?= esc(lang('Public.viewAll')) ?></a>
             <?php endif ?>
-        </section>
+        </div>
+        <?php if ($engagements === []): ?>
+            <?= view('site/partials/empty') ?>
+        <?php else: ?>
+        <ul class="home-cards">
+            <?php foreach ($engagements as $article): ?>
+            <li class="home-card">
+                <?= $photo($article, 'home-card-photo') ?>
+                <?= $date($article) ?>
+                <h3><a class="stretched-link" href="<?= esc(article_url($article), 'attr') ?>"><?= esc($article['title']) ?></a></h3>
+            </li>
+            <?php endforeach ?>
+        </ul>
+        <?php endif ?>
+    </section>
 
+    <div class="container-xl home-section home-social-row">
         <section class="home-social" aria-labelledby="home-social" data-testid="social-media">
             <h2 id="home-social"><?= esc(lang('Public.socialOnHome')) ?></h2>
             <?php if ($socialAccounts === []): ?>

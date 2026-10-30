@@ -162,12 +162,13 @@ final class PublicContentTest extends StaffTestCase
 
     public function testNewsListIsPaginated(): void
     {
-        for ($i = 1; $i <= 12; $i++) {
+        for ($i = 1; $i <= 14; $i++) {
             $this->content('articles', ['category' => 'news', 'title' => "Item {$i}"]);
         }
 
         $this->assertStringContainsString('Page 1 of 2', $this->get('en/news-press/news')->getBody());
-        $this->assertSame(2, substr_count($this->get('en/news-press/news?page=2')->getBody(), 'class="article-item"'));
+        $this->assertSame(12, substr_count($this->get('en/news-press/news')->getBody(), 'class="home-card"'));
+        $this->assertSame(2, substr_count($this->get('en/news-press/news?page=2')->getBody(), 'class="home-card"'));
     }
 
     public function testStatementShowsDownloadsAndTags(): void
@@ -194,7 +195,7 @@ final class PublicContentTest extends StaffTestCase
         $this->assertSame(2, substr_count($page, 'photo-gallery-thumb'));
 
         $list = $this->get('en/news-press/news')->getBody();
-        $this->assertStringContainsString('article-item has-photo', $list);
+        $this->assertMatchesRegularExpression('#<li class="home-card">\s*<img class="home-card-photo"#', $list);
         $this->assertStringContainsString('src="' . base_url('uploads/test-0.jpg') . '"', $list);
     }
 

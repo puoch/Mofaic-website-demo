@@ -43,7 +43,7 @@ class Home extends SiteController
             ->join('tags', 'tags.id = article_tag.tag_id')
             ->where('tags.slug', $types->ministerEngagementTag)
             ->whereIn('articles.category', ['news', 'statement'])
-            ->limit(4)
+            ->limit(3)
             ->get()
             ->getResultArray();
 
@@ -60,7 +60,7 @@ class Home extends SiteController
             ->get()
             ->getRowArray();
 
-        $withPhotos = array_merge($slides, $news, $missionActivities);
+        $withPhotos = array_merge($slides, $engagements, $news, $missionActivities);
         $images     = service('media')->firstImages('articles', array_map('intval', array_column($withPhotos, 'id')));
 
         return view('site/home', [
