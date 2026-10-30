@@ -586,6 +586,11 @@ body {
     font-size: clamp(1.5rem, 2.6vw, 2.4rem);
     font-weight: 600;
     line-height: 1.25;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    overflow: hidden;
 }
 
 .home-slide-text a {
@@ -653,14 +658,15 @@ body {
 /* Wider screens: photo on the left fading into the band, text on the
    right, controls in the lower right corner beside the date. */
 @media (min-width: 768px) {
+    /* Every slide is the same height, so every photo shows at one size
+       (cropped to fill, as in the reference) and the band never jumps. */
     .home-slide {
         grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-        min-block-size: 412px;
+        block-size: 440px;
     }
 
     .home-slide-photo {
-        block-size: 100%;
-        min-block-size: 412px;
+        block-size: 440px;
         aspect-ratio: auto;
         -webkit-mask-image: linear-gradient(to right, #000 80%, transparent);
         mask-image: linear-gradient(to right, #000 80%, transparent);

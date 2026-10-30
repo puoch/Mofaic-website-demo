@@ -1,9 +1,9 @@
 /*
  * Featured slideshow on the home page (site/home). Without this script only
- * the first slide shows. Turns on the previous/next and pause controls,
- * moves on every 7 seconds unless the visitor prefers reduced motion, and
- * stops while the pointer or keyboard focus is inside it (WCAG 2.2.2).
- * The left and right arrow keys change slides when focus is inside it.
+ * the first slide shows. Turns on the previous/next and pause controls and
+ * moves on by itself every 7 seconds (sponsor's request) until the visitor
+ * presses pause (WCAG 2.2.2); it also waits while keyboard focus is inside
+ * it. The left and right arrow keys change slides when focus is inside it.
  */
 (function () {
     'use strict';
@@ -23,8 +23,7 @@
     var count    = controls.querySelector('[data-slide-count]');
     var current  = 0;
     var timer    = null;
-    var stopped  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var hovered  = false;
+    var stopped  = false;
     var focused  = false;
 
     function show(index) {
@@ -37,7 +36,7 @@
     function schedule() {
         window.clearInterval(timer);
         timer = null;
-        var playing = !stopped && !hovered && !focused;
+        var playing = !stopped && !focused;
         if (playing) {
             timer = window.setInterval(function () { show(current + 1); }, 7000);
         }
@@ -52,8 +51,9 @@
         schedule();
     }
 
-    controls.querySelector('[data-slide-prev]').addEventListener('click', function () { show(current - 1); });
-    controls.querySelector('[data-slide-next]').addEventListener('click', function () { show(current + 1); });
+    // A manual change restarts the 7-second wait.
+    controls.querySelector('[data-slide-prev]').addEventListener('click', function () { show(current - 1); schedule(); });
+    controls.querySelector('[data-slide-next]').addEventListener('click', function () { show(current + 1); schedule(); });
     pauseBtn.addEventListener('click', function () { setStopped(!stopped); });
 
     root.addEventListener('keydown', function (event) {
@@ -63,9 +63,11 @@
             event.preventDefault();
         }
     });
-    root.addEventListener('mouseenter', function () { hovered = true; schedule(); });
-    root.addEventListener('mouseleave', function () { hovered = false; schedule(); });
-    root.addEventListener('focusin', function () { focused = true; schedule(); });
+    // Only keyboard focus holds it; a mouse click on the arrows does not.
+    root.addEventListener('focusin', function (event) {
+        focused = event.target.matches(':focus-visible');
+        schedule();
+    });
     root.addEventListener('focusout', function (event) {
         if (!root.contains(event.relatedTarget)) {
             focused = false;
