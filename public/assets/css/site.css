@@ -544,9 +544,18 @@ body {
     }
 }
 
+/* Finder box in light blue so it blends with the navy band; bold heading
+   (sponsor's request). */
 .home-hero .home-finder {
     color: var(--site-ink);
     border: 0;
+    background: #dce8f7;
+}
+
+.home-hero .home-finder .section-heading {
+    font-weight: 700;
+    color: var(--site-navy);
+    border-block-end-color: var(--site-royal);
 }
 
 .home-slides {
