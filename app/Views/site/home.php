@@ -3,7 +3,7 @@
  * Home page, laid out like the sponsor's reference ministry home page. Every item
  * comes from content editors publish; empty areas say so.
  *
- * @var array<string, mixed>|null           $lead
+ * @var list<array<string, mixed>>          $slides
  * @var list<array<string, mixed>>          $statements
  * @var list<array<string, mixed>>          $latestNews
  * @var list<array<string, mixed>>          $news
@@ -49,35 +49,49 @@ $tiles = [
     </section>
     <?php endif ?>
 
-    <section class="home-section" aria-labelledby="home-featured" data-testid="featured-news">
-        <div class="container-xl home-wide">
-            <?php // Visible heading removed at the sponsor's request; the space stays blank. ?>
-            <div class="home-head home-head-blank">
-                <h2 id="home-featured" class="visually-hidden"><?= esc(lang('Public.featuredNews')) ?></h2>
-            </div>
-            <div class="home-lead-grid">
-                <?php if ($lead === null): ?>
-                    <?= view('site/partials/empty') ?>
-                <?php else: ?>
-                <article class="home-lead">
-                    <?= $photo($lead, 'home-lead-photo') ?>
-                    <div class="home-lead-text">
-                        <?php if ((int) ($lead['is_featured'] ?? 0) === 1): ?><p class="home-kicker"><?= esc(lang('Public.featured')) ?></p><?php endif ?>
-                        <h3><a class="stretched-link" href="<?= esc(article_url($lead), 'attr') ?>"><?= esc($lead['title']) ?></a></h3>
-                        <?= $date($lead) ?>
+    <?php // Featured slideshow on a navy band, the mission finder beside it. ?>
+    <section class="home-hero" aria-labelledby="home-featured" data-testid="featured-news">
+        <div class="container-xl home-wide home-hero-grid">
+            <h2 id="home-featured" class="visually-hidden"><?= esc(lang('Public.featuredNews')) ?></h2>
+            <?php if ($slides === []): ?>
+                <?= view('site/partials/empty') ?>
+            <?php else: ?>
+            <div class="home-slides" data-slideshow role="group" aria-roledescription="<?= esc(lang('Public.slideshow'), 'attr') ?>" aria-label="<?= esc(lang('Public.featuredNews'), 'attr') ?>">
+                <?php foreach ($slides as $i => $slide): ?>
+                <article class="home-slide" data-slide role="group" aria-roledescription="<?= esc(lang('Public.slide'), 'attr') ?>" aria-label="<?= esc(lang('Public.slideOf', [$i + 1, count($slides)]), 'attr') ?>"<?= $i === 0 ? '' : ' hidden' ?>>
+                    <?= $photo($slide, 'home-slide-photo') ?>
+                    <div class="home-slide-text">
+                        <?php if ((int) ($slide['is_featured'] ?? 0) === 1): ?><p class="home-kicker"><?= esc(lang('Public.featured')) ?></p><?php endif ?>
+                        <h3><a class="stretched-link" href="<?= esc(article_url($slide), 'attr') ?>"><?= esc($slide['title']) ?></a></h3>
+                        <?= $date($slide) ?>
                     </div>
                 </article>
+                <?php endforeach ?>
+                <?php if (count($slides) > 1): ?>
+                <?php // Shown by assets/js/slideshow.js; without JavaScript only the first slide shows. ?>
+                <div class="home-slide-controls" data-slide-controls hidden>
+                    <button type="button" class="home-slide-btn" data-slide-pause aria-label="<?= esc(lang('Public.slidePause'), 'attr') ?>" data-label-play="<?= esc(lang('Public.slidePlay'), 'attr') ?>" data-label-pause="<?= esc(lang('Public.slidePause'), 'attr') ?>"><span aria-hidden="true">&#10074;&#10074;</span></button>
+                    <button type="button" class="home-slide-btn" data-slide-prev aria-label="<?= esc(lang('Public.slidePrev'), 'attr') ?>"><span aria-hidden="true">&#8249;</span></button>
+                    <span class="home-slide-count" data-slide-count aria-hidden="true">1</span>
+                    <button type="button" class="home-slide-btn" data-slide-next aria-label="<?= esc(lang('Public.slideNext'), 'attr') ?>"><span aria-hidden="true">&#8250;</span></button>
+                </div>
                 <?php endif ?>
+            </div>
+            <?php endif ?>
 
-                <?php // Box 2, to the right of the featured story. ?>
-                <section class="home-finder home-box" aria-labelledby="home-finder" data-testid="mission-finder">
-                    <h3 id="home-finder" class="section-heading"><?= esc(lang('Public.missionFinder')) ?></h3>
-                    <?= view('site/partials/finder', ['countries' => $finderCountries]) ?>
-                </section>
+            <section class="home-finder home-box" aria-labelledby="home-finder" data-testid="mission-finder">
+                <h2 id="home-finder" class="section-heading"><?= esc(lang('Public.missionFinder')) ?></h2>
+                <?= view('site/partials/finder', ['countries' => $finderCountries]) ?>
+            </section>
+        </div>
+    </section>
 
+    <div class="home-section">
+        <div class="container-xl home-wide">
+            <div class="home-lead-grid">
                 <section class="home-side-news" aria-labelledby="home-latest-news" data-testid="latest-news">
                     <div class="home-head">
-                        <h3 id="home-latest-news" class="h2"><?= esc(lang('Public.latestNews')) ?></h3>
+                        <h2 id="home-latest-news"><?= esc(lang('Public.latestNews')) ?></h2>
                         <?php if ($latestNews !== []): ?>
                         <a class="home-more" href="<?= esc(locale_url('news-press/news'), 'attr') ?>"><?= esc(lang('Public.moreNews')) ?></a>
                         <?php endif ?>
@@ -100,7 +114,7 @@ $tiles = [
                 </section>
 
                 <div class="home-latest" data-testid="latest-statements">
-                    <h3 class="home-side-title"><?= esc(lang('Public.latestStatements')) ?></h3>
+                    <h2 class="home-side-title"><?= esc(lang('Public.latestStatements')) ?></h2>
                     <?php if ($statements === []): ?>
                         <?= view('site/partials/empty') ?>
                     <?php else: ?>
@@ -113,7 +127,7 @@ $tiles = [
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <div class="container-xl home-tiles-row">
         <nav class="home-tiles" aria-label="<?= esc(lang('Public.featuredPages'), 'attr') ?>">
@@ -224,4 +238,8 @@ $tiles = [
         <?php endif ?>
     </section>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script src="<?= esc(asset_url('assets/js/slideshow.js'), 'attr') ?>" defer></script>
 <?= $this->endSection() ?>
