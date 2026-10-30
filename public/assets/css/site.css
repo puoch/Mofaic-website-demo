@@ -713,7 +713,6 @@ body {
     text-transform: uppercase;
 }
 
-.home-engagements,
 .home-cards,
 .home-links,
 .home-social-list {
@@ -782,6 +781,7 @@ body {
     border-radius: 4px;
 }
 
+.home-card h2,
 .home-card h3 {
     margin: 0;
     font-size: 1.0625rem;
@@ -789,12 +789,15 @@ body {
     line-height: 1.4;
 }
 
+.home-card h2 a,
 .home-card h3 a {
     color: var(--site-ink);
     text-decoration: none;
 }
 
+.home-card:hover h2 a,
 .home-card:hover h3 a,
+.home-card h2 a:focus-visible,
 .home-card h3 a:focus-visible {
     color: var(--site-accent);
     text-decoration: underline;
@@ -809,56 +812,9 @@ body {
     color: var(--site-accent);
 }
 
-/* Minister's engagements beside social media */
-.home-split {
-    display: grid;
-    gap: 2.5rem;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-    align-items: start;
-}
-
-.home-engagements li {
-    display: grid;
-    grid-template-columns: 4rem minmax(0, 1fr);
-    gap: 1rem;
-    align-items: center;
-    padding-block: .9rem;
-    border-block-end: 1px solid var(--site-line);
-}
-
-.home-engagements a {
-    font-weight: 600;
-    color: var(--site-ink);
-    text-decoration: none;
-}
-
-.home-engagements a:hover {
-    color: var(--site-accent);
-    text-decoration: underline;
-}
-
-.home-cal {
-    display: block;
-    padding-block: .35rem;
-    border: 1px solid var(--site-line);
-    border-radius: 4px;
-    text-align: center;
-    line-height: 1.1;
-    font-variant-numeric: tabular-nums;
-}
-
-.home-cal b {
-    display: block;
-    font-size: 1.35rem;
-    color: var(--site-navy);
-}
-
-.home-cal small {
-    font-size: .6875rem;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--site-muted);
+/* Social media box under the Minister's engagements */
+.home-social-row {
+    padding-block-start: 0;
 }
 
 .home-social {
@@ -942,10 +898,6 @@ body {
 }
 
 @media (max-width: 991.98px) {
-    .home-split {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
     .home-cards,
     .home-links,
     .home-tiles {

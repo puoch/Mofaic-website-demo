@@ -19,7 +19,7 @@ use Exception;
  */
 class News extends SiteController
 {
-    private const PER_PAGE = 10;
+    private const PER_PAGE = 12;
 
     /**
      * URL segment => [category, language key]

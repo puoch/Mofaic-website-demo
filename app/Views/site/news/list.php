@@ -29,7 +29,7 @@
     </form>
 
     <p class="result-count" role="status" data-testid="result-count"><?= esc(lang('Public.resultCount', [$total])) ?></p>
-    <?= view('site/partials/article_list', ['articles' => $articles]) ?>
+    <?= view('site/partials/article_cards', ['articles' => $articles]) ?>
     <?= view('site/partials/pagination', ['page' => $page, 'pages' => $pages, 'query' => $filters]) ?>
 </div>
 <?= $this->endSection() ?>
