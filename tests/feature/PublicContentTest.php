@@ -256,9 +256,10 @@ final class PublicContentTest extends StaffTestCase
         $this->assertMatchesRegularExpression('#data-testid="minister-engagements".*Engagement item.*data-testid="mission-activities"#s', $html);
         $this->assertMatchesRegularExpression('#data-testid="mission-activities".*Activity item.*data-testid="quick-links"#s', $html);
         $this->assertStringContainsString('Test quick link', $html);
-        $this->assertStringContainsString('data-testid="latest-statements"', $html);
+        $this->assertStringNotContainsString('data-testid="latest-statements"', $html);
+        $this->assertStringNotContainsString('data-testid="latest-news"', $html);
         $this->assertMatchesRegularExpression('#data-slideshow.*Featured item.*aria-label="2 of 2" hidden.*Engagement item.*data-slide-controls hidden#s', $html);
-        $this->assertMatchesRegularExpression('#data-testid="mission-finder".*data-testid="latest-news".*Engagement item.*data-testid="latest-statements"#s', $html);
+        $this->assertMatchesRegularExpression('#data-testid="featured-news".*data-testid="mission-finder".*data-testid="minister-engagements"#s', $html);
         $this->assertMatchesRegularExpression('#data-testid="current-affairs".*Engagement item#s', $html);
         $this->assertStringContainsString('assets/brand/coat-of-arms.svg', $html);
     }
