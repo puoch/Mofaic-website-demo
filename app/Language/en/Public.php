@@ -34,6 +34,8 @@ return [
     'serviceDocumentAuthentication'  => 'Document Authentication',
     'serviceScholarships'            => 'Scholarships',
     'serviceTravelingAbroad'         => 'Traveling Abroad',
+    'serviceOverflight'              => 'Overflight',
+    'serviceTravelToSouthSudan'      => 'Travel to South Sudan',
     'featured'              => 'Featured',
     'latestStatements'      => 'Latest statements',
     'currentAffairs'        => 'Current affairs',
