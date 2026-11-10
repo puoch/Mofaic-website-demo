@@ -34,6 +34,10 @@ class Pages extends SiteController
             'citizens/scholarships'            => 'Public.serviceScholarships',
             'citizens/traveling-abroad'        => 'Public.serviceTravelingAbroad',
         ],
+        'foreigners' => [
+            'foreigners/overflight'            => 'Public.serviceOverflight',
+            'foreigners/travel-to-south-sudan' => 'Public.serviceTravelToSouthSudan',
+        ],
     ];
 
     public function section(string $section): string

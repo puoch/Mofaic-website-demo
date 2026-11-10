@@ -98,12 +98,22 @@ final class PublicContentTest extends StaffTestCase
         $this->assertSame(0, substr_count($html, '<details class="service-category"'));
     }
 
-    public function testUnpublishedForeignersShowsAPendingPage(): void
+    public function testForeignersShowsTwoSubButtonsAToZ(): void
     {
         $result = $this->get('en/services/foreigners');
         $result->assertOK();
         $result->assertSee('<h1 class="page-title">Foreigners</h1>', null);
-        $result->assertSee('data-testid="empty-state"', null);
+
+        $html = $result->getBody();
+        $this->assertSame(2, substr_count($html, 'class="service-choice"'));
+        $this->assertMatchesRegularExpression('#foreigners/overflight">Overflight<.*foreigners/travel-to-south-sudan">Travel to South Sudan<#s', $html);
+
+        foreach (['overflight' => 'Overflight', 'travel-to-south-sudan' => 'Travel to South Sudan'] as $path => $title) {
+            $page = $this->get('en/services/foreigners/' . $path);
+            $page->assertOK();
+            $page->assertSee('<h1 class="page-title">' . $title . '</h1>', null);
+            $page->assertSee('data-testid="empty-state"', null);
+        }
     }
 
     public function testCitizensShowsFourSubButtonsAToZ(): void
