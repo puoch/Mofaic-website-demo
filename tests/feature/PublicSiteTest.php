@@ -38,6 +38,7 @@ final class PublicSiteTest extends StaffTestCase
             ['en/contacts'],
             ['en/archives'],
             ['en/search'],
+            ['en/sitemap'],
             ['en/search?q=embassy'],
         ];
     }
@@ -105,6 +106,45 @@ final class PublicSiteTest extends StaffTestCase
 
         $this->assertMatchesRegularExpression('#<footer.*href="[^"]*/en/contacts".*</footer>#s', $html);
         $this->assertMatchesRegularExpression('#<footer.*href="[^"]*/en/about-south-sudan".*</footer>#s', $html);
+    }
+
+    public function testFooterBottomBarHasSitemapContactCopyrightAndBackToTop(): void
+    {
+        $html = $this->get('en/missions')->getBody();
+        preg_match('#<footer.*</footer>#s', $html, $footer);
+
+        $this->assertMatchesRegularExpression('#href="[^"]*/en/sitemap">Sitemap</a>#', $footer[0]);
+        $this->assertMatchesRegularExpression('#href="[^"]*/en/contacts">Contact</a>#', $footer[0]);
+        $this->assertStringContainsString('&copy; The Ministry of Foreign Affairs and International Cooperation of the Republic of South Sudan - All rights reserved', $footer[0]);
+        $this->assertStringNotContainsString('footer-emblem', $footer[0]);
+        $this->assertMatchesRegularExpression('#<a class="back-to-top" href="\#top"[^>]*>.*<span class="visually-hidden">Back to top</span>#s', $footer[0]);
+        $this->assertStringContainsString('<div id="top"></div>', $html);
+        // No official accounts entered yet, so no social icons are shown.
+        $this->assertStringNotContainsString('footer-social', $footer[0]);
+    }
+
+    public function testFooterShowsOnlyOfficialSocialAccountsEnteredByEditors(): void
+    {
+        $this->db->table('social_accounts')->insertBatch([
+            ['platform' => 'Facebook', 'label' => 'Ministry on Facebook', 'url' => 'https://www.facebook.com/test-account', 'sort_order' => 1, 'is_active' => 1],
+            ['platform' => 'X (Twitter)', 'label' => 'Ministry on X', 'url' => 'https://x.com/test-account', 'sort_order' => 2, 'is_active' => 1],
+            ['platform' => 'Instagram', 'label' => 'Hidden account', 'url' => 'https://www.instagram.com/hidden', 'sort_order' => 3, 'is_active' => 0],
+        ]);
+
+        $html = $this->get('en')->getBody();
+        preg_match('#<ul class="footer-social".*?</ul>#s', $html, $social);
+
+        $this->assertNotEmpty($social);
+        $this->assertStringContainsString('href="https://www.facebook.com/test-account"', $social[0]);
+        $this->assertStringContainsString('<span class="visually-hidden">Ministry on X</span>', $social[0]);
+        $this->assertStringNotContainsString('instagram.com', $social[0]);
+    }
+
+    public function testSitemapListsTheNavigation(): void
+    {
+        $html = $this->get('en/sitemap')->getBody();
+
+        $this->assertMatchesRegularExpression('#data-testid="sitemap".*/en/missions/abroad/embassies.*/en/contacts#s', $html);
     }
 
     public function testSearchButtonFollowsTheMenuAndOpensALabelledSearchDialog(): void
