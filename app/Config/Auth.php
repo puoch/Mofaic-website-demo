@@ -47,7 +47,7 @@ class Auth extends ShieldAuth
      * --------------------------------------------------------------------
      */
     public array $views = [
-        'login'                       => '\CodeIgniter\Shield\Views\login',
+        'login'                       => 'auth/login',
         'register'                    => '\CodeIgniter\Shield\Views\register',
         'layout'                      => 'auth/layout',
         'action_email_2fa'            => '\CodeIgniter\Shield\Views\email_2fa_show',
@@ -213,7 +213,8 @@ class Auth extends ShieldAuth
         'field'              => 'user',
         'allowRemembering'   => true,
         'rememberCookieName' => 'remember',
-        'rememberLength'     => 30 * DAY,
+        // 15 days, set by the project owner on 2026-11-10.
+        'rememberLength'     => 15 * DAY,
     ];
 
     /**

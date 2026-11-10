@@ -28,6 +28,7 @@ holds nothing else.
 | `tests/feature/PublicSiteTest.php` | PRI-04, PRI-07, PRI-09, SEC-02 | All 17 public routes: same fixed navigation, `lang`/`dir` attributes, no assets from other hosts, unsupported language returns 404, security headers, non-production banner |
 | `tests/unit/LanguagesTest.php` | PRI-07 | English-only launch, right-to-left by configuration |
 | `tests/feature/StaffAccessTest.php` | GOV-01, SEC-01, SEC-04 | No registration or magic link, admin needs sign-in, each role reaches the dashboard, audit log restricted, CSRF rejection, failed sign-in audited without the password, emailed code required |
+| `tests/feature/SignInHelpTest.php` | Sign-in help (2026-11-10) | Coat of arms and help links on sign-in, Remember me 15 days, Forgot password (same reply for unknown addresses, hashed single-use 1-hour links, rate limit, remembered devices signed out), Request an account (closed until privacy notice, pending only, Super Administrator approves with a role or declines), link emails not kept after sending |
 | `tests/unit/PermissionsTest.php` | GOV-01 to GOV-04, HOME-03 | Four roles, only Super Administrator grants diaspora submissions by role, per-person grant, department scope, mission activities limited to Ministry Administrators |
 | `tests/unit/AuditLogTest.php` | SEC-04 | Records events, strips secrets, newest first |
 | `tests/unit/DemoSeederTest.php` | DEMO-01 | Refuses production, labels every record (including demo countries, missions and articles), no duplicates |

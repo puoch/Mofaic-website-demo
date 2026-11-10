@@ -20,6 +20,15 @@ $routes->match(['GET', 'POST'], 'maintenance', 'Maintenance::index');
 // staff accounts are created by a Super Administrator.
 service('auth')->routes($routes, ['except' => ['register', 'magic-link']]);
 
+// Sign-in help (2026-11-10): "Forgot password" and "Request an account".
+// Requests give no access until a Super Administrator approves them.
+$routes->get('login/forgot-password', 'Auth\\SignInHelp::forgot');
+$routes->post('login/forgot-password', 'Auth\\SignInHelp::sendLink');
+$routes->get('login/reset-password/(:segment)', 'Auth\\SignInHelp::resetForm/$1');
+$routes->post('login/reset-password', 'Auth\\SignInHelp::resetSave');
+$routes->get('login/request-account', 'Auth\\SignInHelp::requestForm');
+$routes->post('login/request-account', 'Auth\\SignInHelp::requestSend');
+
 // Administration area. Every route needs a signed-in staff account (session
 // filter in Config\Filters) and the admin.access permission.
 $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'permission:admin.access'], static function (RouteCollection $routes): void {
@@ -43,6 +52,8 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'pe
         $routes->post('(:num)/ban', 'Staff::ban/$1');
         $routes->post('(:num)/unban', 'Staff::unban/$1');
         $routes->post('(:num)/department', 'Staff::department/$1');
+        $routes->post('requests/(:num)/approve', 'Staff::approveRequest/$1');
+        $routes->post('requests/(:num)/decline', 'Staff::declineRequest/$1');
     });
 
     // Per-person access to the Diaspora inbox.

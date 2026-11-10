@@ -5,6 +5,7 @@
  * @var array<int, string> $departments
  * @var array<string, string> $old
  * @var array<string, string> $errors
+ * @var list<array<string, mixed>> $requests pending "Request an account" submissions
  */
 ?>
 <?= $this->extend('layouts/admin') ?>
@@ -16,6 +17,51 @@
 <p>Everyone who can sign in to the administration area. Use this list for the quarterly access review. When someone leaves, ban the account the same day;
     accounts are never deleted. Every change is recorded in the audit log. Diaspora inbox access is granted on its own screen.</p>
 
+<h2 class="h5 mt-4" id="account-requests">Account requests</h2>
+<?php if ($requests === []): ?>
+<p class="text-muted" data-testid="no-requests">No requests are waiting.</p>
+<?php else: ?>
+<p>People who asked for an account on the sign-in page. They cannot sign in until you approve them. Check with their manager that they work for the Ministry first.
+    Approving creates the account with the role you choose and emails them a link, valid for 48 hours, to choose their own password.</p>
+<div class="table-responsive">
+<table class="table table-sm align-middle" data-testid="account-requests">
+    <caption class="visually-hidden">Account requests waiting for a decision, <?= count($requests) ?> in total</caption>
+    <thead><tr><th scope="col">Person</th><th scope="col">Office and job</th><th scope="col">Reason</th><th scope="col">Received</th><th scope="col">Decision</th></tr></thead>
+    <tbody>
+        <?php foreach ($requests as $request): ?>
+        <?php $rid = (int) $request['id']; $suggested = substr(preg_replace('/[^a-z0-9.]/', '', strtolower(strstr((string) $request['email'], '@', true) ?: '')) ?? '', 0, 30); ?>
+        <tr data-testid="request-<?= $rid ?>">
+            <th scope="row"><?= esc($request['full_name']) ?><br><span class="text-muted small"><?= esc($request['email']) ?></span>
+                <?php if ($request['has_account']): ?><br><span class="badge text-bg-warning">Already has an account</span><?php endif ?></th>
+            <td><?= esc($request['office']) ?><br><span class="text-muted small"><?= esc($request['job_title']) ?></span></td>
+            <td class="small"><?= nl2br(esc($request['reason'])) ?></td>
+            <td><?= esc($request['created_at']) ?></td>
+            <td>
+                <form method="post" action="<?= esc(site_url('admin/staff/requests/' . $rid . '/approve'), 'attr') ?>" class="d-flex flex-wrap gap-1 mb-1">
+                    <?= csrf_field() ?>
+                    <label class="visually-hidden" for="req-username-<?= $rid ?>">Username for <?= esc($request['full_name']) ?></label>
+                    <input class="form-control form-control-sm w-auto" id="req-username-<?= $rid ?>" name="username" required maxlength="30" value="<?= esc($suggested, 'attr') ?>" autocomplete="off">
+                    <label class="visually-hidden" for="req-group-<?= $rid ?>">Role for <?= esc($request['full_name']) ?></label>
+                    <select class="form-select form-select-sm w-auto" id="req-group-<?= $rid ?>" name="group">
+                        <?php foreach ($groups as $key => $group): ?>
+                        <option value="<?= esc($key, 'attr') ?>"<?= $key === 'readonly' ? ' selected' : '' ?>><?= esc($group['title']) ?></option>
+                        <?php endforeach ?>
+                    </select>
+                    <button class="btn btn-sm btn-primary" type="submit">Approve<span class="visually-hidden"> <?= esc($request['full_name']) ?></span></button>
+                </form>
+                <form method="post" action="<?= esc(site_url('admin/staff/requests/' . $rid . '/decline'), 'attr') ?>">
+                    <?= csrf_field() ?>
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Decline<span class="visually-hidden"> <?= esc($request['full_name']) ?></span></button>
+                </form>
+            </td>
+        </tr>
+        <?php endforeach ?>
+    </tbody>
+</table>
+</div>
+<?php endif ?>
+
+<h2 class="h5 mt-4">Current staff</h2>
 <div class="table-responsive">
 <table class="table table-sm align-middle" data-testid="staff-list">
     <caption class="visually-hidden">Staff accounts, <?= count($rows) ?> in total, listed on <?= esc(date('Y-m-d')) ?></caption>

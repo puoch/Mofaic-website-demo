@@ -14,6 +14,8 @@ use App\Libraries\DiasporaAccess;
 use App\Libraries\FormGuard;
 use App\Libraries\MailQueue;
 use App\Libraries\Newsletter;
+use App\Libraries\AccountRequests;
+use App\Libraries\PasswordLinks;
 use App\Libraries\StaffAccounts;
 use App\Libraries\StaffDirectory;
 use App\Libraries\SubmissionService;
@@ -163,6 +165,24 @@ class Services extends BaseService
         }
 
         return new StaffDirectory();
+    }
+
+    public static function passwordLinks(bool $getShared = true): PasswordLinks
+    {
+        if ($getShared) {
+            return static::getSharedInstance('passwordLinks');
+        }
+
+        return new PasswordLinks(Database::connect());
+    }
+
+    public static function accountRequests(bool $getShared = true): AccountRequests
+    {
+        if ($getShared) {
+            return static::getSharedInstance('accountRequests');
+        }
+
+        return new AccountRequests(Database::connect());
     }
 
     public static function staffAccounts(bool $getShared = true): StaffAccounts

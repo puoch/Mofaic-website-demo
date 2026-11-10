@@ -1720,3 +1720,8 @@ summary.org-unit {
     max-width: 40vw;
     height: auto;
 }
+
+/* Staff sign-in cards sit just below the coat of arms. */
+.auth-card-wrap {
+    padding: 1.5rem 0 3rem;
+}
