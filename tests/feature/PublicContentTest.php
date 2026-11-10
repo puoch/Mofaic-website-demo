@@ -102,7 +102,7 @@ final class PublicContentTest extends StaffTestCase
     {
         $result = $this->get('en/services/foreigners');
         $result->assertOK();
-        $result->assertSee('<h1 class="page-title">Foreigners</h1>', null);
+        $result->assertSee('<h1 class="page-title page-title-center">Foreigners</h1>', null);
 
         $html = $result->getBody();
         $this->assertSame(2, substr_count($html, 'class="service-choice"'));
@@ -150,10 +150,11 @@ final class PublicContentTest extends StaffTestCase
         $this->assertMatchesRegularExpression(
             '#about-mfaic/minister">Minister<.*about-mfaic/deputy-minister">Deputy Minister<.*about-mfaic/undersecretary">Undersecretary<'
             . '.*about-mfaic/competences">Competences<.*about-mfaic/ministry-history">History<.*about-mfaic/organogram">Organisational Structure<'
-            . '.*about-mfaic/diplomatic-protocol">Diplomatic Protocol<.*/en/archives">Diplomatic Archive<.*/en/contacts">Contact<#s',
+            . '.*about-mfaic/diplomatic-protocol">Diplomatic Protocol<.*/en/archives">Diplomatic Archive<.*/en/contacts">Contacts<#s',
             $html,
         );
         $this->assertStringNotContainsString('data-testid="empty-state"', $html);
+        $this->assertStringContainsString('<h1 class="page-title page-title-center">MFA &amp; IC</h1>', $html);
     }
 
     public function testMfaButtonPagesShowAPendingPageUntilPublished(): void
