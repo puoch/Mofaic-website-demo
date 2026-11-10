@@ -358,7 +358,7 @@ final class PublicContentTest extends StaffTestCase
         $page = $this->get('en/contacts');
         $page->assertOK();
         $this->assertStringNotContainsString('data-testid="contact-information"', $page->getBody());
-        $this->assertStringNotContainsString('<form', $page->getBody(), 'The inquiry form is Gate 4.');
+        $this->assertStringNotContainsString('data-testid="inquiry-form"', $page->getBody(), 'The inquiry form is Gate 4.');
 
         $block = $this->db->table('site_blocks')->where('block_key', 'contact_information')->get()->getRowArray();
         service('content')->save('site_blocks', (int) $block['id'], ['body' => 'Contact text entered by staff (test)'], null);

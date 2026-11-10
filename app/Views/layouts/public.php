@@ -53,6 +53,9 @@ $emblem = config(Config\Branding::class)->emblem;
             <?php endif ?>
             <nav aria-label="<?= esc(lang('Site.footerNavigation'), 'attr') ?>">
                 <ul class="footer-links">
+                    <?php foreach ($nav->footer as $link): ?>
+                    <li><a href="<?= esc(locale_url($link['path']), 'attr') ?>"><?= esc(lang($link['label'])) ?></a></li>
+                    <?php endforeach ?>
                     <?php if ($nav->archivesPlacement === 'footer'): ?>
                     <li><a href="<?= esc(locale_url($nav->archivesPath), 'attr') ?>"><?= esc(lang('Site.nav.archives')) ?></a></li>
                     <?php endif ?>
@@ -64,6 +67,7 @@ $emblem = config(Config\Branding::class)->emblem;
     </footer>
 
     <?= bootstrap_js() ?>
+    <script src="<?= esc(asset_url('assets/js/site-search.js'), 'attr') ?>" defer></script>
 <?= $this->renderSection('scripts') ?>
 </body>
 </html>

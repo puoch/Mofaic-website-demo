@@ -71,7 +71,7 @@ class Pages extends SiteController
         $path = implode('/', $segments);
         $page = $this->published('pages')->where(['section' => $section, 'path' => $path])->get()->getRowArray();
 
-        $ancestors = $page === null ? null : $this->ancestors($page);
+        $ancestors = $page === null ? null : self::ancestors($page);
 
         // Every Services button leads somewhere, even before the Ministry publishes
         // the page (or a page above it): show the title and a "being prepared" note.
@@ -187,7 +187,7 @@ class Pages extends SiteController
      *
      * @return list<array<string, mixed>>|null
      */
-    private function ancestors(array $page): ?array
+    public static function ancestors(array $page): ?array
     {
         $chain = [];
 

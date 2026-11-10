@@ -128,6 +128,9 @@ $routes->group('{locale}', ['namespace' => 'App\Controllers\Site'], static funct
     $routes->get('diaspora/countries', 'Diaspora::countries');
     $routes->get('diaspora/countries/(:segment)', 'Diaspora::country/$1');
 
+    // Site search (search button in the main navigation)
+    $routes->get('search', 'Search::index');
+
     // CONTACTS
     $routes->get('contacts', 'Contacts::index');
     $routes->post('contacts', 'Contacts::submit');

@@ -77,6 +77,8 @@ return [
     'latest'                => 'Latest news and statements',
     'search'                => 'Search',
     'keywords'              => 'Keywords',
+    'searchPages'           => 'Pages',
+    'searchNothingFound'    => 'Nothing on this website matches "{0}". Try fewer or different words.',
     'fromDate'              => 'From',
     'toDate'                => 'To',
     'applyFilters'          => 'Search',
