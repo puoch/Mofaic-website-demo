@@ -43,7 +43,7 @@ return [
     'mfaOrganisationalStructure'     => 'Organisational Structure',
     'mfaDiplomaticProtocol'          => 'Diplomatic Protocol',
     'mfaDiplomaticArchive'           => 'Diplomatic Archive',
-    'mfaContact'                     => 'Contact',
+    'mfaContact'                     => 'Contacts',
     'serviceOverflight'              => 'Overflight',
     'serviceTravelToSouthSudan'      => 'Travel to South Sudan',
     'featured'              => 'Featured',

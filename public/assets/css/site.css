@@ -541,6 +541,11 @@ body {
 /* Services choices (Citizens, Foreigners, Important links): full-width pale
    blue rows like the reference embassy page. On hover and focus the whole
    row fills blue with white text and a soft glow. */
+/* A page that opens with these buttons centres its title over them. */
+.page-title-center {
+    text-align: center;
+}
+
 .service-choices ul {
     list-style: none;
     margin: 0 auto 2.5rem;

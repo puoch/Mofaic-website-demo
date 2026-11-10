@@ -37,7 +37,7 @@ $renderOrg = static function (array $units) use (&$renderOrg): string {
 <div class="container-xl page-body">
     <?= view('site/partials/breadcrumb', ['crumbs' => $crumbs]) ?>
     <article class="content-page">
-        <h1 class="page-title"><?= esc($page['title']) ?></h1>
+        <h1 class="page-title<?= empty($choices) ? '' : ' page-title-center' ?>"><?= esc($page['title']) ?></h1>
         <?php if (! empty($page['summary'])): ?><p class="lead"><?= esc($page['summary']) ?></p><?php endif ?>
         <?php if ($bodyHtml !== ''): ?><div class="prose"><?= $bodyHtml ?></div><?php endif ?>
         <?php if (! empty($choices)): ?>

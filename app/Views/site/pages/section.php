@@ -27,7 +27,7 @@ $renderTree = static function (array $pages, string $section) use (&$renderTree)
 <?= $this->section('content') ?>
 <div class="container-xl page-body">
     <?= view('site/partials/breadcrumb', ['crumbs' => [[$heading]]]) ?>
-    <h1 class="page-title"><?= esc($heading) ?></h1>
+    <h1 class="page-title<?= $choices !== [] ? ' page-title-center' : '' ?>"><?= esc($heading) ?></h1>
 
     <?php if ($choices !== []): ?>
     <?php
