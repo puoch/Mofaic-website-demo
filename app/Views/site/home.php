@@ -24,9 +24,9 @@ $photo = static function (array $article, string $class) use ($images): string {
 $date = static fn (array $article): string => '<time class="home-date" datetime="' . esc(substr((string) $article['published_at'], 0, 10), 'attr') . '">' . esc(format_date($article['published_at'])) . '</time>';
 
 $tiles = [
-    ['url' => 'https://op.gov.ss/public/south-sudan/', 'key' => 'AboutSouthSudan', 'class' => 'home-tile--flag'],
+    ['url' => 'https://op.gov.ss/public/south-sudan/', 'key' => 'AboutSouthSudan', 'class' => 'home-tile--picture home-tile--flag'],
     ['path' => 'diaspora', 'key' => 'Diaspora'],
-    ['path' => 'services', 'key' => 'Services'],
+    ['path' => 'services', 'key' => 'Services', 'class' => 'home-tile--picture home-tile--eservices'],
     ['path' => 'missions/in-south-sudan', 'key' => 'ForeignMissions'],
 ];
 ?>

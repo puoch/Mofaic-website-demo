@@ -10,4 +10,9 @@ Set `Config\Branding::$emblem` to change or hide the emblem.
 
 `flag-south-sudan.svg` is the national flag of South Sudan, supplied by the
 sponsor on 10 November 2026 for the "About South Sudan" tile on the home page,
-where it sits under an 85% dark blue overlay.
+where it sits under a 60% blue overlay.
+
+`eservices-emblem.png` is the eServices emblem, supplied by the sponsor on
+10 November 2026 for the "eServices" tile on the home page (links to the
+Services page). It sits whole on the right of the tile under the same 60% blue
+overlay; the title and text stay at least 7:1 against it.
