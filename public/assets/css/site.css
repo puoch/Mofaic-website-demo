@@ -930,7 +930,7 @@ body {
     text-decoration: underline;
 }
 
-/* Picture tiles (About South Sudan, eServices): bold white text over the
+/* Picture tiles (About South Sudan, eServices, Diplomatic Protocol): bold white text over the
    same blue as the other tiles. An image fills the tile under a 60% blue
    overlay. */
 .home-tile--picture {
@@ -977,6 +977,11 @@ body {
 .home-tile--eservices strong,
 .home-tile--eservices span {
     max-inline-size: 65%;
+}
+
+/* Photo of national flags fills the Diplomatic Protocol tile. */
+.home-tile--protocol::before {
+    background: url("../brand/diplomatic-protocol-flags.jpg") center / cover no-repeat;
 }
 
 /* Photo cards: current affairs and mission activities */

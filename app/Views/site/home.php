@@ -27,7 +27,7 @@ $tiles = [
     ['url' => 'https://op.gov.ss/public/south-sudan/', 'key' => 'AboutSouthSudan', 'class' => 'home-tile--picture home-tile--flag'],
     ['path' => 'diaspora', 'key' => 'Diaspora'],
     ['url' => 'https://accounts.eservices.gov.ss/mda/service/3', 'key' => 'Services', 'class' => 'home-tile--picture home-tile--eservices', 'text' => true],
-    ['path' => 'missions/in-south-sudan', 'key' => 'ForeignMissions'],
+    ['path' => 'about-mfaic/diplomatic-protocol', 'key' => 'DiplomaticProtocol', 'class' => 'home-tile--picture home-tile--protocol', 'text' => false],
 ];
 ?>
 <?= $this->extend('layouts/public') ?>
@@ -97,7 +97,9 @@ $tiles = [
             <?php else: ?>
             <a class="home-tile<?= isset($tile['class']) ? ' ' . esc($tile['class'], 'attr') : '' ?>" href="<?= esc(locale_url($tile['path']), 'attr') ?>">
                 <strong><?= esc(lang('Public.tile' . $tile['key'])) ?></strong>
+                <?php if ($tile['text'] ?? true): ?>
                 <span><?= esc(lang('Public.tile' . $tile['key'] . 'Text')) ?></span>
+                <?php endif ?>
             </a>
             <?php endif ?>
             <?php endforeach ?>
