@@ -13,6 +13,16 @@ use Config\ContentTypes;
  */
 class Pages extends SiteController
 {
+    /**
+     * The three choices at the top of Services, in order: path => language line.
+     * Citizens and Foreigners are CMS pages; Important links lists the quick links.
+     */
+    public const SERVICE_CHOICES = [
+        'citizens'        => 'Public.serviceCitizens',
+        'foreigners'      => 'Public.serviceForeigners',
+        'important-links' => 'Public.quickLinks',
+    ];
+
     public function section(string $section): string
     {
         $tree = $this->publishedTree($section);
@@ -20,15 +30,48 @@ class Pages extends SiteController
         return view('site/pages/section', [
             'section'      => $section,
             'heading'      => $this->sectionHeading($section),
-            'tree'         => $tree,
+            'tree'         => $section === 'services'
+                ? array_values(array_filter($tree, static fn (array $page): bool => ! isset(self::SERVICE_CHOICES[$page['path']])))
+                : $tree,
             'expandable'   => $section === 'services',
+            'choices'      => $section === 'services' ? self::SERVICE_CHOICES : [],
+        ]);
+    }
+
+    /**
+     * Services > Important links: the active quick links, managed under Quick links in the admin.
+     */
+    public function importantLinks(): string
+    {
+        return view('site/pages/important_links', [
+            'heading' => $this->sectionHeading('services'),
+            'links'   => db_connect()->table('quick_links')->where(['locale' => $this->locale(), 'is_active' => 1])->orderBy('sort_order')->get()->getResultArray(),
         ]);
     }
 
     public function show(string $section, string ...$segments): string
     {
         $path = implode('/', $segments);
-        $page = $this->requireRow($this->published('pages')->where(['section' => $section, 'path' => $path])->get()->getRowArray());
+        $page = $this->published('pages')->where(['section' => $section, 'path' => $path])->get()->getRowArray();
+
+        // The Citizens and Foreigners buttons always lead somewhere, even before
+        // the Ministry publishes the page: show the title and a "being prepared" note.
+        if ($page === null && $section === 'services' && in_array($path, ['citizens', 'foreigners'], true)) {
+            return view('site/pages/show', [
+                'section'   => $section,
+                'heading'   => $this->sectionHeading($section),
+                'page'      => ['title' => lang(self::SERVICE_CHOICES[$path]), 'summary' => null],
+                'bodyHtml'  => '',
+                'links'     => [],
+                'media'     => [],
+                'ancestors' => [],
+                'children'  => [],
+                'orgUnits'  => null,
+                'pending'   => true,
+            ]);
+        }
+
+        $page = $this->requireRow($page);
 
         $ancestors = $this->ancestors($page);
         if ($ancestors === null) {

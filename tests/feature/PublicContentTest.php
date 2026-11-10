@@ -79,16 +79,46 @@ final class PublicContentTest extends StaffTestCase
         $this->get('en/services/citizens/consular-services');
     }
 
-    public function testServicesStartWithExpandableCitizensAndForeigners(): void
+    public function testServicesStartWithThreeChoiceButtons(): void
+    {
+        $html = $this->get('en/services')->getBody();
+
+        $this->assertSame(3, substr_count($html, 'class="service-choice"'));
+        $this->assertMatchesRegularExpression('#href="[^"]*/en/services/citizens">Citizens<.*href="[^"]*/en/services/foreigners">Foreigners<.*href="[^"]*/en/services/important-links">Important links<#s', $html);
+        $this->assertStringNotContainsString('data-testid="empty-state"', $html);
+    }
+
+    public function testChoicesAreNotRepeatedAsCategories(): void
     {
         $this->publishPage('citizens');
         $this->publishPage('foreigners');
-        $this->publishPage('foreigners/visa-requirements');
 
         $html = $this->get('en/services')->getBody();
 
-        $this->assertSame(2, substr_count($html, '<details class="service-category"'));
-        $this->assertMatchesRegularExpression('/Citizens.*Foreigners.*Visa Requirements/s', $html);
+        $this->assertSame(0, substr_count($html, '<details class="service-category"'));
+    }
+
+    public function testUnpublishedCitizensAndForeignersShowAPendingPage(): void
+    {
+        foreach (['citizens' => 'Citizens', 'foreigners' => 'Foreigners'] as $path => $title) {
+            $result = $this->get('en/services/' . $path);
+            $result->assertOK();
+            $result->assertSee('<h1 class="page-title">' . $title . '</h1>', null);
+            $result->assertSee('data-testid="empty-state"', null);
+        }
+    }
+
+    public function testImportantLinksListsActiveQuickLinks(): void
+    {
+        $this->db->table('quick_links')->insertBatch([
+            ['locale' => 'en', 'label' => 'Active link (test)', 'url' => 'https://example.org/a', 'is_active' => 1, 'sort_order' => 1],
+            ['locale' => 'en', 'label' => 'Hidden link (test)', 'url' => 'https://example.org/b', 'is_active' => 0, 'sort_order' => 2],
+        ]);
+
+        $result = $this->get('en/services/important-links');
+        $result->assertOK();
+        $result->assertSee('Active link (test)');
+        $result->assertDontSee('Hidden link (test)');
     }
 
     public function testEditorTextCannotInjectScripts(): void

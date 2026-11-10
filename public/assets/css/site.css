@@ -409,6 +409,44 @@ body {
     break-inside: avoid;
 }
 
+/* Services choices (Citizens, Foreigners, Important links): full-width pale
+   blue rows like the reference embassy page. On hover and focus the whole
+   row fills blue with white text and a soft glow. */
+.service-choices ul {
+    list-style: none;
+    margin: 0 auto 2.5rem;
+    padding: 0;
+    max-inline-size: 56.25rem;
+}
+
+.service-choices li + li {
+    margin-block-start: .75rem;
+}
+
+.service-choice {
+    display: block;
+    padding: 1.3rem 1.5rem;
+    background: #e9f0f8;
+    border-radius: .125rem;
+    color: #1f2d3d;
+    font-size: 1.25rem;
+    text-decoration: none;
+    transition: background-color .15s ease, box-shadow .15s ease;
+}
+
+.service-choice:hover,
+.service-choice:focus-visible {
+    /* White on #2f6fbf is 5.0:1 (WCAG AA). */
+    background: #2f6fbf;
+    color: #ffffff;
+    box-shadow: 0 0 1.25rem .25rem rgba(47, 111, 191, .45);
+}
+
+.service-choice:focus-visible {
+    outline: .1875rem solid #0b57d0;
+    outline-offset: .25rem;
+}
+
 .service-category {
     border: 1px solid #d8dedb;
     border-radius: .375rem;

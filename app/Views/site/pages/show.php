@@ -38,6 +38,7 @@ $renderOrg = static function (array $units) use (&$renderOrg): string {
         <h1 class="page-title"><?= esc($page['title']) ?></h1>
         <?php if (! empty($page['summary'])): ?><p class="lead"><?= esc($page['summary']) ?></p><?php endif ?>
         <?php if ($bodyHtml !== ''): ?><div class="prose"><?= $bodyHtml ?></div><?php endif ?>
+        <?php if (! empty($pending)): ?><?= view('site/partials/empty') ?><?php endif ?>
 
         <?php if ($orgUnits !== null && $orgUnits !== []): ?>
         <section class="organogram" aria-labelledby="organogram-heading" data-testid="organogram">
