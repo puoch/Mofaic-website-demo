@@ -32,7 +32,7 @@ class Pages extends SiteController
             'about-mfaic/undersecretary'           => 'Public.mfaUndersecretary',
             'about-mfaic/competences'              => 'Public.mfaCompetences',
             'about-mfaic/ministry-history'         => 'Public.mfaHistory',
-            'about-mfaic/organogram'               => 'Public.mfaOrganisationalStructure',
+            'about-mfaic/organisational-structure' => 'Public.mfaOrganisationalStructure',
             'about-mfaic/diplomatic-protocol'      => 'Public.mfaDiplomaticProtocol',
             'archives'                             => 'Public.mfaDiplomaticArchive',
             'contacts'                             => 'Public.mfaContact',
@@ -46,28 +46,48 @@ class Pages extends SiteController
     ];
 
     /**
-     * Buttons shown on a Services page for its sub pages: path => [sub path => language line].
-     * Shown in alphabetical order of the label.
+     * Buttons shown on a page for its sub pages:
+     * section => [page path => [linked page path => language line]].
+     * Services buttons are shown A to Z (sponsor's request); the others in the order given.
      */
-    public const SERVICE_SUB_CHOICES = [
-        'citizens' => [
-            'citizens/consular-services'       => 'Public.serviceConsular',
-            'citizens/document-authentication' => 'Public.serviceDocumentAuthentication',
-            'citizens/scholarships'            => 'Public.serviceScholarships',
-            'citizens/traveling-abroad'        => 'Public.serviceTravelingAbroad',
+    public const SUB_CHOICES = [
+        'services' => [
+            'citizens' => [
+                'citizens/consular-services'       => 'Public.serviceConsular',
+                'citizens/document-authentication' => 'Public.serviceDocumentAuthentication',
+                'citizens/scholarships'            => 'Public.serviceScholarships',
+                'citizens/traveling-abroad'        => 'Public.serviceTravelingAbroad',
+            ],
+            'foreigners' => [
+                'foreigners/overflight'            => 'Public.serviceOverflight',
+                'foreigners/travel-to-south-sudan' => 'Public.serviceTravelToSouthSudan',
+            ],
         ],
-        'foreigners' => [
-            'foreigners/overflight'            => 'Public.serviceOverflight',
-            'foreigners/travel-to-south-sudan' => 'Public.serviceTravelToSouthSudan',
+        'about-mfaic' => [
+            'organisational-structure' => [
+                'organogram'                                       => 'Public.mfaOrganogram',
+                'organisational-structure/directorates'            => 'Public.mfaDirectorates',
+                'organisational-structure/specialised-departments' => 'Public.mfaSpecialisedDepartments',
+            ],
         ],
     ];
+
+    /** @var list<string> sections whose sub page buttons are sorted A to Z */
+    private const SUB_CHOICES_SORTED = ['services'];
 
     public function section(string $section): string
     {
         $choices = self::SECTION_CHOICES[$section] ?? [];
-        $tree    = array_values(array_filter(
+        // Pages reached through a button are not listed again below the buttons.
+        $behindButtons = array_keys($choices);
+        foreach (self::SUB_CHOICES[$section] ?? [] as $subChoices) {
+            foreach (array_keys($subChoices) as $path) {
+                $behindButtons[] = $section . '/' . $path;
+            }
+        }
+        $tree = array_values(array_filter(
             $this->publishedTree($section),
-            static fn (array $page): bool => ! isset($choices[$section . '/' . $page['path']]),
+            static fn (array $page): bool => ! in_array($section . '/' . $page['path'], $behindButtons, true),
         ));
 
         return view('site/pages/section', [
@@ -156,11 +176,7 @@ class Pages extends SiteController
             return lang($line);
         }
 
-        if ($section !== 'services') {
-            return null;
-        }
-
-        foreach (self::SERVICE_SUB_CHOICES as $subChoices) {
+        foreach (self::SUB_CHOICES[$section] ?? [] as $subChoices) {
             if (isset($subChoices[$path])) {
                 return lang($subChoices[$path]);
             }
@@ -170,16 +186,18 @@ class Pages extends SiteController
     }
 
     /**
-     * @return array<string, string> Sub page path => label, A to Z
+     * @return array<string, string> Sub page path => label, in display order
      */
     private function subChoices(string $section, string $path): array
     {
-        if ($section !== 'services' || ! isset(self::SERVICE_SUB_CHOICES[$path])) {
+        if (! isset(self::SUB_CHOICES[$section][$path])) {
             return [];
         }
 
-        $choices = array_map(static fn (string $line): string => lang($line), self::SERVICE_SUB_CHOICES[$path]);
-        asort($choices, SORT_NATURAL | SORT_FLAG_CASE);
+        $choices = array_map(static fn (string $line): string => lang($line), self::SUB_CHOICES[$section][$path]);
+        if (in_array($section, self::SUB_CHOICES_SORTED, true)) {
+            asort($choices, SORT_NATURAL | SORT_FLAG_CASE);
+        }
 
         return $choices;
     }

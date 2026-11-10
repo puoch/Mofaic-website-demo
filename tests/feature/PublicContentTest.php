@@ -149,7 +149,7 @@ final class PublicContentTest extends StaffTestCase
         $this->assertSame(9, substr_count($html, 'class="service-choice"'));
         $this->assertMatchesRegularExpression(
             '#about-mfaic/minister">Minister<.*about-mfaic/deputy-minister">Deputy Minister<.*about-mfaic/undersecretary">Undersecretary<'
-            . '.*about-mfaic/competences">Competences<.*about-mfaic/ministry-history">History<.*about-mfaic/organogram">Organisational Structure<'
+            . '.*about-mfaic/competences">Competences<.*about-mfaic/ministry-history">History<.*about-mfaic/organisational-structure">Organisational Structure<'
             . '.*about-mfaic/diplomatic-protocol">Diplomatic Protocol<.*/en/archives">Diplomatic Archive<.*/en/contacts">Contacts<#s',
             $html,
         );
@@ -159,7 +159,7 @@ final class PublicContentTest extends StaffTestCase
 
     public function testMfaButtonPagesShowAPendingPageUntilPublished(): void
     {
-        foreach (['minister' => 'Minister', 'undersecretary' => 'Undersecretary', 'ministry-history' => 'History', 'organogram' => 'Organisational Structure'] as $path => $title) {
+        foreach (['minister' => 'Minister', 'undersecretary' => 'Undersecretary', 'ministry-history' => 'History', 'organogram' => 'Organogram'] as $path => $title) {
             $result = $this->get('en/about-mfaic/' . $path);
             $result->assertOK();
             $result->assertSee('<h1 class="page-title">' . $title . '</h1>', null);
@@ -167,13 +167,39 @@ final class PublicContentTest extends StaffTestCase
         }
     }
 
+    public function testOrganisationalStructureShowsThreeButtonsInTheGivenOrder(): void
+    {
+        $result = $this->get('en/about-mfaic/organisational-structure');
+        $result->assertOK();
+        $result->assertSee('<h1 class="page-title page-title-center">Organisational Structure</h1>', null);
+
+        $html = $result->getBody();
+        $this->assertSame(3, substr_count($html, 'class="service-choice"'));
+        $this->assertMatchesRegularExpression(
+            '#about-mfaic/organogram">Organogram<.*about-mfaic/organisational-structure/directorates">Directorates<'
+            . '.*about-mfaic/organisational-structure/specialised-departments">Specialised Departments<#s',
+            $html,
+        );
+        $this->assertStringNotContainsString('data-testid="empty-state"', $html);
+
+        foreach (['directorates' => 'Directorates', 'specialised-departments' => 'Specialised Departments'] as $path => $title) {
+            $page = $this->get('en/about-mfaic/organisational-structure/' . $path);
+            $page->assertOK();
+            $page->assertSee('<h1 class="page-title">' . $title . '</h1>', null);
+            $page->assertSee('about-mfaic/organisational-structure">Organisational Structure</a>', null);
+            $page->assertSee('data-testid="empty-state"', null);
+        }
+    }
+
     public function testPublishedMfaButtonPagesAreNotListedTwice(): void
     {
         $this->publishPage('ministry-history', [], 'about-mfaic');
+        $this->publishPage('organogram', [], 'about-mfaic');
         $this->publishPage('leadership', [], 'about-mfaic');
 
         $html = $this->get('en/about-mfaic')->getBody();
 
+        $this->assertStringNotContainsString('about-mfaic/organogram"', $html);
         $this->assertSame(1, substr_count($html, 'about-mfaic/ministry-history"'));
         $this->assertStringContainsString('about-mfaic/leadership"', $html);
         $this->get('en/about-mfaic/ministry-history')->assertSee('Ministry History');
