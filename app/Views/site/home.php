@@ -24,7 +24,7 @@ $photo = static function (array $article, string $class) use ($images): string {
 $date = static fn (array $article): string => '<time class="home-date" datetime="' . esc(substr((string) $article['published_at'], 0, 10), 'attr') . '">' . esc(format_date($article['published_at'])) . '</time>';
 
 $tiles = [
-    ['path' => 'about-south-sudan', 'key' => 'AboutSouthSudan'],
+    ['url' => 'https://op.gov.ss/public/south-sudan/', 'key' => 'AboutSouthSudan', 'class' => 'home-tile--flag'],
     ['path' => 'diaspora', 'key' => 'Diaspora'],
     ['path' => 'services', 'key' => 'Services'],
     ['path' => 'missions/in-south-sudan', 'key' => 'ForeignMissions'],
@@ -87,10 +87,16 @@ $tiles = [
     <div class="container-xl home-tiles-row">
         <nav class="home-tiles" aria-label="<?= esc(lang('Public.featuredPages'), 'attr') ?>">
             <?php foreach ($tiles as $tile): ?>
-            <a class="home-tile" href="<?= esc(locale_url($tile['path']), 'attr') ?>">
+            <?php if (isset($tile['url'])): ?>
+            <a class="home-tile<?= isset($tile['class']) ? ' ' . esc($tile['class'], 'attr') : '' ?>" href="<?= esc($tile['url'], 'attr') ?>" rel="noopener" target="_blank">
+                <strong><?= esc(lang('Public.tile' . $tile['key'])) ?> <span class="visually-hidden"><?= esc(lang('Public.opensExternal')) ?></span></strong>
+            </a>
+            <?php else: ?>
+            <a class="home-tile<?= isset($tile['class']) ? ' ' . esc($tile['class'], 'attr') : '' ?>" href="<?= esc(locale_url($tile['path']), 'attr') ?>">
                 <strong><?= esc(lang('Public.tile' . $tile['key'])) ?></strong>
                 <span><?= esc(lang('Public.tile' . $tile['key'] . 'Text')) ?></span>
             </a>
+            <?php endif ?>
             <?php endforeach ?>
         </nav>
     </div>
