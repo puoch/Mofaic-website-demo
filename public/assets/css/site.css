@@ -930,40 +930,40 @@ body {
     text-decoration: underline;
 }
 
-/* About South Sudan tile: bold white text on the left over dark blue,
-   the national flag on the right under an 85% dark blue overlay. */
+/* About South Sudan tile: bold white text over the same blue as the
+   other tiles; the national flag fills the right 75% under a 65% blue
+   overlay, so solid blue shows only on the left 25%. */
 .home-tile--flag {
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    background: var(--site-navy);
 }
 
 .home-tile--flag::before,
 .home-tile--flag::after {
     content: "";
     position: absolute;
-    inset-block: 0;
-    inset-inline-end: 0;
-    inline-size: 60%;
+    inset: 0;
     z-index: -1;
 }
 
 .home-tile--flag::before {
+    inset-inline-start: 25%;
     background: url("../brand/flag-south-sudan.svg") left center / cover no-repeat;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 35%);
-    mask-image: linear-gradient(to right, transparent, #000 35%);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 12%);
+    mask-image: linear-gradient(to right, transparent, #000 12%);
 }
 
 .home-tile--flag::after {
-    inline-size: 100%;
-    background: rgb(8 26 58 / .85);
+    background: linear-gradient(135deg, var(--site-royal-light), var(--site-royal));
+    opacity: .65;
 }
 
 .home-tile--flag strong {
     font-size: 1.375rem;
     font-weight: 700;
     color: #ffffff;
+    text-shadow: 0 1px 3px rgb(0 0 0 / .45);
 }
 
 /* Photo cards: current affairs and mission activities */
