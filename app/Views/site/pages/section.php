@@ -29,13 +29,13 @@ $renderTree = static function (array $pages, string $section) use (&$renderTree)
     <h1 class="page-title"><?= esc($heading) ?></h1>
 
     <?php if ($choices !== []): ?>
-    <nav class="service-choices" aria-label="<?= esc(lang('Public.serviceChoices'), 'attr') ?>" data-testid="service-choices">
-        <ul>
-            <?php foreach ($choices as $path => $line): ?>
-            <li><a class="service-choice" href="<?= esc(locale_url($section . '/' . $path), 'attr') ?>"><?= esc(lang($line)) ?></a></li>
-            <?php endforeach ?>
-        </ul>
-    </nav>
+    <?php
+    $buttons = [];
+    foreach ($choices as $path => $line) {
+        $buttons[locale_url($section . '/' . $path)] = lang($line);
+    }
+    ?>
+    <?= view('site/partials/service_choices', ['choices' => $buttons]) ?>
     <?php endif ?>
 
     <?php if ($tree === []): ?>

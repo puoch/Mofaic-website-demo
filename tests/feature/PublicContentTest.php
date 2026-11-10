@@ -67,16 +67,16 @@ final class PublicContentTest extends StaffTestCase
         $result->assertOK();
         $result->assertSee('<h2>Help</h2>', null);
         $result->assertSee('Official portal');
-        $result->assertSee('Consular Services');
+        $result->assertSee('Consular Service');
         $this->assertStringNotContainsString('not a link', $result->getBody());
     }
 
     public function testChildOfAnUnpublishedPageIsHidden(): void
     {
-        $this->publishPage('citizens/consular-services');
+        $this->publishPage('citizens/traveling-abroad/visa-information');
 
         $this->expectException(PageNotFoundException::class);
-        $this->get('en/services/citizens/consular-services');
+        $this->get('en/services/citizens/traveling-abroad/visa-information');
     }
 
     public function testServicesStartWithThreeChoiceButtons(): void
@@ -98,14 +98,38 @@ final class PublicContentTest extends StaffTestCase
         $this->assertSame(0, substr_count($html, '<details class="service-category"'));
     }
 
-    public function testUnpublishedCitizensAndForeignersShowAPendingPage(): void
+    public function testUnpublishedForeignersShowsAPendingPage(): void
     {
-        foreach (['citizens' => 'Citizens', 'foreigners' => 'Foreigners'] as $path => $title) {
-            $result = $this->get('en/services/' . $path);
-            $result->assertOK();
-            $result->assertSee('<h1 class="page-title">' . $title . '</h1>', null);
-            $result->assertSee('data-testid="empty-state"', null);
+        $result = $this->get('en/services/foreigners');
+        $result->assertOK();
+        $result->assertSee('<h1 class="page-title">Foreigners</h1>', null);
+        $result->assertSee('data-testid="empty-state"', null);
+    }
+
+    public function testCitizensShowsFourSubButtonsAToZ(): void
+    {
+        foreach ([false, true] as $published) {
+            if ($published) {
+                $this->publishPage('citizens');
+                $this->publishPage('citizens/scholarships');
+            }
+
+            $html = $this->get('en/services/citizens')->getBody();
+
+            $this->assertSame(4, substr_count($html, 'class="service-choice"'));
+            $this->assertMatchesRegularExpression('#citizens/consular-services">Consular Service<.*citizens/document-authentication">Document Authentication<.*citizens/scholarships">Scholarships<.*citizens/traveling-abroad">Traveling Abroad<#s', $html);
+            $this->assertStringNotContainsString('id="child-pages"', $html);
+            $this->assertStringNotContainsString('data-testid="empty-state"', $html);
         }
+    }
+
+    public function testUnpublishedCitizensSubPageShowsAPendingPage(): void
+    {
+        $result = $this->get('en/services/citizens/traveling-abroad');
+        $result->assertOK();
+        $result->assertSee('<h1 class="page-title">Traveling Abroad</h1>', null);
+        $result->assertSee('data-testid="empty-state"', null);
+        $result->assertSee('services/citizens">Citizens</a>', null);
     }
 
     public function testImportantLinksListsActiveQuickLinks(): void

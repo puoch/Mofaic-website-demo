@@ -23,6 +23,19 @@ class Pages extends SiteController
         'important-links' => 'Public.quickLinks',
     ];
 
+    /**
+     * Buttons shown on a Services page for its sub pages: path => [sub path => language line].
+     * Shown in alphabetical order of the label.
+     */
+    public const SERVICE_SUB_CHOICES = [
+        'citizens' => [
+            'citizens/consular-services'       => 'Public.serviceConsular',
+            'citizens/document-authentication' => 'Public.serviceDocumentAuthentication',
+            'citizens/scholarships'            => 'Public.serviceScholarships',
+            'citizens/traveling-abroad'        => 'Public.serviceTravelingAbroad',
+        ],
+    ];
+
     public function section(string $section): string
     {
         $tree = $this->publishedTree($section);
@@ -54,31 +67,40 @@ class Pages extends SiteController
         $path = implode('/', $segments);
         $page = $this->published('pages')->where(['section' => $section, 'path' => $path])->get()->getRowArray();
 
-        // The Citizens and Foreigners buttons always lead somewhere, even before
-        // the Ministry publishes the page: show the title and a "being prepared" note.
-        if ($page === null && $section === 'services' && in_array($path, ['citizens', 'foreigners'], true)) {
+        $ancestors = $page === null ? null : $this->ancestors($page);
+
+        // Every Services button leads somewhere, even before the Ministry publishes
+        // the page (or a page above it): show the title and a "being prepared" note.
+        $label = $section === 'services' ? $this->buttonLabel($path) : null;
+        if (($page === null || $ancestors === null) && $label !== null) {
+            $crumbs = [];
+            for ($prefix = dirname($path); $prefix !== '.'; $prefix = dirname($prefix)) {
+                array_unshift($crumbs, ['title' => $this->buttonLabel($prefix) ?? $prefix, 'path' => $prefix]);
+            }
+
             return view('site/pages/show', [
                 'section'   => $section,
                 'heading'   => $this->sectionHeading($section),
-                'page'      => ['title' => lang(self::SERVICE_CHOICES[$path]), 'summary' => null],
+                'page'      => ['title' => $label, 'summary' => null],
                 'bodyHtml'  => '',
                 'links'     => [],
                 'media'     => [],
-                'ancestors' => [],
+                'ancestors' => $crumbs,
                 'children'  => [],
                 'orgUnits'  => null,
+                'choices'   => $this->subChoices($section, $path),
                 'pending'   => true,
             ]);
         }
 
         $page = $this->requireRow($page);
-
-        $ancestors = $this->ancestors($page);
         if ($ancestors === null) {
             $this->notFound();
         }
 
+        $choices  = $this->subChoices($section, $path);
         $children = $this->published('pages')->where('parent_id', $page['id'])->orderBy('sort_order')->orderBy('title')->get()->getResultArray();
+        $children = array_values(array_filter($children, static fn (array $child): bool => ! isset($choices[$child['path']])));
         $orgUnits = $section === 'about-mfaic' && $path === 'organogram' ? $this->orgTree() : null;
 
         return view('site/pages/show', [
@@ -91,7 +113,41 @@ class Pages extends SiteController
             'ancestors' => $ancestors,
             'children'  => $children,
             'orgUnits'  => $orgUnits,
+            'choices'   => $choices,
         ]);
+    }
+
+    /**
+     * The button label for a Services path, or null if it is not a button.
+     */
+    private function buttonLabel(string $path): ?string
+    {
+        if (isset(self::SERVICE_CHOICES[$path])) {
+            return lang(self::SERVICE_CHOICES[$path]);
+        }
+
+        foreach (self::SERVICE_SUB_CHOICES as $subChoices) {
+            if (isset($subChoices[$path])) {
+                return lang($subChoices[$path]);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<string, string> Sub page path => label, A to Z
+     */
+    private function subChoices(string $section, string $path): array
+    {
+        if ($section !== 'services' || ! isset(self::SERVICE_SUB_CHOICES[$path])) {
+            return [];
+        }
+
+        $choices = array_map(static fn (string $line): string => lang($line), self::SERVICE_SUB_CHOICES[$path]);
+        asort($choices, SORT_NATURAL | SORT_FLAG_CASE);
+
+        return $choices;
     }
 
     private function sectionHeading(string $section): string

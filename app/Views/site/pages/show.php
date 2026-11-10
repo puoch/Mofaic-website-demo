@@ -4,6 +4,8 @@
  * @var list<array<string, mixed>>      $ancestors
  * @var list<array<string, mixed>>      $children
  * @var list<array<string, mixed>>|null $orgUnits only on the organogram page
+ * @var array<string, string>           $choices  Services sub page buttons: path => label
+ * @var bool                            $pending  page not published yet
  */
 $crumbs = [[$heading, locale_url($section)]];
 foreach ($ancestors as $ancestor) {
@@ -38,7 +40,17 @@ $renderOrg = static function (array $units) use (&$renderOrg): string {
         <h1 class="page-title"><?= esc($page['title']) ?></h1>
         <?php if (! empty($page['summary'])): ?><p class="lead"><?= esc($page['summary']) ?></p><?php endif ?>
         <?php if ($bodyHtml !== ''): ?><div class="prose"><?= $bodyHtml ?></div><?php endif ?>
-        <?php if (! empty($pending)): ?><?= view('site/partials/empty') ?><?php endif ?>
+        <?php if (! empty($choices)): ?>
+            <?php
+            $buttons = [];
+            foreach ($choices as $path => $label) {
+                $buttons[locale_url($section . '/' . $path)] = $label;
+            }
+            ?>
+            <?= view('site/partials/service_choices', ['choices' => $buttons]) ?>
+        <?php elseif (! empty($pending)): ?>
+            <?= view('site/partials/empty') ?>
+        <?php endif ?>
 
         <?php if ($orgUnits !== null && $orgUnits !== []): ?>
         <section class="organogram" aria-labelledby="organogram-heading" data-testid="organogram">
