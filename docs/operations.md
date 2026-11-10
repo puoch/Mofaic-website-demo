@@ -83,6 +83,27 @@ php spark staff list
 6. Anyone who has not signed in for 90 days is asked whether they still need
    access.
 
+## Account requests and password resets (2026-11-10)
+
+- **Request an account** (link on the sign-in page, `/login/request-account`):
+  staff without an account fill in name, work email, office, job title and
+  reason. A request gives no access. Super Administrators get an email and
+  decide under **Admin > Staff accounts > Account requests**: confirm with
+  the person's manager that they work for the Ministry, then approve with the
+  lowest role that covers their work, or decline. Approving emails the person
+  a link, valid for 48 hours, to choose their own password. The form stays
+  closed until the privacy notice is published, like the public forms. How
+  long declined requests are kept is for the Ministry to decide.
+- **Forgot password** (`/login/forgot-password`): emails a single-use link,
+  valid for one hour, if the address belongs to an active account. The reply
+  is the same either way. Setting a new password signs the account out of
+  every "Remember me" device and emails a notice. Sign-in still needs the
+  emailed code.
+- **Remember me** keeps a device signed in for up to 15 days
+  (`Config\Auth::$sessionConfig['rememberLength']`).
+
+All of these need working outgoing email (SMTP in `.env`).
+
 ## Offboarding (proposal G5-04)
 
 When someone leaves or changes job, on or before their last working day:

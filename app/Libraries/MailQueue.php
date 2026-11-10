@@ -18,6 +18,12 @@ class MailQueue
 {
     public const MAX_ATTEMPTS = 5;
 
+    /**
+     * Messages that carry a sign-in link. Their body is removed once they
+     * are sent or given up on, so the stored copy cannot be used.
+     */
+    public const SECRET_PURPOSES = ['password-reset', 'account-approved'];
+
     public function __construct(private readonly BaseConnection $db)
     {
     }
@@ -73,7 +79,7 @@ class MailQueue
             if ($error === null) {
                 $this->db->table('mail_queue')->where('id', $row['id'])->update([
                     'status' => 'sent', 'attempts' => $attempts, 'last_error' => null, 'sent_at' => Time::now('UTC')->toDateTimeString(),
-                ]);
+                ] + $this->redacted($row));
                 $sent++;
 
                 continue;
@@ -83,11 +89,21 @@ class MailQueue
                 'status'     => $attempts >= self::MAX_ATTEMPTS ? 'failed' : 'queued',
                 'attempts'   => $attempts,
                 'last_error' => mb_substr($error, 0, 500),
-            ]);
+            ] + ($attempts >= self::MAX_ATTEMPTS ? $this->redacted($row) : []));
             $failed++;
         }
 
         return [$sent, $failed];
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     *
+     * @return array<string, string>
+     */
+    private function redacted(array $row): array
+    {
+        return in_array($row['purpose'], self::SECRET_PURPOSES, true) ? ['body' => '[Removed after sending: it contained a sign-in link.]'] : [];
     }
 
     /**

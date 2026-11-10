@@ -43,6 +43,7 @@ class Staff extends BaseController
             'rows'        => $rows,
             'groups'      => config('AuthGroups')->groups,
             'departments' => $departments,
+            'requests'    => service('accountRequests')->pending(),
             'selfId'      => (int) auth()->id(),
             'old'         => session('old') ?? [],
             'errors'      => session('errors') ?? [],
@@ -58,6 +59,36 @@ class Staff extends BaseController
         }
 
         return $this->back()->with('message', 'Created ' . $result->email . '. They sign in with the password you set and a code emailed to them.');
+    }
+
+    /**
+     * Approves a "Request an account" submission: creates the account with
+     * the chosen role and emails the person a link to set their password.
+     */
+    public function approveRequest(int $id): RedirectResponse
+    {
+        try {
+            $result = service('accountRequests')->approve($id, trim((string) $this->request->getPost('username')), (string) $this->request->getPost('group'), auth()->user());
+        } catch (InvalidArgumentException $e) {
+            return $this->back()->with('error', $e->getMessage());
+        }
+
+        if (is_array($result)) {
+            return $this->back()->with('error', implode(' ', $result));
+        }
+
+        return $this->back()->with('message', 'Approved. ' . $result->email . ' has been emailed a link to choose a password (valid for 48 hours).');
+    }
+
+    public function declineRequest(int $id): RedirectResponse
+    {
+        try {
+            service('accountRequests')->decline($id, auth()->user());
+        } catch (InvalidArgumentException $e) {
+            return $this->back()->with('error', $e->getMessage());
+        }
+
+        return $this->back()->with('message', 'Request declined. The person has been told by email.');
     }
 
     public function role(int $id): RedirectResponse

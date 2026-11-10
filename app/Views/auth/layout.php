@@ -4,8 +4,11 @@
  * public CDN without integrity checks. This one uses the site's own asset
  * tags, which follow assets.bootstrapSource (PD-17).
  *
+ * The national coat of arms sits centred above every staff sign-in form.
+ *
  * @var CodeIgniter\View\View $this
  */
+$emblem = config(Config\Branding::class)->emblem;
 ?>
 <!doctype html>
 <html lang="en" dir="ltr">
@@ -22,6 +25,11 @@
     <div class="dev-banner" role="note"><?= esc(lang('Site.devBanner')) ?></div>
     <?php endif ?>
     <main role="main" class="container">
+        <?php if ($emblem !== ''): ?>
+        <div class="auth-emblem">
+            <img src="<?= esc(asset_url($emblem), 'attr') ?>" alt="<?= esc(lang('Site.emblemAlt'), 'attr') ?>" width="140" height="138">
+        </div>
+        <?php endif ?>
         <?= $this->renderSection('main') ?>
     </main>
 <?= $this->renderSection('pageScripts') ?>
