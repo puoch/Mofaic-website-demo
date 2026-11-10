@@ -89,6 +89,7 @@ $routes->group('{locale}', ['namespace' => 'App\Controllers\Site'], static funct
     $routes->get('missions/(abroad|in-south-sudan)/(:segment)', 'Missions::category/$1/$2');
 
     // ABOUT MFA&IC, ABOUT SOUTH SUDAN, SERVICES
+    $routes->get('services/important-links', 'Pages::importantLinks');
     foreach (['about-mfaic', 'about-south-sudan', 'services'] as $section) {
         $routes->get($section, "Pages::section/{$section}");
         $routes->get($section . '/(:any)', "Pages::show/{$section}/$1");
