@@ -24,10 +24,9 @@ $photo = static function (array $article, string $class) use ($images): string {
 $date = static fn (array $article): string => '<time class="home-date" datetime="' . esc(substr((string) $article['published_at'], 0, 10), 'attr') . '">' . esc(format_date($article['published_at'])) . '</time>';
 
 $tiles = [
-    ['url' => 'https://op.gov.ss/public/south-sudan/', 'key' => 'AboutSouthSudan', 'class' => 'home-tile--picture home-tile--flag'],
-    ['path' => 'diaspora', 'key' => 'Diaspora'],
-    ['url' => 'https://accounts.eservices.gov.ss/mda/service/3', 'key' => 'Services', 'class' => 'home-tile--picture home-tile--eservices', 'text' => true],
-    ['path' => 'about-mfaic/diplomatic-protocol', 'key' => 'DiplomaticProtocol', 'class' => 'home-tile--picture home-tile--protocol', 'text' => false],
+    ['url' => 'https://op.gov.ss/public/south-sudan/', 'key' => 'AboutSouthSudan', 'class' => 'home-tile--flag'],
+    ['url' => 'https://accounts.eservices.gov.ss/mda/service/3', 'key' => 'Services', 'class' => 'home-tile--eservices', 'text' => true],
+    ['path' => 'about-mfaic/diplomatic-protocol', 'key' => 'DiplomaticProtocol', 'class' => 'home-tile--protocol', 'text' => false],
 ];
 ?>
 <?= $this->extend('layouts/public') ?>

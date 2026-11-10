@@ -70,8 +70,6 @@ return [
     'featuredPages'         => 'Featured pages',
     'tileAboutSouthSudan'       => 'About South Sudan',
     'tileAboutSouthSudanText'   => 'Country, people and history',
-    'tileDiaspora'              => 'South Sudanese diaspora',
-    'tileDiasporaText'          => 'Register and stay informed',
     'tileServices'              => 'eServices',
     'tileServicesText'          => 'Easy access to government services for Foreigners & Citizens',
     'tileDiplomaticProtocol'    => 'Diplomatic Protocol',
