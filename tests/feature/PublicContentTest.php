@@ -191,6 +191,27 @@ final class PublicContentTest extends StaffTestCase
         }
     }
 
+    public function testDiplomaticProtocolShowsFiveButtonsInTheGivenOrder(): void
+    {
+        $result = $this->get('en/about-mfaic/diplomatic-protocol');
+        $result->assertOK();
+        $result->assertSee('<h1 class="page-title page-title-center">Diplomatic Protocol</h1>', null);
+
+        $html = $result->getBody();
+        $this->assertSame(5, substr_count($html, 'class="service-choice"'));
+        $this->assertMatchesRegularExpression(
+            '#diplomatic-protocol/about-protocol">About Protocol<.*diplomatic-protocol/precedence-list">Precedence list<'
+            . '.*diplomatic-protocol/diplomatic-list">Diplomatic list<.*diplomatic-protocol/protocol-guidelines">Protocol guidelines<'
+            . '.*diplomatic-protocol/national-symbols">Symbols of the Republic of South Sudan<#s',
+            $html,
+        );
+
+        $page = $this->get('en/about-mfaic/diplomatic-protocol/precedence-list');
+        $page->assertOK();
+        $page->assertSee('<h1 class="page-title">Precedence list</h1>', null);
+        $page->assertSee('data-testid="empty-state"', null);
+    }
+
     public function testPublishedMfaButtonPagesAreNotListedTwice(): void
     {
         $this->publishPage('ministry-history', [], 'about-mfaic');

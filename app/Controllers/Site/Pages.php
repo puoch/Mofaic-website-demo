@@ -69,6 +69,13 @@ class Pages extends SiteController
                 'organisational-structure/directorates'            => 'Public.mfaDirectorates',
                 'organisational-structure/specialised-departments' => 'Public.mfaSpecialisedDepartments',
             ],
+            'diplomatic-protocol' => [
+                'diplomatic-protocol/about-protocol'      => 'Public.mfaAboutProtocol',
+                'diplomatic-protocol/precedence-list'     => 'Public.mfaPrecedenceList',
+                'diplomatic-protocol/diplomatic-list'     => 'Public.mfaDiplomaticList',
+                'diplomatic-protocol/protocol-guidelines' => 'Public.mfaProtocolGuidelines',
+                'diplomatic-protocol/national-symbols'    => 'Public.mfaSymbolsOfTheRepublic',
+            ],
         ],
     ];
 
