@@ -13,6 +13,7 @@ sponsor on 10 November 2026 for the "About South Sudan" tile on the home page,
 where it sits under a 60% blue overlay.
 
 `eservices-emblem.png` is the eServices emblem, supplied by the sponsor on
-10 November 2026 for the "eServices" tile on the home page (links to the
-Services page). It sits whole on the right of the tile under the same 60% blue
-overlay; the title and text stay at least 7:1 against it.
+10 November 2026 for the "eServices" tile on the home page, which opens
+https://accounts.eservices.gov.ss/mda/service/3 in a new tab. It sits whole on
+the right of the tile under the same 60% blue overlay; the title and text stay
+at least 7:1 against it.
