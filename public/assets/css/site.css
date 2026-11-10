@@ -931,8 +931,8 @@ body {
 }
 
 /* About South Sudan tile: bold white text over the same blue as the
-   other tiles; the national flag fills the right 75% under a 65% blue
-   overlay, so solid blue shows only on the left 25%. */
+   other tiles. The national flag fills the tile under a blue overlay:
+   85% on the left 35% (the darker side), 65% on the rest. */
 .home-tile--flag {
     position: relative;
     overflow: hidden;
@@ -948,15 +948,13 @@ body {
 }
 
 .home-tile--flag::before {
-    inset-inline-start: 25%;
     background: url("../brand/flag-south-sudan.svg") left center / cover no-repeat;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 12%);
-    mask-image: linear-gradient(to right, transparent, #000 12%);
 }
 
 .home-tile--flag::after {
     background: linear-gradient(135deg, var(--site-royal-light), var(--site-royal));
-    opacity: .65;
+    -webkit-mask-image: linear-gradient(to right, rgb(0 0 0 / .85) 35%, rgb(0 0 0 / .65) 35%);
+    mask-image: linear-gradient(to right, rgb(0 0 0 / .85) 35%, rgb(0 0 0 / .65) 35%);
 }
 
 .home-tile--flag strong {
