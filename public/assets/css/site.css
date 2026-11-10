@@ -961,11 +961,8 @@ body {
 }
 
 .home-tile--flag strong {
+    font-size: 1.375rem;
     font-weight: 700;
-    color: #ffffff;
-}
-
-.home-tile--flag span {
     color: #ffffff;
 }
 
