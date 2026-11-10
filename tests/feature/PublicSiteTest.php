@@ -119,14 +119,16 @@ final class PublicSiteTest extends StaffTestCase
         $this->assertStringNotContainsString('footer-emblem', $footer[0]);
         $this->assertMatchesRegularExpression('#<a class="back-to-top" href="\#top"[^>]*>.*<span class="visually-hidden">Back to top</span>#s', $footer[0]);
         $this->assertStringContainsString('<div id="top"></div>', $html);
-        // No official accounts entered yet, so no social icons are shown.
-        $this->assertStringNotContainsString('footer-social', $footer[0]);
+        // Only the Ministry's Facebook page has been supplied so far.
+        $this->assertSame(1, preg_match_all('#<li>\s*<a href="https://#', $footer[0]));
+        $this->assertMatchesRegularExpression('#<a href="https://www\.facebook\.com/p/Ministry-of-Foreign-Affairs-and-International-Cooperation-of-South-Sudan-100075949121921/" target="_blank" rel="noopener noreferrer">#', $footer[0]);
+        $this->assertStringContainsString('on Facebook (opens in a new tab)</span>', $footer[0]);
     }
 
     public function testFooterShowsOnlyOfficialSocialAccountsEnteredByEditors(): void
     {
         $this->db->table('social_accounts')->insertBatch([
-            ['platform' => 'Facebook', 'label' => 'Ministry on Facebook', 'url' => 'https://www.facebook.com/test-account', 'sort_order' => 1, 'is_active' => 1],
+            ['platform' => 'YouTube', 'label' => 'Ministry on YouTube', 'url' => 'https://www.youtube.com/test-account', 'sort_order' => 1, 'is_active' => 1],
             ['platform' => 'X (Twitter)', 'label' => 'Ministry on X', 'url' => 'https://x.com/test-account', 'sort_order' => 2, 'is_active' => 1],
             ['platform' => 'Instagram', 'label' => 'Hidden account', 'url' => 'https://www.instagram.com/hidden', 'sort_order' => 3, 'is_active' => 0],
         ]);
@@ -135,8 +137,8 @@ final class PublicSiteTest extends StaffTestCase
         preg_match('#<ul class="footer-social".*?</ul>#s', $html, $social);
 
         $this->assertNotEmpty($social);
-        $this->assertStringContainsString('href="https://www.facebook.com/test-account"', $social[0]);
-        $this->assertStringContainsString('<span class="visually-hidden">Ministry on X</span>', $social[0]);
+        $this->assertStringContainsString('href="https://www.youtube.com/test-account"', $social[0]);
+        $this->assertStringContainsString('<span class="visually-hidden">Ministry on X (opens in a new tab)</span>', $social[0]);
         $this->assertStringNotContainsString('instagram.com', $social[0]);
     }
 

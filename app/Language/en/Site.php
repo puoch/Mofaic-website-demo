@@ -20,6 +20,7 @@ return [
     'footerSocial'      => 'The Ministry on social media',
     'footerCopyright'   => '© The Ministry of Foreign Affairs and International Cooperation of the Republic of South Sudan - All rights reserved',
     'backToTop'         => 'Back to top',
+    'opensInNewTab'     => '(opens in a new tab)',
     'devBanner'         => 'Development build. This is not an official website and its content is not approved.',
     'search'            => 'Search',
     'openSearch'        => 'Search this website',

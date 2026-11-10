@@ -60,9 +60,9 @@ $social = footer_social_links();
                     <ul class="footer-social" aria-label="<?= esc(lang('Site.footerSocial'), 'attr') ?>" data-testid="footer-social">
                         <?php foreach ($social as $account): ?>
                         <li>
-                            <a href="<?= esc($account['url'], 'attr') ?>" rel="noopener">
+                            <a href="<?= esc($account['url'], 'attr') ?>" target="_blank" rel="noopener noreferrer">
                                 <?= view('partials/social_icon', ['icon' => $account['icon']]) ?>
-                                <span class="visually-hidden"><?= esc($account['label']) ?></span>
+                                <span class="visually-hidden"><?= esc($account['label']) ?> <?= esc(lang('Site.opensInNewTab')) ?></span>
                             </a>
                         </li>
                         <?php endforeach ?>
