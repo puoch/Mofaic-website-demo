@@ -931,7 +931,7 @@ body {
 }
 
 /* About South Sudan tile: bold white text over the same blue as the
-   other tiles. The national flag fills the tile under an 85% blue overlay. */
+   other tiles. The national flag fills the tile under a 60% blue overlay. */
 .home-tile--flag {
     position: relative;
     overflow: hidden;
@@ -952,7 +952,7 @@ body {
 
 .home-tile--flag::after {
     background: linear-gradient(135deg, var(--site-royal-light), var(--site-royal));
-    opacity: .85;
+    opacity: .6;
 }
 
 .home-tile--flag strong {
