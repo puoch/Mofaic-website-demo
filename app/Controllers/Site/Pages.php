@@ -17,7 +17,7 @@ class Pages extends SiteController
      * Buttons at the top of a section page, in the sponsor's order:
      * section => [path below the locale => language line].
      * A path inside the section that has no published page yet shows a
-     * "being prepared" page; other paths (archives, contacts) are their own pages.
+     * "being prepared" page; other paths (contacts) are their own pages.
      */
     public const SECTION_CHOICES = [
         'services' => [
@@ -34,7 +34,7 @@ class Pages extends SiteController
             'about-mfaic/ministry-history'         => 'Public.mfaHistory',
             'about-mfaic/organisational-structure' => 'Public.mfaOrganisationalStructure',
             'about-mfaic/diplomatic-protocol'      => 'Public.mfaDiplomaticProtocol',
-            'archives'                             => 'Public.mfaDiplomaticArchive',
+            'about-mfaic/diplomatic-archive'       => 'Public.mfaDiplomaticArchive',
             'contacts'                             => 'Public.mfaContact',
         ],
     ];
@@ -75,6 +75,10 @@ class Pages extends SiteController
                 'diplomatic-protocol/diplomatic-list'     => 'Public.mfaDiplomaticList',
                 'diplomatic-protocol/protocol-guidelines' => 'Public.mfaProtocolGuidelines',
                 'diplomatic-protocol/national-symbols'    => 'Public.mfaSymbolsOfTheRepublic',
+            ],
+            'diplomatic-archive' => [
+                'diplomatic-archive/history'          => 'Public.mfaArchiveHistory',
+                'diplomatic-archive/access-materials' => 'Public.mfaArchiveAccess',
             ],
         ],
     ];

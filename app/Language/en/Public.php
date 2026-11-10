@@ -49,6 +49,8 @@ return [
     'mfaDiplomaticList'              => 'Diplomatic list',
     'mfaProtocolGuidelines'          => 'Protocol guidelines',
     'mfaSymbolsOfTheRepublic'        => 'Symbols of the Republic of South Sudan',
+    'mfaArchiveHistory'              => 'History of the Diplomatic Archive',
+    'mfaArchiveAccess'               => 'Access to Archive materials',
     'mfaDiplomaticProtocol'          => 'Diplomatic Protocol',
     'mfaDiplomaticArchive'           => 'Diplomatic Archive',
     'mfaContact'                     => 'Contacts',
