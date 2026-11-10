@@ -17,3 +17,10 @@ where it sits under a 60% blue overlay.
 https://accounts.eservices.gov.ss/mda/service/3 in a new tab. It sits whole on
 the right of the tile under the same 60% blue overlay; the title and text stay
 at least 7:1 against it.
+
+`diplomatic-protocol-flags.jpg` is a photo of national flags, supplied by the
+sponsor on 10 November 2026 for the "Diplomatic Protocol" tile on the home page,
+which links to the MFA & IC Diplomatic Protocol page. It fills the tile under
+the same 60% blue overlay. It was re-saved for the web (570 x 360, 43 KB, no
+metadata). The image looks like a stock-photo preview: confirm the Ministry
+holds a licence for it, or replace it, before launch.

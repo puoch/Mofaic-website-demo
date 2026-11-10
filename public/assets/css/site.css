@@ -893,75 +893,110 @@ body {
     padding: 0;
 }
 
-/* Picture tiles */
+/* Picture tiles: three equal tiles (About South Sudan, eServices,
+   Diplomatic Protocol). Each picture fills its tile under a 60% blue
+   overlay; the title sits bottom left under a short gold rule. */
 .home-tiles-row {
-    padding-block: 2.75rem;
+    padding-block: 3rem;
 }
 
 .home-tiles {
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .home-tile {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-block-size: 8.5rem;
-    padding: 1.25rem;
-    border-radius: 4px;
-    background: linear-gradient(135deg, var(--site-royal-light), var(--site-royal));
-    color: #ffffff;
-    text-decoration: none;
-}
-
-.home-tile strong {
-    font-size: 1.125rem;
-}
-
-.home-tile span {
-    font-size: .875rem;
-    color: #dbe3ec;
-}
-
-.home-tile:hover strong,
-.home-tile:focus-visible strong {
-    text-decoration: underline;
-}
-
-/* Picture tiles (About South Sudan, eServices): bold white text over the
-   same blue as the other tiles. An image fills the tile under a 60% blue
-   overlay. */
-.home-tile--picture {
     position: relative;
     overflow: hidden;
     isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: .375rem;
+    min-block-size: 13rem;
+    padding: 1.75rem;
+    border-radius: .5rem;
+    background: var(--site-royal);
+    box-shadow: 0 1px 2px rgb(8 26 58 / .12), 0 6px 18px rgb(8 26 58 / .12);
+    color: #ffffff;
+    text-decoration: none;
+    transition: box-shadow .2s ease, transform .2s ease;
 }
 
-.home-tile--picture::before,
-.home-tile--picture::after {
+.home-tile::before,
+.home-tile::after {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
 }
 
-.home-tile--picture::after {
+.home-tile::before {
+    transition: transform .4s ease;
+}
+
+.home-tile::after {
     background: linear-gradient(135deg, var(--site-royal-light), var(--site-royal));
     opacity: .6;
 }
 
-.home-tile--picture strong {
+.home-tile strong {
     font-size: 1.375rem;
     font-weight: 700;
+    line-height: 1.25;
     color: #ffffff;
     text-shadow: 0 1px 3px rgb(0 0 0 / .45);
 }
 
-.home-tile--picture span {
+/* Short gold rule above each title. */
+.home-tile strong::before {
+    content: "";
+    display: block;
+    inline-size: 2.5rem;
+    block-size: 3px;
+    margin-block-end: .75rem;
+    border-radius: 2px;
+    background: var(--site-gold);
+}
+
+.home-tile span:not(.visually-hidden) {
+    font-size: .9375rem;
+    line-height: 1.45;
     color: #ffffff;
     text-shadow: 0 1px 3px rgb(0 0 0 / .45);
+}
+
+.home-tile:hover,
+.home-tile:focus-visible {
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgb(8 26 58 / .14), 0 12px 28px rgb(8 26 58 / .2);
+}
+
+.home-tile:hover::before,
+.home-tile:focus-visible::before {
+    transform: scale(1.04);
+}
+
+.home-tile:hover strong,
+.home-tile:focus-visible strong {
+    text-decoration: underline;
+    text-underline-offset: .2em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-tile,
+    .home-tile::before {
+        transition: none;
+    }
+
+    .home-tile:hover,
+    .home-tile:focus-visible,
+    .home-tile:hover::before,
+    .home-tile:focus-visible::before {
+        transform: none;
+    }
 }
 
 /* The national flag fills the About South Sudan tile. */
@@ -971,12 +1006,17 @@ body {
 
 /* The eServices emblem sits whole on the right, on its own dark ground. */
 .home-tile--eservices::before {
-    background: #141415 url("../brand/eservices-emblem.png") right 1rem center / auto min(88%, 7.5rem) no-repeat;
+    background: #141415 url("../brand/eservices-emblem.png") right 1.5rem center / auto min(72%, 8.5rem) no-repeat;
 }
 
 .home-tile--eservices strong,
 .home-tile--eservices span {
-    max-inline-size: 65%;
+    max-inline-size: 62%;
+}
+
+/* A photo of national flags fills the Diplomatic Protocol tile. */
+.home-tile--protocol::before {
+    background: url("../brand/diplomatic-protocol-flags.jpg") center / cover no-repeat;
 }
 
 /* Photo cards: current affairs and mission activities */
@@ -1120,21 +1160,39 @@ body {
 
 @media (max-width: 991.98px) {
     .home-cards,
-    .home-links,
-    .home-tiles {
+    .home-links {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Three tiles do not split evenly into two columns: stack them. */
+    .home-tiles {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1rem;
+    }
+
+    .home-tile {
+        min-block-size: 10rem;
+        padding: 1.5rem;
     }
 }
 
 @media (max-width: 575.98px) {
     .home-cards,
-    .home-links,
-    .home-tiles {
+    .home-links {
         grid-template-columns: minmax(0, 1fr);
     }
 
+    .home-tiles-row {
+        padding-block: 2rem;
+    }
+
     .home-tile {
-        min-block-size: 6rem;
+        min-block-size: 9rem;
+        padding: 1.25rem;
+    }
+
+    .home-tile strong {
+        font-size: 1.25rem;
     }
 }
 
