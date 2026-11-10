@@ -150,7 +150,7 @@ final class PublicContentTest extends StaffTestCase
         $this->assertMatchesRegularExpression(
             '#about-mfaic/minister">Minister<.*about-mfaic/deputy-minister">Deputy Minister<.*about-mfaic/undersecretary">Undersecretary<'
             . '.*about-mfaic/competences">Competences<.*about-mfaic/ministry-history">History<.*about-mfaic/organisational-structure">Organisational Structure<'
-            . '.*about-mfaic/diplomatic-protocol">Diplomatic Protocol<.*/en/archives">Diplomatic Archive<.*/en/contacts">Contacts<#s',
+            . '.*about-mfaic/diplomatic-protocol">Diplomatic Protocol<.*about-mfaic/diplomatic-archive">Diplomatic Archive<.*/en/contacts">Contacts<#s',
             $html,
         );
         $this->assertStringNotContainsString('data-testid="empty-state"', $html);
@@ -210,6 +210,27 @@ final class PublicContentTest extends StaffTestCase
         $page->assertOK();
         $page->assertSee('<h1 class="page-title">Precedence list</h1>', null);
         $page->assertSee('data-testid="empty-state"', null);
+    }
+
+    public function testDiplomaticArchiveShowsTwoButtonsInTheGivenOrder(): void
+    {
+        $result = $this->get('en/about-mfaic/diplomatic-archive');
+        $result->assertOK();
+        $result->assertSee('<h1 class="page-title page-title-center">Diplomatic Archive</h1>', null);
+
+        $html = $result->getBody();
+        $this->assertSame(2, substr_count($html, 'class="service-choice"'));
+        $this->assertMatchesRegularExpression(
+            '#diplomatic-archive/history">History of the Diplomatic Archive<.*diplomatic-archive/access-materials">Access to Archive materials<#s',
+            $html,
+        );
+
+        foreach (['history' => 'History of the Diplomatic Archive', 'access-materials' => 'Access to Archive materials'] as $path => $title) {
+            $page = $this->get('en/about-mfaic/diplomatic-archive/' . $path);
+            $page->assertOK();
+            $page->assertSee('<h1 class="page-title">' . $title . '</h1>', null);
+            $page->assertSee('data-testid="empty-state"', null);
+        }
     }
 
     public function testPublishedMfaButtonPagesAreNotListedTwice(): void
