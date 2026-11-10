@@ -931,9 +931,7 @@ body {
 }
 
 /* About South Sudan tile: bold white text over the same blue as the
-   other tiles. The national flag fills the tile under an 85% blue overlay,
-   with a circular window (10% overlay) over the star and blue triangle.
-   The window is a mask image sized and placed exactly like the flag. */
+   other tiles. The national flag fills the tile under an 85% blue overlay. */
 .home-tile--flag {
     position: relative;
     overflow: hidden;
@@ -954,8 +952,7 @@ body {
 
 .home-tile--flag::after {
     background: linear-gradient(135deg, var(--site-royal-light), var(--site-royal));
-    -webkit-mask: url("../brand/flag-south-sudan-window.svg") left center / cover no-repeat;
-    mask: url("../brand/flag-south-sudan-window.svg") left center / cover no-repeat;
+    opacity: .85;
 }
 
 .home-tile--flag strong {
