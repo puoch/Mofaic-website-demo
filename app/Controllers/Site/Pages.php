@@ -14,13 +14,35 @@ use Config\ContentTypes;
 class Pages extends SiteController
 {
     /**
-     * The three choices at the top of Services, in order: path => language line.
-     * Citizens and Foreigners are CMS pages; Important links lists the quick links.
+     * Buttons at the top of a section page, in the sponsor's order:
+     * section => [path below the locale => language line].
+     * A path inside the section that has no published page yet shows a
+     * "being prepared" page; other paths (archives, contacts) are their own pages.
      */
-    public const SERVICE_CHOICES = [
-        'citizens'        => 'Public.serviceCitizens',
-        'foreigners'      => 'Public.serviceForeigners',
-        'important-links' => 'Public.quickLinks',
+    public const SECTION_CHOICES = [
+        'services' => [
+            // Citizens and Foreigners are CMS pages; Important links lists the quick links.
+            'services/citizens'        => 'Public.serviceCitizens',
+            'services/foreigners'      => 'Public.serviceForeigners',
+            'services/important-links' => 'Public.quickLinks',
+        ],
+        'about-mfaic' => [
+            'about-mfaic/minister'                 => 'Public.mfaMinister',
+            'about-mfaic/deputy-minister'          => 'Public.mfaDeputyMinister',
+            'about-mfaic/undersecretary'           => 'Public.mfaUndersecretary',
+            'about-mfaic/competences'              => 'Public.mfaCompetences',
+            'about-mfaic/ministry-history'         => 'Public.mfaHistory',
+            'about-mfaic/organogram'               => 'Public.mfaOrganisationalStructure',
+            'about-mfaic/diplomatic-protocol'      => 'Public.mfaDiplomaticProtocol',
+            'archives'                             => 'Public.mfaDiplomaticArchive',
+            'contacts'                             => 'Public.mfaContact',
+        ],
+    ];
+
+    /** @var array<string, string> section => language line naming its buttons for screen readers */
+    private const CHOICES_LABEL = [
+        'services'    => 'Public.serviceChoices',
+        'about-mfaic' => 'Public.mfaChoices',
     ];
 
     /**
@@ -42,16 +64,19 @@ class Pages extends SiteController
 
     public function section(string $section): string
     {
-        $tree = $this->publishedTree($section);
+        $choices = self::SECTION_CHOICES[$section] ?? [];
+        $tree    = array_values(array_filter(
+            $this->publishedTree($section),
+            static fn (array $page): bool => ! isset($choices[$section . '/' . $page['path']]),
+        ));
 
         return view('site/pages/section', [
             'section'      => $section,
             'heading'      => $this->sectionHeading($section),
-            'tree'         => $section === 'services'
-                ? array_values(array_filter($tree, static fn (array $page): bool => ! isset(self::SERVICE_CHOICES[$page['path']])))
-                : $tree,
+            'tree'         => $tree,
             'expandable'   => $section === 'services',
-            'choices'      => $section === 'services' ? self::SERVICE_CHOICES : [],
+            'choices'      => array_map(static fn (string $line): string => lang($line), $choices),
+            'choicesLabel' => lang(self::CHOICES_LABEL[$section] ?? 'Public.serviceChoices'),
         ]);
     }
 
@@ -73,13 +98,13 @@ class Pages extends SiteController
 
         $ancestors = $page === null ? null : self::ancestors($page);
 
-        // Every Services button leads somewhere, even before the Ministry publishes
+        // Every button leads somewhere, even before the Ministry publishes
         // the page (or a page above it): show the title and a "being prepared" note.
-        $label = $section === 'services' ? $this->buttonLabel($path) : null;
+        $label = $this->buttonLabel($section, $path);
         if (($page === null || $ancestors === null) && $label !== null) {
             $crumbs = [];
             for ($prefix = dirname($path); $prefix !== '.'; $prefix = dirname($prefix)) {
-                array_unshift($crumbs, ['title' => $this->buttonLabel($prefix) ?? $prefix, 'path' => $prefix]);
+                array_unshift($crumbs, ['title' => $this->buttonLabel($section, $prefix) ?? $prefix, 'path' => $prefix]);
             }
 
             return view('site/pages/show', [
@@ -122,12 +147,17 @@ class Pages extends SiteController
     }
 
     /**
-     * The button label for a Services path, or null if it is not a button.
+     * The button label for a page path in a section, or null if it is not a button.
      */
-    private function buttonLabel(string $path): ?string
+    private function buttonLabel(string $section, string $path): ?string
     {
-        if (isset(self::SERVICE_CHOICES[$path])) {
-            return lang(self::SERVICE_CHOICES[$path]);
+        $line = self::SECTION_CHOICES[$section][$section . '/' . $path] ?? null;
+        if ($line !== null) {
+            return lang($line);
+        }
+
+        if ($section !== 'services') {
+            return null;
         }
 
         foreach (self::SERVICE_SUB_CHOICES as $subChoices) {

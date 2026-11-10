@@ -4,7 +4,8 @@
  * @var string                     $section
  * @var list<array<string, mixed>> $tree
  * @var bool                       $expandable Services categories open and close
- * @var array<string, string>      $choices    Services buttons: path => language line
+ * @var array<string, string>      $choices      buttons: path below the locale => label
+ * @var string                     $choicesLabel names the buttons for screen readers
  */
 $renderTree = static function (array $pages, string $section) use (&$renderTree): string {
     $html = '<ul class="page-tree">';
@@ -31,11 +32,11 @@ $renderTree = static function (array $pages, string $section) use (&$renderTree)
     <?php if ($choices !== []): ?>
     <?php
     $buttons = [];
-    foreach ($choices as $path => $line) {
-        $buttons[locale_url($section . '/' . $path)] = lang($line);
+    foreach ($choices as $path => $label) {
+        $buttons[locale_url($path)] = $label;
     }
     ?>
-    <?= view('site/partials/service_choices', ['choices' => $buttons]) ?>
+    <?= view('site/partials/service_choices', ['choices' => $buttons, 'label' => $choicesLabel]) ?>
     <?php endif ?>
 
     <?php if ($tree === []): ?>
