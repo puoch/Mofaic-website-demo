@@ -9,8 +9,10 @@ use CodeIgniter\Config\BaseConfig;
 /**
  * Public site navigation.
  *
- * $primary is the approved top-level navigation (brief section 2) in its
- * approved order. Do not reorder or rename it without sponsor sign-off.
+ * $primary is the top-level navigation in the order the project owner set on
+ * 2026-11-10: HOME, MFA & IC, MISSIONS, SERVICES, SSD DIASPORA, MEDIA/PRESS.
+ * CONTACTS and ABOUT SOUTH SUDAN moved to the footer ($footer), and a search
+ * button follows the last item. Do not reorder or rename it without sign-off.
  * The MISSIONS children are the confirmed hierarchy and must not be
  * restructured.
  *
@@ -27,6 +29,7 @@ class Navigation extends BaseConfig
      */
     public array $primary = [
         ['key' => 'home', 'path' => ''],
+        ['key' => 'aboutMfaic', 'path' => 'about-mfaic'],
         [
             'key'      => 'missions',
             'path'     => 'missions',
@@ -51,12 +54,9 @@ class Navigation extends BaseConfig
                 ],
             ],
         ],
-        ['key' => 'aboutMfaic', 'path' => 'about-mfaic'],
-        ['key' => 'aboutSouthSudan', 'path' => 'about-south-sudan'],
         ['key' => 'services', 'path' => 'services'],
-        ['key' => 'newsPress', 'path' => 'news-press'],
         ['key' => 'diaspora', 'path' => 'diaspora'],
-        ['key' => 'contacts', 'path' => 'contacts'],
+        ['key' => 'newsPress', 'path' => 'news-press'],
     ];
 
     /**
@@ -71,4 +71,16 @@ class Navigation extends BaseConfig
     public string $archivesAfter = 'newsPress';
 
     public string $archivesPath = 'archives';
+
+    /**
+     * Pages linked from the footer that are no longer in the top navigation.
+     *
+     * Each item: label (language line) and path (relative to the locale prefix).
+     *
+     * @var list<array{label: string, path: string}>
+     */
+    public array $footer = [
+        ['label' => 'Site.footerAboutSouthSudan', 'path' => 'about-south-sudan'],
+        ['label' => 'Site.footerContacts', 'path' => 'contacts'],
+    ];
 }

@@ -237,6 +237,135 @@ body {
     }
 }
 
+/* Search button after the last menu item, and the search bar it opens. */
+.site-search-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    color: var(--site-on-dark);
+    border-radius: .25rem;
+    margin-inline-start: auto;
+}
+
+.site-search-toggle:hover,
+.site-search-toggle:focus-visible,
+.site-search-toggle.active,
+.site-search-toggle[aria-expanded="true"] {
+    color: var(--site-on-dark);
+    background: var(--site-royal-light);
+}
+
+/* Small screens: the search button sits on the same row as the menu button;
+   the opened menu drops below both. */
+@media (max-width: 991.98px) {
+    .site-nav .navbar-collapse {
+        order: 3;
+    }
+}
+
+@media (min-width: 992px) {
+    .site-search-toggle {
+        margin-inline-start: .5rem;
+    }
+}
+
+.site-search-dialog {
+    inline-size: 100%;
+    max-inline-size: 100%;
+    margin: 0;
+    margin-block-start: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    inset-block-start: 0;
+}
+
+.site-search-dialog::backdrop {
+    background: rgba(8, 26, 58, .55);
+}
+
+.site-search-bar {
+    background: var(--site-royal);
+    border-block-end: 3px solid var(--site-gold);
+    padding-block: 1rem;
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .25);
+}
+
+.site-search-form {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.site-search-input {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    font-size: 1.05rem;
+    padding-block: .6rem;
+}
+
+.site-search-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    flex: none;
+    color: var(--site-on-dark);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, .6);
+    border-radius: .25rem;
+}
+
+.site-search-close:hover,
+.site-search-close:focus-visible {
+    color: var(--site-navy);
+    background: var(--site-on-dark);
+}
+
+.site-search-dialog :focus-visible {
+    outline: 3px solid var(--site-gold);
+    outline-offset: 2px;
+}
+
+/* Search results page */
+.search-group {
+    margin-block-start: 2rem;
+}
+
+.search-group-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--site-royal);
+    border-block-end: 2px solid var(--site-line);
+    padding-block-end: .4rem;
+}
+
+.search-results {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.search-results li {
+    padding-block: .75rem;
+    border-block-end: 1px solid var(--site-line);
+}
+
+.search-result-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.search-result-meta,
+.search-result-summary {
+    margin: .2rem 0 0;
+    color: var(--site-muted);
+}
+
 .site-nav .dropdown-group {
     font-weight: 600;
 }

@@ -37,6 +37,8 @@ final class PublicSiteTest extends StaffTestCase
             ['en/diaspora'],
             ['en/contacts'],
             ['en/archives'],
+            ['en/search'],
+            ['en/search?q=embassy'],
         ];
     }
 
@@ -52,7 +54,7 @@ final class PublicSiteTest extends StaffTestCase
         $this->assertMatchesRegularExpression('/<header class="site-header sticky-top"/', $html);
         $this->assertSame($this->topLevelNavKeys($this->get('en')->getBody()), $this->topLevelNavKeys($html));
         $this->assertSame(
-            ['home', 'missions', 'aboutMfaic', 'aboutSouthSudan', 'services', 'newsPress', 'diaspora', 'contacts'],
+            ['home', 'aboutMfaic', 'missions', 'services', 'diaspora', 'newsPress'],
             $this->topLevelNavKeys($html),
         );
     }
@@ -95,6 +97,28 @@ final class PublicSiteTest extends StaffTestCase
 
         $this->assertNotContains('archives', $this->topLevelNavKeys($html));
         $this->assertMatchesRegularExpression('#<footer.*href="[^"]*/en/archives".*</footer>#s', $html);
+    }
+
+    public function testContactsAndAboutSouthSudanAreLinkedFromTheFooter(): void
+    {
+        $html = $this->get('en')->getBody();
+
+        $this->assertMatchesRegularExpression('#<footer.*href="[^"]*/en/contacts".*</footer>#s', $html);
+        $this->assertMatchesRegularExpression('#<footer.*href="[^"]*/en/about-south-sudan".*</footer>#s', $html);
+    }
+
+    public function testSearchButtonFollowsTheMenuAndOpensALabelledSearchDialog(): void
+    {
+        $html = $this->get('en/missions')->getBody();
+
+        // The button is a link to the search page, so it works without JavaScript.
+        $this->assertMatchesRegularExpression('#data-nav-key="newsPress".*<a class="site-search-toggle" href="[^"]*/en/search"[^>]*aria-controls="site-search"#s', $html);
+        $this->assertStringContainsString('<span class="visually-hidden">Search this website</span>', $html);
+        $this->assertMatchesRegularExpression('#<dialog class="site-search-dialog" id="site-search" aria-labelledby="site-search-title"#', $html);
+        $this->assertMatchesRegularExpression('#<form class="site-search-form[^"]*" role="search" method="get" action="[^"]*/en/search">#', $html);
+        $this->assertMatchesRegularExpression('#<label class="visually-hidden" for="site-search-input">#', $html);
+        $this->assertMatchesRegularExpression('#aria-label="Close search"#', $html);
+        $this->assertStringContainsString('assets/js/site-search.js', $html);
     }
 
     public function testNonProductionPagesAreMarkedAndNotIndexed(): void

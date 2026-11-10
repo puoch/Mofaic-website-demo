@@ -21,14 +21,14 @@ final class NavigationConfigTest extends CIUnitTestCase
         );
 
         $this->assertSame(
-            ['HOME', 'MISSIONS', 'ABOUT MFA&IC', 'ABOUT SOUTH SUDAN', 'SERVICES', 'NEWS / PRESS', 'SSD DIASPORA', 'CONTACTS'],
+            ['HOME', 'MFA & IC', 'MISSIONS', 'SERVICES', 'SSD DIASPORA', 'MEDIA/PRESS'],
             $labels,
         );
     }
 
     public function testMissionsHierarchyIsExactlyAsConfirmed(): void
     {
-        $missions = config(Navigation::class)->primary[1];
+        $missions = array_values(array_filter(config(Navigation::class)->primary, static fn (array $item): bool => $item['key'] === 'missions'))[0];
 
         $tree = [];
         foreach ($missions['children'] as $group) {
@@ -59,7 +59,7 @@ final class NavigationConfigTest extends CIUnitTestCase
         $keys = array_column(primary_navigation(), 'key');
 
         $this->assertSame(array_search('newsPress', $keys, true) + 1, array_search('archives', $keys, true));
-        $this->assertCount(9, $keys);
+        $this->assertCount(7, $keys);
     }
 
     protected function tearDown(): void
