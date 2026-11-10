@@ -930,36 +930,53 @@ body {
     text-decoration: underline;
 }
 
-/* About South Sudan tile: bold white text over the same blue as the
-   other tiles. The national flag fills the tile under a 60% blue overlay. */
-.home-tile--flag {
+/* Picture tiles (About South Sudan, eServices): bold white text over the
+   same blue as the other tiles. An image fills the tile under a 60% blue
+   overlay. */
+.home-tile--picture {
     position: relative;
     overflow: hidden;
     isolation: isolate;
 }
 
-.home-tile--flag::before,
-.home-tile--flag::after {
+.home-tile--picture::before,
+.home-tile--picture::after {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
 }
 
-.home-tile--flag::before {
-    background: url("../brand/flag-south-sudan.svg") left center / cover no-repeat;
-}
-
-.home-tile--flag::after {
+.home-tile--picture::after {
     background: linear-gradient(135deg, var(--site-royal-light), var(--site-royal));
     opacity: .6;
 }
 
-.home-tile--flag strong {
+.home-tile--picture strong {
     font-size: 1.375rem;
     font-weight: 700;
     color: #ffffff;
     text-shadow: 0 1px 3px rgb(0 0 0 / .45);
+}
+
+.home-tile--picture span {
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgb(0 0 0 / .45);
+}
+
+/* The national flag fills the About South Sudan tile. */
+.home-tile--flag::before {
+    background: url("../brand/flag-south-sudan.svg") left center / cover no-repeat;
+}
+
+/* The eServices emblem sits whole on the right, on its own dark ground. */
+.home-tile--eservices::before {
+    background: #141415 url("../brand/eservices-emblem.png") right 1rem center / auto min(88%, 7.5rem) no-repeat;
+}
+
+.home-tile--eservices strong,
+.home-tile--eservices span {
+    max-inline-size: 65%;
 }
 
 /* Photo cards: current affairs and mission activities */
