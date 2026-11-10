@@ -15,6 +15,7 @@ return [
     'footerAboutSouthSudan' => 'About South Sudan',
     'footerContacts'    => 'Contacts',
     'staffSignIn'       => 'Staff sign-in',
+    'emblemAlt'         => 'Coat of arms of the Republic of South Sudan',
     'sitemap'           => 'Sitemap',
     'footerContact'     => 'Contact',
     'footerSocial'      => 'The Ministry on social media',

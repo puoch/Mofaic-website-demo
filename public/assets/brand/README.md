@@ -2,9 +2,13 @@
 
 `coat-of-arms.svg` is the coat of arms of the Republic of South Sudan, used as
 the site emblem at the sponsor's request (29 October 2026, with reference to
-https://op.gov.ss/). This copy is the vector drawing from the `coat-of-arms`
-npm package 6.4.0 (MIT; drawing originally from Wikimedia Commons), minified
-with svgo. Replace it with the file the Ministry supplies before launch.
+https://op.gov.ss/). Since 10 November 2026 this copy is the SVG the sponsor
+supplied for the staff sign-in page (the same Wikimedia Commons drawing as the
+earlier `coat-of-arms` npm 6.4.0 copy). It was checked for scripts, event
+handlers and external links (none), cleaned of editor metadata and three
+broken `<use>` references, and minified with svgo 3.3.2. It is shown in the
+header, the footer and centred above the staff sign-in form. Replace it with
+the file the Ministry supplies before launch.
 
 Set `Config\Branding::$emblem` to change or hide the emblem.
 

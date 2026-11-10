@@ -1708,3 +1708,15 @@ summary.org-unit {
     inline-size: 100%;
     block-size: auto;
 }
+
+/* Staff sign-in: coat of arms centred above the form. */
+.auth-emblem {
+    text-align: center;
+    padding-top: 2rem;
+}
+
+.auth-emblem img {
+    width: 140px;
+    max-width: 40vw;
+    height: auto;
+}
