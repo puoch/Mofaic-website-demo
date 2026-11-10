@@ -402,39 +402,99 @@ body {
     color: #ffffff;
 }
 
+/* Footer bottom bar: Sitemap, Contact and social icons
+   over the copyright line on the left; footer links and the square
+   back-to-top tile on the right. Colours are the existing footer colours. */
 .site-footer-inner {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 1rem 1.5rem;
+    gap: 1rem 2rem;
 }
 
-.footer-emblem {
-    flex: none;
-    inline-size: 52px;
-    block-size: 52px;
+.footer-start {
+    flex: 1 1 24rem;
+    min-inline-size: 0;
 }
 
-.site-footer-inner nav {
-    order: 3;
-    margin-inline-start: auto;
+.footer-start-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem 2rem;
+    margin-block-end: .75rem;
 }
 
+.footer-quick,
+.footer-social,
 .footer-links {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: .5rem 1.5rem;
+    align-items: center;
     padding: 0;
     margin: 0;
 }
 
-.footer-name {
-    order: 2;
+.footer-quick {
+    gap: .5rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.site-footer .footer-quick a {
+    text-decoration: none;
+}
+
+.site-footer .footer-quick a:hover {
+    text-decoration: underline;
+}
+
+.footer-social {
+    gap: .25rem 1rem;
+}
+
+.footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    border-radius: .25rem;
+}
+
+.footer-social a:hover {
+    background: rgba(255, 255, 255, .12);
+}
+
+.footer-copyright {
     margin: 0;
-    color: #ffffff;
     font-weight: 600;
-    max-inline-size: 32rem;
+}
+
+.footer-links {
+    gap: .5rem 1.5rem;
+}
+
+.back-to-top {
+    flex: none;
+    margin-inline-start: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 4rem;
+    block-size: 4rem;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .55);
+}
+
+.back-to-top:hover {
+    background: rgba(255, 255, 255, .22);
+}
+
+/* The default blue focus ring is too dark on the navy footer. */
+.site-footer :focus-visible {
+    outline-color: var(--site-gold);
 }
 
 @media (prefers-reduced-motion: reduce) {

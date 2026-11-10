@@ -9,6 +9,7 @@ $locale = site_locale();
 $dir    = site_dir($locale);
 $nav    = config(Config\Navigation::class);
 $emblem = config(Config\Branding::class)->emblem;
+$social = footer_social_links();
 ?>
 <!doctype html>
 <html lang="<?= esc($locale, 'attr') ?>" dir="<?= esc($dir, 'attr') ?>">
@@ -22,6 +23,7 @@ $emblem = config(Config\Branding::class)->emblem;
 <?= view('partials/head_assets', ['dir' => $dir]) ?>
 </head>
 <body>
+    <div id="top"></div>
     <a class="visually-hidden-focusable skip-link" href="#main"><?= esc(lang('Site.skipToContent')) ?></a>
 
     <header class="site-header sticky-top" data-testid="site-header">
@@ -48,9 +50,27 @@ $emblem = config(Config\Branding::class)->emblem;
 
     <footer class="site-footer">
         <div class="container-xl site-footer-inner">
-            <?php if ($emblem !== ''): ?>
-            <img class="footer-emblem" src="<?= esc(asset_url($emblem), 'attr') ?>" alt="" width="52" height="52">
-            <?php endif ?>
+            <div class="footer-start">
+                <div class="footer-start-row">
+                    <ul class="footer-quick" data-testid="footer-quick-links">
+                        <li><a href="<?= esc(locale_url('sitemap'), 'attr') ?>"><?= esc(lang('Site.sitemap')) ?></a></li>
+                        <li><a href="<?= esc(locale_url('contacts'), 'attr') ?>"><?= esc(lang('Site.footerContact')) ?></a></li>
+                    </ul>
+                    <?php if ($social !== []): ?>
+                    <ul class="footer-social" aria-label="<?= esc(lang('Site.footerSocial'), 'attr') ?>" data-testid="footer-social">
+                        <?php foreach ($social as $account): ?>
+                        <li>
+                            <a href="<?= esc($account['url'], 'attr') ?>" target="_blank" rel="noopener noreferrer">
+                                <?= view('partials/social_icon', ['icon' => $account['icon']]) ?>
+                                <span class="visually-hidden"><?= esc($account['label']) ?> <?= esc(lang('Site.opensInNewTab')) ?></span>
+                            </a>
+                        </li>
+                        <?php endforeach ?>
+                    </ul>
+                    <?php endif ?>
+                </div>
+                <p class="footer-copyright"><?= esc(lang('Site.footerCopyright')) ?></p>
+            </div>
             <nav aria-label="<?= esc(lang('Site.footerNavigation'), 'attr') ?>">
                 <ul class="footer-links">
                     <?php foreach ($nav->footer as $link): ?>
@@ -62,7 +82,12 @@ $emblem = config(Config\Branding::class)->emblem;
                     <li><a href="<?= esc(site_url('login'), 'attr') ?>"><?= esc(lang('Site.staffSignIn')) ?></a></li>
                 </ul>
             </nav>
-            <p class="footer-name"><?= esc(lang('Site.ministryName')) ?>, <?= esc(lang('Site.countryName')) ?></p>
+            <a class="back-to-top" href="#top" data-testid="back-to-top">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" focusable="false">
+                    <path d="M5 15l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="visually-hidden"><?= esc(lang('Site.backToTop')) ?></span>
+            </a>
         </div>
     </footer>
 

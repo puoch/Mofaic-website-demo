@@ -240,3 +240,51 @@ if (! function_exists('bootstrap_tag')) {
         return sprintf($format, esc($assets->cdnBase . $file), $extra);
     }
 }
+
+if (! function_exists('footer_social_links')) {
+    /**
+     * Icons for the footer bottom bar: the Ministry's official accounts that
+     * editors have entered and switched on under "Social media accounts".
+     * Only Facebook, YouTube, X (Twitter) and Instagram have footer icons; other
+     * platforms stay on the Social Media page. Nothing is shown until an
+     * official address is entered, so no account is ever made up here.
+     *
+     * @return list<array{icon: string, label: string, url: string}>
+     */
+    function footer_social_links(): array
+    {
+        $icons = [
+            'youtube'   => 'youtube',
+            'x'         => 'x',
+            'twitter'   => 'x',
+            'instagram' => 'instagram',
+            'facebook'  => 'facebook',
+        ];
+
+        $links = [];
+
+        try {
+            $rows = db_connect()->table('social_accounts')->where('is_active', 1)
+                ->orderBy('sort_order')->orderBy('label')->get()->getResultArray();
+        } catch (Throwable) {
+            return $links;
+        }
+
+        $seen = [];
+        foreach ($rows as $row) {
+            $platform = strtolower(trim((string) $row['platform']));
+            $platform = preg_replace('/\s*\(.*\)$|\.com$/', '', $platform) ?? $platform;
+            $icon     = $icons[$platform] ?? null;
+            $url      = (string) $row['url'];
+
+            if ($icon === null || isset($seen[$icon]) || ! str_starts_with($url, 'https://')) {
+                continue;
+            }
+
+            $seen[$icon] = true;
+            $links[]     = ['icon' => $icon, 'label' => (string) $row['label'], 'url' => $url];
+        }
+
+        return $links;
+    }
+}

@@ -131,6 +131,9 @@ $routes->group('{locale}', ['namespace' => 'App\Controllers\Site'], static funct
     // Site search (search button in the main navigation)
     $routes->get('search', 'Search::index');
 
+    // Sitemap (footer bottom bar)
+    $routes->get('sitemap', 'Sitemap::index');
+
     // CONTACTS
     $routes->get('contacts', 'Contacts::index');
     $routes->post('contacts', 'Contacts::submit');
