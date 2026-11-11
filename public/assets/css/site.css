@@ -366,14 +366,6 @@ body {
     color: var(--site-muted);
 }
 
-.site-nav .dropdown-group {
-    font-weight: 600;
-}
-
-.site-nav .dropdown-child {
-    padding-inline-start: 2rem;
-}
-
 .site-main {
     flex: 1 0 auto;
 }

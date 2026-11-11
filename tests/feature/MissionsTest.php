@@ -51,6 +51,53 @@ final class MissionsTest extends StaffTestCase
         }
     }
 
+    public function testMissionsPageShowsOnlyTwoButtons(): void
+    {
+        $html = $this->get('en/missions')->getBody();
+
+        preg_match('#<nav class="service-choices".*?</nav>#s', $html, $nav);
+        $this->assertNotEmpty($nav);
+        $this->assertSame(2, preg_match_all('#<a class="service-choice"#', $nav[0]));
+        $this->assertMatchesRegularExpression('#href="[^"]*/en/missions/abroad">South Sudan Missions Abroad</a>.*href="[^"]*/en/missions/in-south-sudan">Foreign Missions in South Sudan</a>#s', $nav[0]);
+        $this->assertStringNotContainsString('data-testid="mission-finder"', $html);
+        $this->assertStringNotContainsString('data-testid="mission-hierarchy"', $html);
+    }
+
+    public function testGroupPagesShowOneButtonPerMissionType(): void
+    {
+        $expected = [
+            'abroad' => [
+                'abroad/embassies' => 'Embassies', 'abroad/consulates' => 'Consulate',
+                'abroad/permanent-missions' => 'Permanent Missions', 'abroad/non-resident-missions' => 'Non-resident Missions',
+            ],
+            'in-south-sudan' => ['in-south-sudan/embassies' => 'Embassies', 'in-south-sudan/international-agencies' => 'International Agencies'],
+        ];
+
+        foreach ($expected as $group => $buttons) {
+            $html = $this->get('en/missions/' . $group)->getBody();
+            preg_match('#<nav class="service-choices".*?</nav>#s', $html, $nav);
+            $this->assertNotEmpty($nav);
+            $this->assertSame(count($buttons), preg_match_all('#<a class="service-choice"#', $nav[0]));
+            $pattern = '';
+            foreach ($buttons as $path => $label) {
+                $pattern .= '.*href="[^"]*/en/missions/' . preg_quote($path, '#') . '">' . preg_quote($label, '#') . '</a>';
+            }
+            $this->assertMatchesRegularExpression('#' . $pattern . '#s', $nav[0]);
+        }
+
+        $this->get('en/missions/abroad')->assertSee('South Sudan Missions Abroad');
+    }
+
+    public function testMissionsMenuItemIsAPlainLinkWithoutDropdown(): void
+    {
+        $html = $this->get('en')->getBody();
+        preg_match('#<nav class="navbar[^"]*site-nav".*?</nav>#s', $html, $nav);
+
+        $this->assertNotEmpty($nav);
+        $this->assertMatchesRegularExpression('#<a class="nav-link" data-nav-key="missions"\s+href="[^"]*/en/missions">MISSIONS</a>#', $nav[0]);
+        $this->assertStringNotContainsString('dropdown', $nav[0]);
+    }
+
     public function testCategoryListsOnlyPublishedMissionsOfThatType(): void
     {
         $embassies = $this->get('en/missions/abroad/embassies');

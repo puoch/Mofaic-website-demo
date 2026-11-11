@@ -22,15 +22,13 @@ class Missions extends SiteController
         'in-south-sudan' => ['foreign_embassy', 'foreign_international_agency'],
     ];
 
+    /**
+     * Two buttons only: South Sudan Missions Abroad and Foreign Missions in
+     * South Sudan, styled like the Services page.
+     */
     public function index(): string
     {
-        $directory = service('missionDirectory');
-
-        return view('site/missions/index', [
-            'groups'    => self::GROUPS,
-            'counts'    => $directory->countsByCategory(array_merge(...array_values(self::GROUPS)), $this->locale()),
-            'countries' => $directory->countriesWithMissions($this->locale()),
-        ]);
+        return view('site/missions/index');
     }
 
     public function group(string $group): string
@@ -40,7 +38,6 @@ class Missions extends SiteController
         return view('site/missions/group', [
             'group'      => $group,
             'categories' => $categories,
-            'counts'     => service('missionDirectory')->countsByCategory($categories, $this->locale()),
         ]);
     }
 
