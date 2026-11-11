@@ -21,7 +21,11 @@ $items = primary_navigation();
     <div class="container-xl">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#primary-nav-items"
                 aria-controls="primary-nav-items" aria-expanded="false" aria-label="<?= esc(lang('Site.toggleNavigation'), 'attr') ?>">
-            <span class="navbar-toggler-icon"></span>
+            <?php // Drawn inline: the site's Content-Security-Policy (img-src 'self') stops
+                  // phone browsers from showing Bootstrap's data: image icon. ?>
+            <svg class="site-menu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" aria-hidden="true" focusable="false">
+                <path d="M4 7h22M4 15h22M4 23h22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
         </button>
         <div class="collapse navbar-collapse" id="primary-nav-items">
             <ul class="navbar-nav">
