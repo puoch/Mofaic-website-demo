@@ -33,6 +33,7 @@ final class SignInHelpTest extends StaffTestCase
         $page->assertSee('data-testid="forgot-password-link"', null);
         $page->assertSee('data-testid="request-account-link"', null);
         $page->assertSee('up to 15 days');
+        $this->assertStringContainsString('href="' . site_url('en') . '" data-testid="back-to-website"', html_entity_decode($page->getBody()));
     }
 
     public function testRememberMeLastsFifteenDays(): void

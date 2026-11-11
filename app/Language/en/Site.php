@@ -15,6 +15,7 @@ return [
     'footerAboutSouthSudan' => 'About South Sudan',
     'footerContacts'    => 'Contacts',
     'staffSignIn'       => 'Staff sign-in',
+    'backToWebsite'     => 'Back to the website',
     'emblemAlt'         => 'Coat of arms of the Republic of South Sudan',
     'sitemap'           => 'Sitemap',
     'footerContact'     => 'Contact',
