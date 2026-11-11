@@ -152,7 +152,6 @@ body {
 
 .site-nav .nav-link,
 .site-nav .nav-link.show {
-    position: relative;
     font-size: .8125rem;
     font-weight: 700;
     letter-spacing: .05em;
@@ -161,34 +160,14 @@ body {
     transition: background-color .25s ease, color .25s ease;
 }
 
-/* Gold bar under each menu item: it grows out from the centre on hover or
-   keyboard focus and stays full width on the page you are on. */
-.site-nav .nav-link::after {
-    content: "";
-    position: absolute;
-    inset-inline: .5rem;
-    inset-block-end: 0;
-    block-size: 3px;
-    background: var(--site-gold);
-    border-radius: 3px 3px 0 0;
-    transform: scaleX(0);
-    transition: transform .3s ease;
-}
-
 .site-nav .nav-link:hover,
 .site-nav .nav-link:focus-visible {
     color: var(--site-on-dark);
     background: var(--site-royal-light);
 }
 
-.site-nav .nav-link:hover::after,
-.site-nav .nav-link:focus-visible::after,
-.site-nav .nav-link.active::after {
-    transform: scaleX(1);
-}
-
-/* The page you are on: lighter blue with the full gold bar. The text stays
-   white (7.4:1); gold text on this blue would be only 3.5:1. */
+/* The page you are on: lighter blue. The text stays white (7.4:1). No gold
+   underline (2026-11-11, project owner). */
 .site-nav .nav-link.active {
     color: var(--site-on-dark);
     background: var(--site-royal-light);
@@ -254,9 +233,8 @@ body {
     }
 }
 
-/* Small screens: the opened menu lists the items one under another, so the
-   gold bar runs down the start edge instead, and each item slides in a little
-   on hover or focus. */
+/* Small screens: the opened menu lists the items one under another, and
+   each item slides in a little on hover or focus. */
 @media (max-width: 991.98px) {
     .site-nav .navbar-nav {
         padding-block: .25rem .75rem;
@@ -269,24 +247,9 @@ body {
         transition: background-color .25s ease, color .25s ease, padding .25s ease;
     }
 
-    .site-nav .nav-link::after {
-        inset-inline: 0 auto;
-        inset-block: 0;
-        inline-size: 4px;
-        block-size: auto;
-        border-radius: 0;
-        transform: scaleY(0);
-    }
-
     .site-nav .nav-link:hover,
     .site-nav .nav-link:focus-visible {
         padding-inline-start: 1.35rem;
-    }
-
-    .site-nav .nav-link:hover::after,
-    .site-nav .nav-link:focus-visible::after,
-    .site-nav .nav-link.active::after {
-        transform: scaleY(1);
     }
 }
 
@@ -351,15 +314,6 @@ body {
     font-weight: 700;
     letter-spacing: .03em;
     color: var(--site-royal);
-}
-
-.nav-panel-title::after {
-    content: "";
-    display: block;
-    inline-size: 3rem;
-    block-size: 3px;
-    margin-block-start: .6rem;
-    background: var(--site-gold);
 }
 
 .nav-panel-more {
@@ -487,12 +441,7 @@ body {
     .has-panel .nav-panel-group:nth-child(3) { transition-delay: .29s; }
     .has-panel .nav-panel-group:nth-child(n+4) { transition-delay: .36s; }
 
-    /* The tab whose panel is showing keeps its gold bar. */
-    .has-panel.is-open .nav-link::after,
-    .has-panel:not(.is-dismissed):hover .nav-link::after {
-        transform: scaleX(1);
-    }
-
+    /* The tab whose panel is showing stays highlighted. */
     .has-panel.is-open .nav-link,
     .has-panel:not(.is-dismissed):hover .nav-link {
         background: var(--site-royal-light);
@@ -587,7 +536,6 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
     .site-nav .nav-link,
-    .site-nav .nav-link::after,
     .site-search-toggle,
     .site-search-icon {
         transition: none;
