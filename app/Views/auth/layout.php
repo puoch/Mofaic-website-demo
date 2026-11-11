@@ -16,6 +16,8 @@ $emblem = config(Config\Branding::class)->emblem;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?php // Light design only: stops phone browsers (e.g. Chrome auto dark mode) recolouring the pages, photos and emblems. ?>
+    <meta name="color-scheme" content="only light">
     <meta name="robots" content="noindex, nofollow">
     <title><?= $this->renderSection('title') ?></title>
 <?= view('partials/head_assets', ['dir' => 'ltr']) ?>

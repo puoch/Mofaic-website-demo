@@ -9,6 +9,10 @@
  * rules work for right-to-left languages.
  */
 :root {
+    /* The site has one light design. "only light" tells phone browsers with
+       a forced dark mode not to recolour it (that darkened the flag and
+       emblem tiles and turned white sections black). */
+    color-scheme: only light;
     --site-ink: #1f2d3d;
     --site-muted: #56616d;
     --site-surface: #ffffff;
