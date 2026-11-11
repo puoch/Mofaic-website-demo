@@ -14,7 +14,8 @@ use CodeIgniter\Config\BaseConfig;
  * CONTACTS and ABOUT SOUTH SUDAN moved to the footer ($footer), and a search
  * button follows the last item. Do not reorder or rename it without sign-off.
  * The MISSIONS children are the confirmed hierarchy and must not be
- * restructured.
+ * restructured. The menu shows no dropdown (2026-11-11): the children are
+ * reached through the buttons on the Missions page and listed on the sitemap.
  *
  * ARCHIVES placement is undecided (brief section 6, item 2). It is held in
  * $archivesPlacement so the Ministry's decision is a configuration change.

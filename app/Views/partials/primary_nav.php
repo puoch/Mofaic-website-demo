@@ -3,6 +3,10 @@
  * Approved top-level navigation (brief section 2). Items and order come from
  * Config\Navigation; do not hard-code menu items here.
  *
+ * Every item is a plain link with no dropdown (2026-11-11, project owner):
+ * MISSIONS opens the Missions page, whose buttons lead to the sub-pages.
+ * The children in Config\Navigation are still listed on the sitemap.
+ *
  * The search button after the last item is a link to the search page. With
  * JavaScript (assets/js/site-search.js) it opens the search dialog below
  * instead: focus moves into the field, Escape or the close button closes it
@@ -20,27 +24,10 @@ $items = primary_navigation();
             <ul class="navbar-nav">
                 <?php foreach ($items as $item): ?>
                     <?php $active = nav_is_active($item['path']); ?>
-                    <?php if (empty($item['children'])): ?>
                     <li class="nav-item">
                         <a class="nav-link<?= $active ? ' active' : '' ?>" data-nav-key="<?= esc($item['key'], 'attr') ?>"
                            href="<?= esc(locale_url($item['path']), 'attr') ?>"<?= $active ? ' aria-current="page"' : '' ?>><?= esc(lang('Site.nav.' . $item['key'])) ?></a>
                     </li>
-                    <?php else: ?>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle<?= $active ? ' active' : '' ?>" data-nav-key="<?= esc($item['key'], 'attr') ?>"
-                           href="<?= esc(locale_url($item['path']), 'attr') ?>" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?= esc(lang('Site.nav.' . $item['key'])) ?></a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="<?= esc(locale_url($item['path']), 'attr') ?>"><?= esc(lang('Site.nav.' . $item['key'])) ?></a></li>
-                            <?php foreach ($item['children'] as $group): ?>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item dropdown-group" data-nav-key="<?= esc($group['key'], 'attr') ?>" href="<?= esc(locale_url($group['path']), 'attr') ?>"><?= esc(lang('Site.nav.' . $group['key'])) ?></a></li>
-                                <?php foreach ($group['children'] ?? [] as $child): ?>
-                                <li><a class="dropdown-item dropdown-child" data-nav-key="<?= esc($child['key'], 'attr') ?>" href="<?= esc(locale_url($child['path']), 'attr') ?>"><?= esc(lang('Site.nav.' . $child['key'])) ?></a></li>
-                                <?php endforeach ?>
-                            <?php endforeach ?>
-                        </ul>
-                    </li>
-                    <?php endif ?>
                 <?php endforeach ?>
             </ul>
         </div>
