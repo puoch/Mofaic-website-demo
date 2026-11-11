@@ -16,6 +16,8 @@ $social = footer_social_links();
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?php // Light design only: stops phone browsers (e.g. Chrome auto dark mode) recolouring the pages, photos and emblems. ?>
+    <meta name="color-scheme" content="only light">
     <?php if (ENVIRONMENT !== 'production'): ?>
     <meta name="robots" content="noindex, nofollow">
     <?php endif ?>
