@@ -58,6 +58,98 @@ if (! function_exists('primary_navigation')) {
     }
 }
 
+if (! function_exists('nav_panel')) {
+    /**
+     * Links shown in the hover panel under a top navigation item
+     * (2026-11-11, project owner: every item except HOME shows its sub pages
+     * on hover). The links are the same buttons the item's own page shows,
+     * so the panel never offers a page the site does not have.
+     *
+     * Each group has an optional title and path (a page that has its own
+     * buttons) and its links. Links without sub pages share one untitled group.
+     *
+     * @return list<array{title: ?string, path: ?string, links: list<array{label: string, path: string}>}>
+     */
+    function nav_panel(string $key): array
+    {
+        $groups = [];
+        $plain  = null;
+
+        $add = static function (string $label, string $path, array $children) use (&$groups, &$plain): void {
+            if ($children !== []) {
+                $groups[] = ['title' => $label, 'path' => $path, 'links' => $children];
+
+                return;
+            }
+            if ($plain === null) {
+                $plain    = count($groups);
+                $groups[] = ['title' => null, 'path' => null, 'links' => []];
+            }
+            $groups[$plain]['links'][] = ['label' => $label, 'path' => $path];
+        };
+
+        switch ($key) {
+            case 'aboutMfaic':
+            case 'services':
+                $section = $key === 'aboutMfaic' ? 'about-mfaic' : 'services';
+                $subs    = \App\Controllers\Site\Pages::SUB_CHOICES[$section] ?? [];
+
+                foreach (\App\Controllers\Site\Pages::SECTION_CHOICES[$section] as $path => $line) {
+                    $children = [];
+                    $page     = str_starts_with($path, $section . '/') ? substr($path, strlen($section) + 1) : null;
+
+                    foreach ($page === null ? [] : ($subs[$page] ?? []) as $subPath => $subLine) {
+                        $children[] = ['label' => lang($subLine), 'path' => $section . '/' . $subPath];
+                    }
+                    $add(lang($line), $path, $children);
+                }
+                break;
+
+            case 'missions':
+                foreach (config(Navigation::class)->primary as $item) {
+                    if ($item['key'] !== 'missions') {
+                        continue;
+                    }
+
+                    foreach ($item['children'] ?? [] as $group) {
+                        $children = [];
+
+                        foreach ($group['children'] ?? [] as $child) {
+                            $children[] = ['label' => lang('Site.nav.' . $child['key']), 'path' => $child['path']];
+                        }
+                        $add(lang('Site.nav.' . $group['key']), $group['path'] ?? 'missions', $children);
+                    }
+                }
+                break;
+
+            case 'diaspora':
+                foreach ([
+                    'diaspora/register'      => 'Forms.register',
+                    'diaspora/contribute'    => 'Forms.contribute',
+                    'diaspora/stay-informed' => 'Forms.stayInformed',
+                    'diaspora/countries'     => 'Forms.byCountry',
+                ] as $path => $line) {
+                    $add(lang($line), $path, []);
+                }
+                break;
+
+            case 'newsPress':
+                foreach ([
+                    'news-press/news'               => 'Public.news',
+                    'news-press/statements'         => 'Public.statements',
+                    'news-press/mission-activities' => 'Public.missionActivities',
+                    'news-press/social-media'       => 'Public.socialMedia',
+                    'news-press/gallery'            => 'Public.gallery',
+                ] as $path => $line) {
+                    $add(lang($line), $path, []);
+                }
+                break;
+        }
+
+        return $groups;
+    }
+}
+
 if (! function_exists('nav_is_active')) {
     function nav_is_active(string $path): bool
     {

@@ -218,7 +218,8 @@ final class PublicContentTest extends StaffTestCase
         $this->publishPage('organogram', [], 'about-mfaic');
         $this->publishPage('leadership', [], 'about-mfaic');
 
-        $html = $this->get('en/about-mfaic')->getBody();
+        // The main menu's hover panel links every button page too; check the page body only.
+        $html = preg_replace('#<nav class="navbar[^"]*site-nav".*?</nav>#s', '', $this->get('en/about-mfaic')->getBody());
 
         $this->assertStringNotContainsString('about-mfaic/organogram"', $html);
         $this->assertSame(1, substr_count($html, 'about-mfaic/ministry-history"'));

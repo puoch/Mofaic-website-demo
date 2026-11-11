@@ -98,6 +98,28 @@ final class MissionsTest extends StaffTestCase
         $this->assertStringNotContainsString('dropdown', $nav[0]);
     }
 
+    public function testEveryMenuItemExceptHomeHasAHoverPanelOfItsSubPages(): void
+    {
+        $html = $this->get('en')->getBody();
+        preg_match('#<nav class="navbar[^"]*site-nav".*?</nav>#s', $html, $nav);
+
+        $this->assertStringNotContainsString('nav-panel-home', $nav[0]);
+        foreach (['aboutMfaic', 'missions', 'services', 'diaspora', 'newsPress'] as $key) {
+            $this->assertStringContainsString('id="nav-panel-' . $key . '"', $nav[0]);
+            $this->assertStringContainsString('aria-controls="nav-panel-' . $key . '"', $nav[0]);
+        }
+
+        preg_match('#<div class="nav-panel" id="nav-panel-missions".*?</ul>\s*</div>\s*<div class="nav-panel-group">.*?</ul>#s', $nav[0], $panel);
+        $this->assertNotEmpty($panel);
+        foreach (['missions/abroad', 'missions/abroad/embassies', 'missions/abroad/non-resident-missions', 'missions/in-south-sudan', 'missions/in-south-sudan/international-agencies'] as $path) {
+            $this->assertStringContainsString('/en/' . $path . '"', $panel[0]);
+        }
+
+        // MFA & IC and SERVICES show the same buttons as their pages.
+        $this->assertStringContainsString('/en/about-mfaic/diplomatic-protocol/precedence-list"', $nav[0]);
+        $this->assertStringContainsString('/en/services/citizens/scholarships"', $nav[0]);
+    }
+
     public function testCategoryListsOnlyPublishedMissionsOfThatType(): void
     {
         $embassies = $this->get('en/missions/abroad/embassies');

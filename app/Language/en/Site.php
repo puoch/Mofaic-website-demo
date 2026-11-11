@@ -29,6 +29,8 @@ return [
     'searchPlaceholder' => 'Search the website',
     'closeSearch'       => 'Close search',
     'sectionPending'    => 'Content for this section will be published by Ministry editors.',
+    'navShowPanel'      => 'Show the {0} pages',
+    'navPanelOpen'      => 'Go to the {0} page',
     'nav'               => [
         'home'                         => 'HOME',
         'missions'                     => 'MISSIONS',

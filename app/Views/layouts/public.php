@@ -93,6 +93,7 @@ $social = footer_social_links();
 
     <?= bootstrap_js() ?>
     <script src="<?= esc(asset_url('assets/js/site-search.js'), 'attr') ?>" defer></script>
+    <script src="<?= esc(asset_url('assets/js/site-nav.js'), 'attr') ?>" defer></script>
 <?= $this->renderSection('scripts') ?>
 </body>
 </html>
