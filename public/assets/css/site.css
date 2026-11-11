@@ -157,13 +157,24 @@ body {
     letter-spacing: .05em;
     color: var(--site-on-dark);
     padding-inline: .5rem;
+    transition: background-color .25s ease, color .25s ease;
 }
 
-.site-nav .nav-link.active,
 .site-nav .nav-link:hover,
 .site-nav .nav-link:focus-visible {
     color: var(--site-on-dark);
     background: var(--site-royal-light);
+}
+
+/* The page you are on: lighter blue. The text stays white (7.4:1). No gold
+   underline (2026-11-11, project owner). */
+.site-nav .nav-link.active {
+    color: var(--site-on-dark);
+    background: var(--site-royal-light);
+}
+
+.site-nav .nav-link:active {
+    background: var(--site-navy);
 }
 
 .site-nav .navbar-toggler {
@@ -219,6 +230,320 @@ body {
 
     .site-nav .nav-link {
         padding-block: .95rem;
+    }
+}
+
+/* Small screens: the opened menu lists the items one under another, and
+   each item slides in a little on hover or focus. */
+@media (max-width: 991.98px) {
+    .site-nav .navbar-nav {
+        padding-block: .25rem .75rem;
+    }
+
+    .site-nav .nav-link {
+        padding-block: .75rem;
+        padding-inline: 1rem;
+        border-block-start: 1px solid rgba(255, 255, 255, .1);
+        transition: background-color .25s ease, color .25s ease, padding .25s ease;
+    }
+
+    .site-nav .nav-link:hover,
+    .site-nav .nav-link:focus-visible {
+        padding-inline-start: 1.35rem;
+    }
+}
+
+/* Hover panels under the menu items (all except HOME). White sheet with a
+   gold top edge; it fades and slides down a little, and its columns follow
+   one after another. Large screens: opens on hover, or with the arrow
+   button (.is-open). Small screens: the arrow opens it inside the menu. */
+.site-nav .nav-item-head {
+    display: flex;
+    align-items: center;
+}
+
+.nav-panel-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    color: var(--site-on-dark);
+    background: transparent;
+    border: 0;
+    border-radius: .25rem;
+    transition: background-color .25s ease;
+}
+
+.nav-panel-toggle[hidden] {
+    display: none;
+}
+
+.nav-panel-toggle svg {
+    transition: transform .3s ease;
+}
+
+.has-panel.is-open .nav-panel-toggle svg {
+    transform: rotate(180deg);
+}
+
+.nav-panel-toggle:hover,
+.nav-panel-toggle:focus-visible {
+    background: var(--site-royal-light);
+}
+
+.nav-panel {
+    color: var(--site-ink);
+    background: var(--site-surface);
+}
+
+.nav-panel-inner {
+    display: flex;
+    gap: 2.5rem;
+    padding-block: 1.75rem 2rem;
+}
+
+.nav-panel-intro {
+    flex: 0 0 15rem;
+    padding-inline-end: 2rem;
+    border-inline-end: 1px solid var(--site-line);
+}
+
+.nav-panel-title {
+    margin: 0 0 .75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: var(--site-royal);
+}
+
+.nav-panel-more {
+    font-weight: 600;
+    color: var(--site-royal);
+    text-decoration: none;
+}
+
+/* A no-break space keeps the arrow on the same line as the last word. */
+.nav-panel-more::after {
+    content: "\00a0\2192";
+}
+
+.nav-panel-more:hover,
+.nav-panel-more:focus-visible {
+    color: var(--site-navy);
+    text-decoration: underline;
+}
+
+.nav-panel-groups {
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 1.25rem 2rem;
+    align-content: start;
+}
+
+.nav-panel-heading {
+    margin: 0 0 .4rem;
+    padding-block-end: .4rem;
+    border-block-end: 2px solid var(--site-line);
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+.nav-panel-heading a {
+    color: var(--site-royal);
+    text-decoration: none;
+}
+
+.nav-panel-heading a:hover,
+.nav-panel-heading a:focus-visible {
+    color: var(--site-navy);
+    text-decoration: underline;
+}
+
+.nav-panel-links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-panel-links a {
+    position: relative;
+    display: block;
+    padding: .4rem .5rem;
+    border-radius: .25rem;
+    color: var(--site-ink);
+    text-decoration: none;
+    transition: background-color .2s ease, color .2s ease, padding .25s ease;
+}
+
+.nav-panel-links a:hover,
+.nav-panel-links a:focus-visible {
+    padding-inline-start: .85rem;
+    color: var(--site-royal);
+    background: var(--site-paper);
+}
+
+.nav-panel :focus-visible {
+    outline: 3px solid var(--site-focus);
+    outline-offset: 1px;
+}
+
+@media (min-width: 992px) {
+    .site-nav .nav-panel-toggle {
+        inline-size: 1.5rem;
+        block-size: 1.5rem;
+        margin-inline-start: -.15rem;
+    }
+
+    .site-nav .has-panel .nav-link {
+        padding-inline-end: .3rem;
+    }
+
+    .nav-panel {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 100%;
+        z-index: 1040;
+        border-block-start: 3px solid var(--site-gold);
+        box-shadow: 0 1.25rem 2.5rem rgba(8, 26, 58, .28);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-.5rem);
+        /* Closing waits a moment so the panel does not flicker away while
+           the pointer travels down into it. */
+        transition: opacity .2s ease .1s, transform .2s ease .1s, visibility 0s linear .3s;
+    }
+
+    .nav-panel-group {
+        opacity: 0;
+        transform: translateY(.5rem);
+        transition: opacity .3s ease, transform .3s ease;
+    }
+
+    .has-panel.is-open > .nav-panel,
+    .has-panel:not(.is-dismissed):hover > .nav-panel {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        transition: opacity .25s ease .12s, transform .3s ease .12s, visibility 0s linear .12s;
+    }
+
+    .has-panel.is-open .nav-panel-group,
+    .has-panel:not(.is-dismissed):hover .nav-panel-group {
+        opacity: 1;
+        transform: none;
+    }
+
+    .has-panel .nav-panel-group:nth-child(1) { transition-delay: .15s; }
+    .has-panel .nav-panel-group:nth-child(2) { transition-delay: .22s; }
+    .has-panel .nav-panel-group:nth-child(3) { transition-delay: .29s; }
+    .has-panel .nav-panel-group:nth-child(n+4) { transition-delay: .36s; }
+
+    /* The tab whose panel is showing stays highlighted. */
+    .has-panel.is-open .nav-link,
+    .has-panel:not(.is-dismissed):hover .nav-link {
+        background: var(--site-royal-light);
+    }
+}
+
+@media (max-width: 991.98px) {
+    .site-nav .nav-item-head {
+        border-block-start: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .site-nav .nav-item-head .nav-link {
+        flex: 1 1 auto;
+        border-block-start: 0;
+    }
+
+    .site-nav .nav-panel-toggle {
+        inline-size: 2.75rem;
+        block-size: 2.75rem;
+    }
+
+    .nav-panel {
+        display: none;
+        border-inline-start: 4px solid var(--site-gold);
+        border-radius: .25rem;
+        margin-block-end: .5rem;
+    }
+
+    .has-panel.is-open > .nav-panel {
+        display: block;
+        animation: nav-panel-in .25s ease;
+    }
+
+    .nav-panel-inner {
+        display: block;
+        padding: 1rem;
+    }
+
+    .nav-panel-intro {
+        padding: 0 0 .75rem;
+        margin-block-end: .75rem;
+        border-inline-end: 0;
+        border-block-end: 1px solid var(--site-line);
+    }
+
+    .nav-panel-title {
+        display: none;
+    }
+
+    .nav-panel-links a {
+        padding-block: .55rem;
+    }
+}
+
+@keyframes nav-panel-in {
+    from {
+        opacity: 0;
+        transform: translateY(-.35rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-panel,
+    .nav-panel-group,
+    .nav-panel-toggle svg,
+    .nav-panel-links a,
+    .has-panel.is-open > .nav-panel,
+    .has-panel:hover > .nav-panel {
+        transition: none !important;
+        animation: none !important;
+    }
+
+    .nav-panel,
+    .nav-panel-group {
+        transform: none !important;
+    }
+}
+
+/* Search button: the magnifier tips over slightly on hover or focus. */
+.site-search-icon {
+    transition: transform .25s ease;
+}
+
+.site-search-toggle {
+    transition: background-color .25s ease;
+}
+
+.site-search-toggle:hover .site-search-icon,
+.site-search-toggle:focus-visible .site-search-icon {
+    transform: rotate(-12deg) scale(1.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site-nav .nav-link,
+    .site-search-toggle,
+    .site-search-icon {
+        transition: none;
+    }
+
+    .site-search-toggle:hover .site-search-icon,
+    .site-search-toggle:focus-visible .site-search-icon {
+        transform: none;
     }
 }
 
