@@ -2026,10 +2026,32 @@ summary.org-unit {
     block-size: auto;
 }
 
-/* Staff sign-in: coat of arms centred above the form. */
+/* Staff sign-in: "Back to the website" button, then the coat of arms
+   centred above the form. */
+.auth-return {
+    padding-top: 1rem;
+}
+
+.auth-return .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    min-height: 44px;
+    color: var(--site-royal);
+    border-color: var(--site-royal);
+    background: var(--site-surface);
+}
+
+.auth-return .btn:hover,
+.auth-return .btn:focus-visible {
+    color: var(--site-accent-ink);
+    background: var(--site-royal);
+    border-color: var(--site-royal);
+}
+
 .auth-emblem {
     text-align: center;
-    padding-top: 2rem;
+    padding-top: 1rem;
 }
 
 .auth-emblem img {
