@@ -417,35 +417,18 @@ body {
 .nav-panel-links a {
     position: relative;
     display: block;
-    padding: .4rem .5rem .4rem .9rem;
+    padding: .4rem .5rem;
     border-radius: .25rem;
     color: var(--site-ink);
     text-decoration: none;
     transition: background-color .2s ease, color .2s ease, padding .25s ease;
 }
 
-/* A small gold bar marks each link and grows when it is pointed at. */
-.nav-panel-links a::before {
-    content: "";
-    position: absolute;
-    inset-inline-start: .2rem;
-    inset-block: .85rem;
-    inline-size: 4px;
-    border-radius: 2px;
-    background: var(--site-gold);
-    transition: inset-block .25s ease;
-}
-
 .nav-panel-links a:hover,
 .nav-panel-links a:focus-visible {
-    padding-inline-start: 1.2rem;
+    padding-inline-start: .85rem;
     color: var(--site-royal);
     background: var(--site-paper);
-}
-
-.nav-panel-links a:hover::before,
-.nav-panel-links a:focus-visible::before {
-    inset-block: .35rem;
 }
 
 .nav-panel :focus-visible {
@@ -576,7 +559,6 @@ body {
     .nav-panel-group,
     .nav-panel-toggle svg,
     .nav-panel-links a,
-    .nav-panel-links a::before,
     .has-panel.is-open > .nav-panel,
     .has-panel:hover > .nav-panel {
         transition: none !important;
